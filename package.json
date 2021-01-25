@@ -1,0 +1,82 @@
+{
+  "name": "kokrokooad",
+  "description": "Brand advertising hub",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Khemy543/Kokrokoo-client.git"
+  },
+  "keywords": [
+    "react",
+    "reactjs",
+    "kokrokooad",
+    "kokrokoo"
+  ],
+  "author": "Gideon Assafuah",
+  "license": "MIT",
+  "homepage": "/",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "install:clean": "rm -rf node_modules/ && rm -rf package-lock.json && npm install && npm start",
+    "compile-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css",
+    "minify-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.min.css --output-style compressed",
+    "map-sass": "node-sass src/assets/scss/argon-dashboard-react.scss src/assets/css/argon-dashboard-react.css --source-map true"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "dependencies": {
+    "@fullcalendar/core": "^5.3.0",
+    "@fullcalendar/daygrid": "^5.3.0",
+    "@fullcalendar/interaction": "^5.3.0",
+    "@fullcalendar/list": "^5.3.0",
+    "@fullcalendar/react": "^5.3.0",
+    "@fullcalendar/timegrid": "^5.3.0",
+    "aos": "^2.3.4",
+    "axios": "^0.19.2",
+    "chart.js": "2.9.3",
+    "classnames": "2.2.6",
+    "docxtemplater": "^3.19.6",
+    "font-awesome": "^4.7.0",
+    "history": "^5.0.0",
+    "jwt-decode": "^2.2.0",
+    "moment": "2.24.0",
+    "node-sass": "^4.14.1",
+    "nouislider": "14.1.1",
+    "pizzip": "^3.0.6",
+    "react": "16.12.0",
+    "react-animated-css": "^1.2.1",
+    "react-chartjs-2": "2.9.0",
+    "react-copy-to-clipboard": "5.0.2",
+    "react-datetime": "2.16.3",
+    "react-dom": "16.12.0",
+    "react-google-maps": "9.4.5",
+    "react-js-pagination": "^3.0.3",
+    "react-loading-overlay": "^1.0.1",
+    "react-pdf": "^4.2.0",
+    "react-router-dom": "5.1.2",
+    "react-router-navigation-prompt": "^1.8.13",
+    "react-scripts": "^3.4.0",
+    "react-spinners": "^0.9.0",
+    "react-to-print": "^2.11.0",
+    "reactstrap": "8.4.1"
+  },
+  "devDependencies": {
+    "@types/googlemaps": "3.39.2",
+    "@types/markerclustererplus": "2.1.33",
+    "@types/react": "16.9.19",
+    "eslint-plugin-flowtype": "3.13.0",
+    "gulp": "4.0.2",
+    "gulp-append-prepend": "1.0.8",
+    "typescript": "3.7.5"
+  }
+}

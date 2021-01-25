@@ -1,0 +1,7 @@
+[1102/072621.472:ERROR:crash_report_database_win.cc(457)] unexpected header
+[1120/170741.137:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1121/174506.033:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1123/073358.938:ERROR:file_io.cc(135)] WriteFile: The pipe is being closed. (0xE8)
+[1124/113625.779:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1213/125318.337:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)
+[1215/120001.300:ERROR:directory_reader_win.cc(43)] FindFirstFile: The system cannot find the path specified. (0x3)

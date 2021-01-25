@@ -1,0 +1,359 @@
+.bg-white{
+    background-color: red;
+}
+
+.custom-modal-style{
+    width:1000px;
+}
+
+.nav-link{
+    color:white !important;
+}
+.alert-modal .modal-content {
+    background-color: #404E67;
+  }
+  .nav-tabs-navigation {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.nav-tabs-wrapper {
+  display: inline-block;
+  margin-bottom: -6px;
+  margin-left: 1.25%;
+  margin-right: 1.25%;
+  position: relative;
+  width: auto;
+}
+
+.address p {
+  text-align: left;
+  font-weight: 600;
+  font-size:14px;
+  margin-bottom: 0px;
+  text-transform: uppercase;
+}
+
+.to-address p{
+  text-align: left;
+  font-weight: 600;
+  font-size:14px;
+  margin-bottom: 0px;
+  text-transform: uppercase;
+}
+
+.fc .fc-col-header-cell { /* needs to be same precedence */
+  background-color: #01a9ac;
+  color:white
+}
+.fc .fc-button-primary{
+  background-color: #01a9ac;
+}
+/* .fc-event-title-container{
+}
+.fc-h-event{
+  width:"20px";
+} */
+.editted{
+  color:red
+}
+
+.account h3{
+  color: #E6AA00;
+    font-size: 25px;
+    font-weight: 400;
+}
+
+.account label{
+  font-family: "Helvetica Neue", Helvetica, Aria !important;
+  font-size: 12px !important;
+  color: rgb(38, 40, 42) !important;
+  font-weight: lighter !important;
+  line-height: normal !important;
+}
+
+
+.form-control{
+  font-size: 12px !important;
+}
+
+.form-control-file{
+  height: 45px;
+  font-size: 12px;
+}
+
+.progress-bar{
+  background-color: #E6AA00 !important;
+}
+
+.big-text{
+    position: relative;
+    font-family: "Raleway", sans-serif;
+    line-height: 45px;
+    margin-left: 35px;
+    
+    font-size: 42px;
+    font-weight: 100;
+}
+
+.left-section h2{
+  font-size: 42px;
+    font-weight: 100;
+    font-family: "Raleway", sans-serif;
+}
+
+.left-section h3{
+  font-size: 32px
+}
+
+.pricing-table{
+  border: none;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    -webkit-transition: all 400ms linear;
+    transition: all 400ms linear;
+    padding: 32px 21px;
+}
+
+#app p {
+  font-size: 13px;
+    font-family: "Open Sans", sans-serif;
+    font-weight: 400;
+    line-height: 24px;
+}
+
+
+	ul#horizontal-list li {
+    display: inline;
+    margin-right:5px;
+  }
+  
+  .navbar-transparent{
+    background-color:#11cdef00 !important;
+  }
+
+.info{
+  background-color: white !important;
+  color:black !important;
+}
+.info .nav-link{
+  color:black !important;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link{
+  transition: border-color 300ms linear;
+    padding: 0;
+    font-size: 13px;
+    font-family: "Raleway", sans-serif;
+    text-transform: uppercase;
+}
+
+.navbar-expand-lg .navbar-nav .nav-link i{
+    font-weight: 100;
+    font-size: 13px;
+}
+
+.navbar-toggler {
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25rem;
+  line-height: 1;
+  background-color: black !important;
+  border: 1px solid black !important;
+  border-radius: 0px;
+}
+
+/* .navbar-toggler span{
+  padding-bottom: 50px;
+  margin-bottom: 50px;
+} */
+
+.slider-image-1{
+  filter: brightness(50%) !important;
+}
+
+.userdrop:hover{
+  background-color: whitesmoke;
+  cursor: pointer;
+}
+
+.conditions p{
+  font-size: 13px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.await p{
+  font-size: 13px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: 400;
+  line-height: 24px;
+}
+
+.nav-footer .nav-link{
+  
+  transition: border-color 300ms linear;
+    font-size: 13px !important;
+    font-family: "Raleway", sans-serif;
+    text-transform: uppercase;
+}
+
+.copyright{
+  transition: border-color 300ms linear;
+    font-size: 13px !important;
+    font-family: "Raleway", sans-serif;
+    text-transform: uppercase;
+
+}
+
+.image-filter{
+  filter: grayscale(100%) !important; 
+}
+
+@media screen and (max-width: 991px){
+ /*  .tp-mask-wrap{
+    width:120% !important;
+  } */
+  .news-liner{
+    font-size: 12px !important;
+    line-height: 13px !important;
+    margin-top: 43px !important;
+  }
+
+  /* .heading-linear{
+    margin-bottom: 15px !important;
+  } */
+  .desktop-view{
+    display: none;
+  }
+  /* .tp-caption{
+    margin-bottom: 30px;
+  } */
+ 
+  
+}
+
+@media screen and (min-width: 991px){
+.news-liner{
+  font-size: 16px !important;
+}
+.phone-view{
+  display: none;
+}
+
+.phone-view-hide{
+  display:none;
+}
+
+}
+
+@media (max-width: 767.98px){
+.navbar-collapse.collapsing, .navbar-collapse.show {
+  line-height: 2rem;
+}
+.middleman{
+    width: 700px;
+    overflow: hidden;
+    white-space: nowrap;
+}
+}
+
+.first {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.second{
+  position: absolute !important;
+  top: 60% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.third{
+  position: absolute !important;
+  top: 70% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.first{
+  text-align: center;
+}
+.third{
+  text-align: center;
+  width: 85% !important;
+  font-size: 16px !important;
+}
+.second{
+  text-align: center;
+  width: 100% !important;
+}
+
+@media (max-width: 300px) {
+  .first { 
+    font-size: 140%; 
+  }
+  .second {
+     font-size: 140%; 
+    }
+}
+
+@media (max-width:499px){
+  .first{
+    font-size: 170%;
+  }
+  .second { 
+    font-size: 170%; 
+  }
+}
+
+@media (min-width: 500px) {
+  .first { 
+    font-size: 160%; 
+    padding-bottom: -40px;
+  }
+  .second { font-size: 160%;
+  }
+}
+
+@media (min-width: 700px) {
+  .first { 
+    font-size: 240%; 
+  }
+  .second { font-size: 240%;
+    }
+}
+
+
+@media (min-width: 1200px) {
+  .first { 
+    font-size: 400%;
+   }
+  .second { 
+    font-size: 400%; 
+  }
+}
+
+.middleman span {
+  display: inline !important;
+}
+
+.middleman span::after{
+  display: inline !important;
+}
+
+.middleman span:after{
+  display: inline !important;
+}
+
+.sort{
+  background-color: transparent;
+  border-color: transparent;
+  color: white;
+  padding:0px;
+  cursor: pointer;
+}
+
