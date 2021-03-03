@@ -3,7 +3,7 @@ import {
     Card,
     Container,
     Row,
-    Col,Table,Button,CardBody,CardFooter,Spinner
+    Col,Table,Button,CardBody,CardFooter,Spinner,Modal,ModalFooter,ModalHeader
   } from "reactstrap";
   // core components
   import Header from "components/Headers/Header.js";
@@ -21,7 +21,9 @@ import EmptyCart from "./EmptyCart.js";
       allData:[],
       cartTotal:0,
       isActive:false,
-      cart_id:null
+      cart_id:null,
+      deleteModal:false,
+      deleteId:null
     }
 
     componentDidMount(){
@@ -83,6 +85,26 @@ import EmptyCart from "./EmptyCart.js";
           }
           this.setState({payLater:newPayLater,cart:tempCart, cartTotal:cartTotal,cart_id:res.data.cart_id})
         }
+      })
+      .catch(error=>{
+        console.log(error)
+      })
+    }
+
+    handleDelete=(id)=>{
+      let tempCart = this.state.cart;
+      let tempPayLater = this.state.payLater;
+      let cartTotal = 0;
+      axios.delete(`${domain}/api/scheduledAd/${id}/delete`,
+      {headers:{ 'Authorization':`Bearer ${user}`}})
+      .then(res=>{
+        console.log(res.data);
+        tempCart = tempCart.filter(item=>item.id !== id);
+        tempPayLater = tempPayLater.filter(item=>item.id !== id);
+        for(var i =0; i<tempCart.length; i++){
+          cartTotal = cartTotal + tempCart[i].total_amount;
+        }
+        this.setState({payLater:tempPayLater,cart:tempCart, cartTotal:cartTotal, deleteModal:false})
       })
       .catch(error=>{
         console.log(error)
@@ -171,10 +193,13 @@ import EmptyCart from "./EmptyCart.js";
               <td>{value.date} {value.time}</td>
               <td>
                 <Row>
-                  <Col md="6" lg="6" sm="6" xs="6" className="ml-auto mr-auto">
-                  <Button color="danger" style={{padding:"5px 10px 5px 10px"}}
+                  <Col md="6" lg="6" sm="6" xs="6">
+                  <Button color="warning" style={{padding:"5px 10px 5px 10px"}}
                   onClick={()=>this.moveToPayLater(value.id)}
                   ><i className="fa fa-refresh"/></Button>
+                  <Button color="danger" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.setState({deleteModal:true, deleteId:value.id})}>
+                    <i className="fa fa-trash"/>
+                  </Button>
                   </Col>
                 </Row>  
                 </td>
@@ -236,10 +261,13 @@ import EmptyCart from "./EmptyCart.js";
               <td>{value.date} {value.time}</td>
               <td>
                 <Row>
-                  <Col md="6" lg="6" sm="6" xs="6" className="ml-auto mr-auto">
+                  <Col md="6" lg="6" sm="6" xs="6">
                   <Button color="info" style={{padding:"5px 10px 5px 10px"}}
                   onClick={()=>this.moveToCart(value.id)}
                   ><i className="fa fa-refresh"/></Button>
+                  <Button color="danger" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.setState({deleteModal:true, deleteId:value.id})}>
+                    <i className="fa fa-trash"/>
+                  </Button>
                   </Col>
                 </Row>  
                 </td>
@@ -269,6 +297,15 @@ import EmptyCart from "./EmptyCart.js";
         </>
         }
         </Container>
+        <Modal isOpen={this.state.deleteModal}>
+              <ModalHeader>
+                Delete Campaign?
+              </ModalHeader>
+              <ModalFooter>
+                <Button color="danger" onClick={()=>this.handleDelete(this.state.deleteId)}>Yes</Button>
+                <Button color="info" onClick={()=>this.setState({deleteModal:false})}>No</Button>
+              </ModalFooter>
+            </Modal>
         </>
         
       )

@@ -173,8 +173,8 @@ class MediaAccount extends React.Component {
     }
 
     handleCompanyHide=()=>{
-        const {company_name, company_email,address,media_house,website,business_cert,logo} = this.state;
-        if(company_name !== "" && company_email !== "" && address !== "" &&  media_house !== "" && website !== "" && business_cert!== "" && logo !== ""){
+        const {company_name, company_email,address,media_house,website,business_cert,logo, purpose} = this.state;
+        if(company_name !== "" && company_email !== "" && purpose !== "" && address !== "" &&  media_house !== "" && website !== "" && business_cert!== "" && logo !== ""){
             this.setState({companyHide:false, userHide:true, bankHide:false})
         }
         else{
@@ -347,7 +347,7 @@ class MediaAccount extends React.Component {
                             </FormGroup>
                             </Col>
                             <Col sm="12" md="6" lg="6" xl="6" xs="12">
-                            <label>Purpose</label>
+                            <label>Purpose*</label>
                             {/* <Input type="select" placeholder="Purpose"  value={this.state.purpose} onChange={e=>this.setState({purpose:e.target.value})}>
                             <option value="Public">Public</option>
                             <option value="Public(Foreign)">Public(Foreign)</option>

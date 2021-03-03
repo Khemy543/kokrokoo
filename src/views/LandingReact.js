@@ -279,7 +279,7 @@ function LandingPage(){
               <NavItem className="phone-view">
                 <NavLink onClick={()=>toggleRegisterCollapse()}>REGISTER <i className={!registerCollpase?"fa fa-chevron-down ml-2":"fa fa-chevron-up ml-2" }/></NavLink>
                 <Collapse isOpen={registerCollpase} style={{backgroundColor:"#f5f5f5"}}>
-                  <NavLink href="/auth/perosonal-account">CLIENT(PERSONAL)</NavLink>
+                  <NavLink href="/auth/personal-account">CLIENT(PERSONAL)</NavLink>
                   <NavLink href="/auth/organization-account">CLIENT(ORGANIZATION)</NavLink>
                   <NavLink href="/auth/media-house">MEDIA HOUSE</NavLink>
                 </Collapse>

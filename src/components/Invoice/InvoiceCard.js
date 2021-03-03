@@ -19,7 +19,7 @@ class InvoiceCard extends React.Component{
         return(
             <>
             <Col md="12">
-                <Card>
+                <Card style={{overflowX:"scroll"}}>
                     <CardHeader>
                       <Row>
                         <Col>

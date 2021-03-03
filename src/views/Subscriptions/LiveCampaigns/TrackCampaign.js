@@ -62,7 +62,7 @@ class TrackCampaign extends React.Component {
           </Row>
           :
           <>
-          {!this.state.spinnerActive && this.state.liveCampaigns.length<=0?
+          {!this.state.spinnerActive && this.state.data.length<=0?
             <Row>
             <Col md="12" style={{textAlign:"center"}}>
              <h4>You Have No Live Campaigns</h4> 
@@ -82,7 +82,7 @@ class TrackCampaign extends React.Component {
             <tr>
               <th>#</th>
               <th>Campaign Title</th>
-              <th>Date</th>
+              <th>Production Date</th>
               <th>Media House</th>
               <th>Media Type</th>
               <th>Status</th>

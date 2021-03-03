@@ -2,6 +2,7 @@
 
 import React from "react";
 import  { Prompt } from 'react-router-dom';
+import NavigationPrompt from "react-router-navigation-prompt";
 // reactstrap components
 import {
   Card,
@@ -53,9 +54,10 @@ class EditCampaign extends React.Component{
         changeText:false,
         total_amount:0,
         volumeModal:false,
-        prompt:true,
         volume:[],
-        discount:0
+        discount_amount:0,
+        modalmessage:'Schedule Saved'
+
     }
 
 
@@ -65,12 +67,15 @@ class EditCampaign extends React.Component{
 
       
       componentDidMount(){
-
+        console.log(this.props.location.state.file_duration,this.props.location.state.no_of_words)
         axios.get(`${domain}/api/company/${this.props.location.state.media_house_id}/volume-discounts`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
+            console.log("discount here")
             this.setState({volume:res.data})
         })
+
+
         var tomorrow = new Date();
         tomorrow.setDate(new Date(). getDate() +2);
         var dd = String(tomorrow.getDate()).padStart(2, '0');
@@ -78,34 +83,42 @@ class EditCampaign extends React.Component{
         var yyyy = tomorrow.getFullYear();
         var today = yyyy + '-' + mm + '-' + dd;
         console.log("today:",today)
-        let discount = 0;
+        console.log("ne:",this.props.location.state)
         let newEvents = [];
         axios.get(`${domain}/api/view-ratecard/${this.props.location.state.rate_card.id}/details`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log(res.data)
+            console.log("details:",res.data);
             this.setState({rateCards:res.data})
             for(var i=0; i<res.data.length; i++){
                 if(newEvents.some(item=>item.id === res.data[i].day.id)){
                     continue;
                 }
                 else{
+                    if(res.data[i].day.id === 7){
+                        newEvents.push({title:"",daysOfWeek:['0'], id:res.data[i].day.id, startRecur: `${today}`,display:'list-item'})
+                    }else{
                     newEvents.push({title:"",daysOfWeek:[`${res.data[i].day.id}`], id:res.data[i].day.id, startRecur: `${today}`,display:'list-item'})
+                    }
                 }
             }
-            
+
             let grand_total = 0;
+            let discount =0;
             axios.get(`${domain}/api/subscription/${this.props.location.state.title_id}/details`,
             {headers:{ 'Authorization':`Bearer ${user}`}})
             .then(res=>{
                 console.log("mafia",res.data);
                 for(var i=0; i<res.data.length;i++){
-                    newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
                     grand_total = Number(res.data[i].total_amount) + grand_total;
+                    if(newEvents.some(item=>item.start === res.data[i].selected_date)){
+                        continue;
+                    }else{
+                    newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
+                    }
                 }
-
-                console.log("grand",grand_total);
-                for(var t=0; t<this.state.volume.length; t++){
+                 console.log("grand",grand_total);
+                    for(var t=0; t<this.state.volume.length; t++){
                     let range = this.state.volume[t].amount_range.split("-");
                     console.log(this.state.volume[t].amount_range)
                     if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
@@ -114,7 +127,7 @@ class EditCampaign extends React.Component{
                         console.log(discount)
                     }
                 }
-                this.setState({data:res.data, total_amount:grand_total,eventData:newEvents, discount_amount:discount});
+                this.setState({data:res.data, total_amount:grand_total,eventData:newEvents,discount_amount:discount});
 
             })
             
@@ -124,13 +137,13 @@ class EditCampaign extends React.Component{
                 alert("check your internet connection");
             }
             else{
+                console.log(error)
             }
         });
         
+        
       }
 
-
-     
       handleDateClick=(calEvent, jsEvent, view)=>{
           let total = 0;
           let no_of_weeks=0;
@@ -158,13 +171,9 @@ class EditCampaign extends React.Component{
             total = total * twice
          }
          if(Number(id) !== 0){
-            this.setState({rateDetails:selectedCard, date:formatted_date,day_id:Number(calEvent.event._def.publicId) ,modal:true, total:total, no_of_weeks:no_of_weeks});
-            }
+         this.setState({rateDetails:selectedCard, date:formatted_date,day_id:Number(calEvent.event._def.publicId) ,modal:true, total:total, no_of_weeks:no_of_weeks});
+         }
      }
-
-     /* handleDate=(arg)=>{
-        console.log("arg:",arg.dateStr)
-     } */
 
       getRateCard = id =>{
          let tempRateCards = [...this.state.rateCards];
@@ -176,7 +185,7 @@ class EditCampaign extends React.Component{
      handleCompare=(duration,unit)=>{
         if(unit === 'Hr'){
             duration = duration*3600;
-            if(duration < this.state.file_duration){
+            if(this.state.file_duration-duration > 0){
                 return true
             }
             else{
@@ -186,7 +195,7 @@ class EditCampaign extends React.Component{
 
         if(unit === 'Min'){
             duration = duration*60;
-            if(duration < this.state.file_duration){
+            if(this.state.file_duration-duration > 0){
                 return true
             }else{
                 return false
@@ -194,7 +203,7 @@ class EditCampaign extends React.Component{
         }else
 
         if(unit === 'Sec'){
-            if(duration < this.state.file_duration){
+            if(this.state.file_duration-duration > 0){
                 
                 return true
             }
@@ -202,6 +211,7 @@ class EditCampaign extends React.Component{
                 return false
             }
         }
+
         else
         
         if(unit === "Words"){
@@ -215,14 +225,13 @@ class EditCampaign extends React.Component{
     }
 
     handleCheck=(id, date)=>{
-
         let tempData = this.state.data;
-        let selected = tempData.find(item=>item.selected_date === date);
-        if(selected === undefined){
+        let selected = tempData.find(item=>item.selected_date == date);
+        if(selected == undefined){
             return false;
         }
         else{
-            if(selected.details.some(item=>item.duration.id === id)){
+            if(selected.details.some(item=>item.duration.id == id)){
                 return true;
             }
             else {
@@ -267,14 +276,18 @@ class EditCampaign extends React.Component{
         }
     }
 
-    handleRadioChange=(id, index, ratecard_id,date)=>{
+    handleRadioChange=(id, index, ratecard_id,date, checked)=>{
+        if(checked){
+            
+        }
         let data = this.state.data;
         let checker = false;
         let total=0;
         let tempData = this.state.rateDetails;
         let selectedIndex = tempData[index];
         let selectedDuration =  selectedIndex.duration.find(item=>item.id === id);
-        if(data.length<=0){
+        let selectedDate = data.find(item=>item.selected_date == date);
+        if(selectedDate == undefined){
             data.push({
                 selected_date:this.state.date,
                 no_of_weeks:0, 
@@ -288,11 +301,10 @@ class EditCampaign extends React.Component{
         }
         else
         {
-
-            let selectedDate = data.find(item=>item.selected_date === date);
-            if(selectedDate !== undefined){
+            if(selectedDate != undefined){
                 let selectedRateDetails = selectedDate.details.find(item=>item.ratecard.id === ratecard_id);
-                if(selectedRateDetails !== undefined){
+                if(selectedRateDetails != undefined){
+                    selectedDate.new = false
                     selectedRateDetails.duration_id=selectedDuration.id;
                     selectedRateDetails.duration = selectedDuration;
                     selectedRateDetails.selected_spots =1;
@@ -317,24 +329,17 @@ class EditCampaign extends React.Component{
                 total = total* twice
                 this.setState({data:data, total:total})
             }
-            else{
-                data.push({
-                    selected_date:this.state.date, 
-                    no_of_weeks:0,
-                    new:true,
-                    details:[{duration_id:selectedDuration.id, ratecard_id:ratecard_id, duration:selectedDuration, selected_spots:1,ratecard:{id:ratecard_id}, amount:selectedDuration.rate}]
-                });
-                this.setState({data:data, total:selectedDuration.rate})
-            }
             
     }
         
+        console.log("data",data)
     }
 
     handleSpotChange=(id, value)=>{
         let data = this.state.data;
         let total = 0;
         let selectedDate = data.find(item=>item.selected_date === this.state.date);
+        console.log(selectedDate)
         if(selectedDate !== undefined){
             let itemselect = selectedDate.details.find(item=>item.ratecard.id === id);
             if(itemselect !== undefined){
@@ -347,6 +352,7 @@ class EditCampaign extends React.Component{
             let twice = Number(selectedDate.no_of_weeks)+1;
             total = total * twice;
             this.setState({data:data,total:total});
+            console.log(data, total)
         }
         
         
@@ -354,31 +360,93 @@ class EditCampaign extends React.Component{
 
     handleClear=(id)=>{
        let tempData = this.state.data;
+       let newEvents = [...this.state.eventData];
        let newArray =[];
        let newDataArray = []
-       let total =0;
+       let discount = 0;
+       let total = 0;
+       let grand_total = 0;
        let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
        if(selectedDate !== undefined){
-           
            let selectedItem = selectedDate.details.find(item=>item.ratecard.id === id);
            if(selectedItem !== undefined){
+            let deleteItem = selectedDate.details.filter(item=>item.ratecard.id == id);
+            axios.delete(`${domain}/api/subscription-detail/${deleteItem[0].id}/delete`,
+            {headers:{ 'Authorization':`Bearer ${user}`}}).then(res=>{
+            newEvents = newEvents.filter(item=>item.start != this.state.date);
                newArray = selectedDate.details.filter(item=>item.ratecard.id !== id);
                selectedItem.selected_spots = 0;
-                this.setState({data:tempData})
+               console.log(newArray);
                if(newArray.length <= 0){
-                newDataArray = tempData.filter(item=>item.selected_date !== this.state.date);
-                 this.setState({data:newDataArray, total:0})
+                newDataArray = tempData.filter(item=>item.selected_date != this.state.date);
+                for(var i=0; i<newDataArray.length;i++){
+                    grand_total = Number(newDataArray[i].total_amount) + grand_total;
+                    if(newEvents.some(item => item.start == newDataArray[i].selected_date)){
+                        continue;
+                    }
+                    else{
+                        newEvents.push({title:"", start:`${newDataArray[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"});
+                    }
+                }
+
+                for(var t=0; t<this.state.volume.length; t++){
+                    let range = this.state.volume[t].amount_range.split("-");
+                    if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
+                        discount = (this.state.volume[t].percentile/100) * grand_total
+                        console.log(discount)
+                    }
+                }
+                 this.setState({data:newDataArray, total:0, modal:false, eventData:newEvents, total_amount:grand_total, discount_amount:discount})
                }
                else{
                 selectedDate.details=newArray;
+                selectedDate.new = false;
                 for(var i=0; i<selectedDate.details.length; i++){
                 total = total + selectedDate.details[i].duration.rate * selectedDate.details[i].selected_spots;
                 }
                 let twice = Number(selectedDate.no_of_weeks)+1;
                 total = total * twice;
-                this.setState({data:tempData, total:total})
-                  
+                for(var i=0; i<tempData.length;i++){
+                      grand_total = Number(tempData[i].total_amount) + grand_total;
+                    if(newEvents.some(item=>item.start === tempData[i].selected_date)){
+                        continue;
+                    }
+                    else{
+                    newEvents.push({title:"", start:`${tempData[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"});
+                    }
+    
+                }
+                for(var t=0; t<this.state.volume.length; t++){
+                    let range = this.state.volume[t].amount_range.split("-");
+                    if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
+                        discount = (this.state.volume[t].percentile/100) * grand_total
+                        console.log(discount)
+                    }
+                }
+                this.setState({data:tempData, total:total, eventData:newEvents, total_amount:grand_total, discount_amount:discount})   
                }
+            }).catch(error=>{
+                console.log(error.response.status)
+                if(error.response.status == 404){
+                newArray = selectedDate.details.filter(item=>item.ratecard.id !== id);
+                selectedItem.selected_spots = 0;
+                console.log(newArray);
+                if(newArray.length <= 0){
+                    newDataArray = tempData.filter(item=>item.selected_date != this.state.date);
+                    this.setState({data:newDataArray, total:0, modal:false})
+                }
+                else{
+                    selectedDate.details=newArray;
+                    for(var i=0; i<selectedDate.details.length; i++){
+                    total = total + selectedDate.details[i].duration.rate * selectedDate.details[i].selected_spots;
+                    }
+                    let twice = Number(selectedDate.no_of_weeks)+1;
+                    total = total * twice;
+                    this.setState({data:tempData, total:total})
+                    
+                }
+              }
+            })
                
            }
        }
@@ -387,11 +455,10 @@ class EditCampaign extends React.Component{
 
     handleSave=()=>{
         let tempData = this.state.data;
-        let newEvents = [...this.state.eventData]
         let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
         let no_of_weeks = 0;
         let segments =[];
-        let grand_total=0;
+        let newEvents = [...this.state.eventData];
         let discount = 0;
         if(selectedDate !== undefined){
             no_of_weeks = selectedDate.no_of_weeks;
@@ -409,32 +476,25 @@ class EditCampaign extends React.Component{
             segments: segments
         },{headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("res",res.data);
             this.setState({isActive:false})
             let grand_total=0;
             for(var i=0; i<res.data.length;i++){
-                console.log("ampunt",res.data[i].total_amount)
                  grand_total = Number(res.data[i].total_amount) + grand_total;
                 if(newEvents.some(item=>item.start === res.data[i].selected_date)){
                     continue;
                 }
                 else{
                 newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
-                }
-               
+                } 
             }
-
             for(var t=0; t<this.state.volume.length; t++){
                 let range = this.state.volume[t].amount_range.split("-");
-                console.log("ha")
                 if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
-                    console.log("yes")
                     discount = (this.state.volume[t].percentile/100) * grand_total
                     console.log(discount)
                 }
             }
-
-                this.setState({no_of_weeks:0, saveModal:true, data:res.data,total_amount:grand_total, eventData:newEvents, discount_amount:discount});
+                this.setState({no_of_weeks:0, saveModal:true, modalmessage:"Schedule Saved", data:res.data,total_amount:grand_total, eventData:newEvents, discount_amount:discount});
 
                 setTimeout(
                     function(){
@@ -443,6 +503,7 @@ class EditCampaign extends React.Component{
         })
         .catch(error=>{
             this.setState({isActive:false})
+            console.log(error.response.data)
         })
         }
         else{
@@ -456,31 +517,26 @@ class EditCampaign extends React.Component{
             segments: segments
         },{headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("res",res.data);
+            console.log(res.data)
             this.setState({isActive:false})
             let grand_total=0;
             for(var i=0; i<res.data.length;i++){
-                console.log("ampunt",res.data[i].total_amount)
-                 grand_total = Number(res.data[i].total_amount) + grand_total;
+                  grand_total = Number(res.data[i].total_amount) + grand_total;
                 if(newEvents.some(item=>item.start === res.data[i].selected_date)){
                     continue;
                 }
                 else{
-                newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
+                newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"});
                 }
-               
-            }
 
+            }
             for(var t=0; t<this.state.volume.length; t++){
                 let range = this.state.volume[t].amount_range.split("-");
-                console.log("ha")
                 if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
-                    console.log("yes")
                     discount = (this.state.volume[t].percentile/100) * grand_total
-                    console.log(discount)
                 }
             }
-                this.setState({no_of_weeks:0, saveModal:true, data:res.data,total_amount:grand_total, eventData:newEvents, discount_amount:discount});
+                this.setState({no_of_weeks:0, saveModal:true, modalmessage:"Schedule Saved", data:res.data,total_amount:grand_total, eventData:newEvents,discount_amount:discount});
 
                 setTimeout(
                     function(){
@@ -489,70 +545,28 @@ class EditCampaign extends React.Component{
         })
         .catch(error=>{
             this.setState({isActive:false})
+            console.log(error.response.data)
         })
         }
       }
 
-     /*  handleUpload=()=>{
-         this.setState({uploadModal:true, changeText:true})
-        let file  =this.props.location.state.videoFile;
-        console.log(file);
-        let formData = new FormData();
-        formData.append('ad',file);
-        console.log("bdy:",formData)
-        axios({
-            method:'post',
-            headers:{
-                "Authorization":`Bearer ${user}`,
-                "Content-Type":"mutipart/form-data"
-            },
-            data:formData,
-            url:`${domain}/api/${this.props.location.state.title_id}/upload-ad`,
-            onUploadProgress: (progressEvent) => {
-                const {loaded , total} = progressEvent;
-                let percentage = Math.floor(loaded * 100 / total);
-                console.log(percentage)
-                if(percentage<100){
-                    this.setState({percentage:percentage});
-                }
-                else{
-                    this.setState({percentage:100})
-                }
-            }
-            }).then(res=>{
-                    console.log(res.data);
-                    if(res.data.status === "ad saved"){
-                        this.setState({isActive:false, changeText:false});
-                        setTimeout(
-                            function(){
-                                this.setState({uploadModal:false})
-                                this.props.history.push("/client/edit-campaign",{
-                                    id:this.props.location.state.title_id, 
-                                    title:this.state.title
-                                })
-                            }.bind(this),
-                            1500)
-                    }
-                })
-                .catch(error=>{
-                    console.log(error.response.data)
-                    this.setState({isActive:true})
-                })
-     
-    } */
-
-    handleUpload=()=>{
+      handleUpload=()=>{
         this.setState({prompt:false});
         setTimeout(
             function(){
                 this.props.history.push("/client/edit-campaign",{
                     id:this.props.location.state.title_id, 
-                    title:this.state.title
+                    title:this.state.title,
+                    media_house_id:this.props.location.state.media_house_id
                 })
             }.bind(this),
             500)
     }
-    
+
+    handleDeleteCampaign=()=>{
+        axios.delete(`${domain}/api/scheduledAd/${this.props.location.state.title_id}/delete`,
+        {headers:{ 'Authorization':`Bearer ${user}`}})
+    }
      
 
      
@@ -563,10 +577,6 @@ class EditCampaign extends React.Component{
       active = {this.state.isActive}
       spinner={<FadeLoader color={'#4071e1'}/>}
       >
-    {/*   <Prompt
-        when={this.state.prompt}
-        message="You have unsaved changes, are you sure you want to leave?"
-        /> */}
         <Header />
         {/* Page content */}
         <Container className=" mt--9" fluid>
@@ -584,7 +594,7 @@ class EditCampaign extends React.Component{
                 <Col>
 
                 <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {this.state.total_amount}</span></h3>
-                <h3>Expected Discount: <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
+                <h3>Discount Total Amount(Expected): <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
                 <div>
                     <h1 style={{color:"#3788d8",fontSize:"40px", fontWeight:1000}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Available</span></h1>
                     <h1 style={{color:"red",fontSize:"40px", fontWeight:1000, marginTop:"-40px"}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Subscribed To</span></h1>
@@ -592,14 +602,15 @@ class EditCampaign extends React.Component{
                 </Col>
                 <Col>
                     <Button
+                    style={{ float:"right"}}
                     color="info"
-                    style={{float:"right"}}
                     onClick={()=>this.setState({volumeModal:true})}
                     >
                         Volume Discount
                     </Button>
                 </Col>
             </Row>
+            <br/>
             <Row>
             <Col md="12" sm="12" lg="12" xl="12" xs="12">
             <Card className="shadow">
@@ -636,7 +647,17 @@ class EditCampaign extends React.Component{
             <Row>
             <Col md="12" sm="12" lg="12" xl="12" xs="12">    
               <h4 className="text-uppercase">{this.props.location.state.rate_card.title}</h4>
+              {this.props.location.state.file_duration === 0 && this.props.location.state.no_of_words === 1?
+              <div></div>
+              :
+              <>
+              {this.props.location.state.ad_duration === 0?
+              <h4>NUMBER OF WORDS : {this.props.location.state.no_of_words}</h4>
+              :
               <h4 >UPLOADED VIDEO DURATION : {this.state.file_duration} sec</h4>
+              }
+              </>
+              }
               </Col>
               </Row>
               </div>
@@ -650,7 +671,7 @@ class EditCampaign extends React.Component{
               </InputGroup>
                 <br/>
                 {this.state.rateDetails.map((value,index)=>(
-                <form key={value.id}>
+                <form key={index}>
                 <div  style={{marginBottom:"50px" ,paddingBottom:"20px", borderBottom:"1px solid #0000004a"}}>
                 <h3>Time: {value.start_time} - {value.end_time}</h3>
                 <Table bordered>
@@ -671,7 +692,7 @@ class EditCampaign extends React.Component{
                         <td><input type="radio" id={`${item.id}`}  name={`${value.id}`} value={`${item.id}`}
                         checked={this.handleCheck(item.id,this.state.date)}
                         disabled={this.handleCompare(item.duration,item.unit.unit)}
-                         onClick={()=>this.handleRadioChange(item.id, index,value.id, this.state.date)}
+                         onChange={(e)=>this.handleRadioChange(item.id, index,value.id, this.state.date, e.target.checked)}
                          /></td>
                         </tr>
                     ))}
@@ -685,9 +706,9 @@ class EditCampaign extends React.Component{
                     </Col>
                     <Col md="2" className="mr-auto mr-auto">
                         <Button
-                        color="warning"
-                        type="reset"
-                        onClick={()=>this.handleClear(value.id)}
+                            color="warning"
+                            type="reset"
+                            onClick={()=>this.handleClear(value.id)}
                         > 
                             clear
                         </Button>
@@ -703,7 +724,7 @@ class EditCampaign extends React.Component{
                 <ModalFooter style={{display:"inline"}}>
                 {/* <Row>
                 <Col>   
-                <h5>Enter the number of weeks you want to roll over this subscription for this day (optional)</h5>
+                <h5>Enter The Number Of Weeks You Want To Roll Over The Schedule For This Day (optional)</h5>
                 </Col>
                 <Col>
                 <Input type="number" value={this.getRollOver()} onChange={(e)=>this.handelRollOverChange(e.target.value)} 
@@ -713,7 +734,7 @@ class EditCampaign extends React.Component{
                 </Row> */}
                 <Row>
                 <Col md="5">
-                <h4>TOTAL :<span style={{color:"red"}}>GH¢ {this.state.total}</span></h4>
+                <h4>TOTAL : <span style={{color:"red"}}>GH¢ {this.state.total}</span></h4>
                 </Col>
                 <Col md="4">
 
@@ -729,31 +750,30 @@ class EditCampaign extends React.Component{
             </Modal> 
             <Modal isOpen={this.state.saveModal}>
             <ModalHeader  style={{textAlign:"center", display:"block"}}>
-                <h4>Details Saved </h4>
+                <h4> {this.state.modalmessage} </h4>
             </ModalHeader>
           </Modal>
           <Modal isOpen={this.state.uploadModal}>
           {this.state.changeText?
             <ModalHeader style={{textAlign:"center", display:"block"}}>
-            Creating subscription
+            Creating Campaign
             <Progress value={this.state.percentage} style={{marginTop:"10px"}}/>
             </ModalHeader>
           :
             <ModalHeader style={{textAlign:"center", display:"block"}}>
-            <i className="fa fa-check mr-1" style={{color:"green", fontSize:"25px"}}/>Subscription Created!!
+            <i className="fa fa-check mr-1" style={{color:"green", fontSize:"25px"}}/>Campaign Created!!
             </ModalHeader>
             }
           </Modal>
 
           <Modal isOpen={this.state.volumeModal}  style={{ maxWidth:"90%"}} toggle={()=>this.VolumeCollapseToggle()}>
-          
               <ModalHeader>
             <h3>{this.props.location.state.media_house_name}</h3>
               </ModalHeader>
               <ModalBody>
               <Container fluid>
-              {this.state.volume.length<=0?
-              <Row>
+            {this.state.volume.length<=0?
+            <Row>
                 <Col  style={{textAlign:"center"}}>
                     <h4>No Volume Discount</h4>
                 </Col>
@@ -761,6 +781,7 @@ class EditCampaign extends React.Component{
             :
             <Row>
             <Col lg="12" xs="12" md="12" sm="12" xl="12">
+            <br/>
             <Table striped bordered>
             <thead>
                 <tr>
@@ -776,12 +797,12 @@ class EditCampaign extends React.Component{
                 <td>GH¢ {value.amount_range}</td>
                 <td>{value.percentile}%</td>
                 </tr>
-            ))}
+                ))}
             </tbody>
             </Table>
             </Col>
             </Row>
-              }
+            }
             </Container>
               </ModalBody>
               <ModalFooter>
@@ -802,3 +823,4 @@ class EditCampaign extends React.Component{
 
 
 export default EditCampaign;
+

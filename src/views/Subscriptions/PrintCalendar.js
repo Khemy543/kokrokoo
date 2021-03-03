@@ -54,6 +54,7 @@ class PrintCalender extends React.Component{
         changeText:false,
         uploadModal:false,
         volumeModal:false,
+        modalmessage:"Details Saved",
         prompt:true,
         volume:[],
         discount_amount:0
@@ -169,7 +170,7 @@ class PrintCalender extends React.Component{
     
 
     handleRadioChange=(index, id,checked)=>{
-        console.log("starting");
+        console.log("starting", checked, id);
         let tempData = this.state.data;
         let tempDetails = this.state.rateDetails;
         let selected = tempDetails.find(item =>item.id === id);
@@ -177,53 +178,68 @@ class PrintCalender extends React.Component{
         let total = 0;
         console.log(selected)
         let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
-        console.log("selectedDate",selectedDate);
-        if(selectedDate && selectedDate.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
-          selectedDate.details = selectedDate.details.filter(item=>item.ratecard_id !== id || (item.ratecard && item.ratecard.id !== id));
-
-          for(var i=0; i<selectedDate.details.length; i++){
-            subtotal = subtotal + Number(selectedDate.details[i].amount)
-          }
-          console.log(subtotal);
-          selectedDate.total_amount = subtotal
-          for(var t=0; t<tempData.length; t++){
-            total = total + Number(tempData[t].total_amount)
-          }
-          console.log("total",total)
-
-          this.setState({data:tempData, total:total, dayTotal:subtotal})
-
-        }
-        else{
-        if(selectedDate === undefined){
-          tempData.push({new:true,selected_date:this.state.date,no_of_weeks:0, total_amount:selected.cost, details:[
-            {
-              ratecard_id:selected.id,
-              amount:selected.cost
+        if(checked){
+          if(selectedDate === undefined){
+            tempData.push({new:true,selected_date:this.state.date,no_of_weeks:0, total_amount:selected.cost, details:[
+              {
+                ratecard_id:selected.id,
+                amount:selected.cost
+              }
+            ]});
+            console.log(tempData);
+            for(var t=0; t<tempData.length; t++){
+              total = total + Number(tempData[t].total_amount)
             }
-          ]});
-          console.log(tempData);
-          for(var t=0; t<tempData.length; t++){
-            total = total + Number(tempData[t].total_amount)
+           this.setState({data:tempData, total:total, dayTotal:selected.cost});
           }
-         this.setState({data:tempData, total:total, dayTotal:selected.cost});
-        }
-        else{
-          selectedDate.details.push({ratecard_id:selected.id, amount:selected.cost});
-          for(var i=0; i<selectedDate.details.length; i++){
-            subtotal = subtotal + Number(selectedDate.details[i].amount)
+          else{
+            selectedDate.details.push({ratecard_id:selected.id, amount:selected.cost});
+            for(var i=0; i<selectedDate.details.length; i++){
+              subtotal = subtotal + Number(selectedDate.details[i].amount)
+            }
+            console.log(subtotal);
+            selectedDate.total_amount = subtotal
+            for(var t=0; t<tempData.length; t++){
+              total = total + Number(tempData[t].total_amount)
+            }
+            console.log("total",total)
+  
+            this.setState({data:tempData, total:total, dayTotal:subtotal}) 
           }
-          console.log(subtotal);
-          selectedDate.total_amount = subtotal
-          for(var t=0; t<tempData.length; t++){
-            total = total + Number(tempData[t].total_amount)
+        }else{
+          if(selectedDate && selectedDate.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
+            let deleteItem = selectedDate.details.filter(item=> item.ratecard_id === id || (item.ratecard && item.ratecard.id === id));
+            let deleteId = deleteItem[0].id;
+            console.log("id",deleteId, deleteItem);
+            axios.delete(`${domain}/api/subscription-detail/${deleteId}/delete`,
+            {headers:{ 'Authorization':`Bearer ${user}`}})
+            .then(res=>{
+              console.log(res.data);
+              selectedDate.details = selectedDate.details.filter(item=> item.ratecard && item.ratecard.id !== id);
+              console.log("selectedDate",selectedDate);
+              for(var i=0; i<selectedDate.details.length; i++){
+                subtotal = subtotal + Number(selectedDate.details[i].amount)
+              }
+              console.log(subtotal);
+              selectedDate.total_amount = subtotal;
+              let key = tempData.map(function(e) { return e.selected_date; }).indexOf(this.state.date);
+              console.log('key',key);
+              tempData[key] = selectedDate
+              for(var t=0; t<tempData.length; t++){
+                total = total + Number(tempData[t].total_amount)
+              }
+              console.log("total",tempData)
+    
+              this.setState({data:tempData, total:total, dayTotal:subtotal})
+  
+            })
+            .catch(error=>{
+              console.log(error)
+            })
           }
-          console.log("total",total)
-
-          this.setState({data:tempData, total:total, dayTotal:subtotal})
+          
         }
       }
-    }
 
     handleCheck=(id)=>{
       let tempData = this.state.data;
@@ -359,6 +375,13 @@ class PrintCalender extends React.Component{
       }
 
       handleUpload=()=>{
+        if(this.state.data.length <= 0){
+          this.setState({saveModal:true, modalmessage:"No Schedule Created"})
+          setTimeout(
+            function(){
+                this.setState({saveModal:false})
+            }.bind(this),2000)
+        }else{
         console.log("......")
         this.setState({uploadModal:true, changeText:true})
        let file  =this.props.location.state.videoFile;
@@ -390,7 +413,11 @@ class PrintCalender extends React.Component{
                        this.setState({isActive:false, changeText:false,prompt:false});
                        setTimeout(
                            function(){
-                               this.props.history.push("/client/edit-printcampaign",{id:this.props.location.state.title_id, title:this.state.title})
+                               this.props.history.push("/client/edit-printcampaign",{
+                                 id:this.props.location.state.title_id, 
+                                 title:this.state.title,
+                                media_house_id:this.props.location.state.media_house_id
+                                })
                            }.bind(this),2000)
                })
                .catch(error=>{
@@ -399,6 +426,7 @@ class PrintCalender extends React.Component{
                })
     
    }
+  }
    
    handleDeleteCampaign=()=>{
     axios.delete(`${domain}/api/scheduledAd/${this.props.location.state.title_id}/delete`,
@@ -447,7 +475,7 @@ class PrintCalender extends React.Component{
               <Row>
                 <Col>
                 <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {this.state.total_amount}</span></h3>
-                <h3>Expected Discount: <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
+                <h3>Discount Total Amount(Expected): <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
                 
                 <h1 style={{color:"#3788d8",fontSize:"40px", fontWeight:1000}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Available</span></h1>
                     <h1 style={{color:"red",fontSize:"40px", fontWeight:1000, marginTop:"-40px"}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Subscribed To</span></h1>
@@ -578,7 +606,7 @@ class PrintCalender extends React.Component{
                      
             <Modal isOpen={this.state.saveModal}>
             <ModalHeader  style={{textAlign:"center", display:"block"}}>
-                <h4>Details Saved </h4>
+                <h4> {this.state.modalmessage} </h4>
             </ModalHeader>
           </Modal>
           <Modal isOpen={this.state.uploadModal}>

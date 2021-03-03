@@ -7,7 +7,7 @@ import {
   Row,
   Col,
   Button,
-  Spinner, CardHeader, CardFooter,Table, Modal, ModalHeader,ModalFooter
+  Spinner, CardHeader, CardFooter,Table, Modal, ModalHeader,ModalFooter,ModalBody
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.js";
@@ -26,12 +26,16 @@ class EditSubscription extends React.Component{
         deleteId:null,
         modal:false,
         detailsArray:[],
-        index:null
+        index:null,
+        discount_amount:0,
+        volumeModal:false,
+        volume:[]
     }
 
 componentDidMount(){
     this.setState({isActive:true})
     let total = 0;
+    let discount = 0;
     axios.get(`${domain}/api/subscription/${this.props.location.state.id}/details`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
@@ -39,7 +43,21 @@ componentDidMount(){
       for(var i=0; i<res.data.length; i++){
         total = total + Number(res.data[i].total_amount);
       }
-      this.setState({selectedSub:res.data,total:total,isActive:false})
+      axios.get(`${domain}/api/company/${this.props.location.state.media_house_id}/volume-discounts`,
+        {headers:{ 'Authorization':`Bearer ${user}`}})
+        .then(response=>{
+            this.setState({volume:response.data});
+            for(var t=0; t<response.data.length; t++){
+              let range = response.data[t].amount_range.split("-");
+              console.log(response.data[t].amount_range)
+              if(Number(range[0])<=total && total<=Number(range[1])){
+                  console.log("yes")
+                  discount = (response.data[t].percentile/100) * total
+                  console.log(discount)
+              }
+          }
+          this.setState({selectedSub:res.data,isActive:false, total:total,discount_amount:discount})
+        });
     })
     .catch(error=>{
       console.log(error)
@@ -50,34 +68,41 @@ componentDidMount(){
 handleDelete=(id)=>{
   console.log(id)
   let tempData = this.state.selectedSub;
-  let newData = [];
   let total = 0;
   let GrandTotal = 0;
+  let discount = 0;
   axios.delete(`${domain}/api/subscription-detail/${id}/delete`,
   {headers:{ 'Authorization':`Bearer ${user}`}})
   .then(res=>{
     console.log(res.data);
     let newDetails = this.state.detailsArray.filter(item=>item.id !==id);
     if(newDetails.length<=0){
-      tempData = tempData.filter(item=> item.id === tempData[this.state.index].id);
-      console.log('index',tempData)
+      tempData = tempData.filter(item=> item.id != tempData[this.state.index].id);
+      console.log(tempData)
       for(var k=0; k<tempData.length; k++){
         GrandTotal = GrandTotal + Number(tempData[k].total_amount)
       }
     }else{
     tempData[this.state.index].details = newDetails;
-    console.log("after",tempData)
     for(var i=0; i<newDetails.length; i++){
       total = total + Number(newDetails[i].amount);
     }
-    tempData[this.state.index].total_amount = total;
+    tempData[this.state.index].total_amount = GrandTotal;
     console.log(total, tempData)
 
     for(var k=0; k<tempData.length; k++){
-      GrandTotal = GrandTotal + Number(tempData[k].total_amount)
+      GrandTotal = GrandTotal + Number(tempData[k].total_amount);
     }
   }
-    this.setState({selectedSub:tempData, total:GrandTotal, modal:false})
+  for(var t=0; t<this.state.volume.length; t++){
+    let range = this.state.volume[t].amount_range.split("-");
+    if(Number(range[0])<=total && total<=Number(range[1])){
+        console.log("yes")
+        discount = (this.state.volume[t].percentile/100) * GrandTotal
+        console.log(discount)
+    }
+  }
+    this.setState({selectedSub:tempData, total:GrandTotal, modal:false, discount_amount:discount})
   })
 }
 render(){
@@ -100,17 +125,28 @@ render(){
             <Col md="12" xl="12" lg="12" xs="12" sm="12">
             <Card>
                 <CardHeader>
+                <CardHeader  style={{ maxWidth:"100%"}}>
                 <Row>
                   <Col>
-                  
                   <h4 style={{textTransform:"uppercase"}}>{this.state.title}</h4>
                   </Col>
                   <Col>
-                  <h3>Total Campaign Amount : <span style={{color:'red'}}>GH¢ {this.state.total}</span></h3>
+                  <h3>Total Amount : <span style={{color:'red'}}>GH¢ {this.state.total}</span></h3>
+                  <h3>Discount Total Amount(Expected): <span style={{color:'red'}}>GH¢ {this.state.discount_amount}</span></h3>
+                  </Col>
+                  <Col>
+                  <Button
+                    style={{ float:"right"}}
+                    color="info"
+                    onClick={()=>this.setState({volumeModal:true})}
+                    >
+                        Volume Discount
+                    </Button>
                   </Col>
                 </Row>
                 </CardHeader>
-                    <CardBody>
+                </CardHeader>
+                    <CardBody style={{overflowX:"scroll"}}>
                     {this.state.selectedSub.map((item,key)=>(
                     <Row>
                         <Col md="12">
@@ -168,6 +204,55 @@ render(){
                         <Button color="info" onClick={()=>this.setState({modal:false})}>No</Button>
                       </ModalFooter>
                     </Modal>
+
+                    <Modal isOpen={this.state.volumeModal}  style={{ maxWidth:"90%"}} toggle={()=>this.VolumeCollapseToggle()}>
+              <ModalHeader>
+            <h3>{this.props.location.state.media_house_name}</h3>
+              </ModalHeader>
+              <ModalBody>
+              <Container fluid>
+            {this.state.volume.length<=0?
+            <Row>
+                <Col  style={{textAlign:"center"}}>
+                    <h4>No Volume Discount</h4>
+                </Col>
+            </Row>
+            :
+            <Row>
+            <Col lg="12" xs="12" md="12" sm="12" xl="12">
+            <br/>
+            <Table striped bordered>
+            <thead>
+                <tr>
+                <th>#</th>
+                <th style={{fontWeight:1000}}>Amount Range (Min-Max)</th>
+                <th style={{fontWeight:1000}}>Discount Offer(%)</th>
+                </tr>
+            </thead>
+            <tbody>
+            {this.state.volume.map((value,key)=>(
+                <tr>
+                <th scope="row">{key+1}</th>
+                <td>GH¢ {value.amount_range}</td>
+                <td>{value.percentile}%</td>
+                </tr>
+                ))}
+            </tbody>
+            </Table>
+            </Col>
+            </Row>
+            }
+            </Container>
+              </ModalBody>
+              <ModalFooter>
+                <Button
+                color="danger"
+                onClick={()=>this.setState({volumeModal:false})}
+                >
+                    Close
+                </Button>
+              </ModalFooter>
+          </Modal>
                 </Card>
             </Col>
             </Row>

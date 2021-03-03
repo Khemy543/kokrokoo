@@ -543,51 +543,6 @@ class VideoResubscribeCalender extends React.Component{
       }
 
       handleUpload=()=>{
-         /* this.setState({uploadModal:true, changeText:true})
-        let file  =this.props.location.state.videoFile;
-        console.log(file)
-        console.log(file, this.state.file_duration);
-        let formData = new FormData();
-        formData.append('ad',file);
-        console.log("bdy:",formData)
-        axios({
-            method:'post',
-            headers:{
-                "Authorization":`Bearer ${user}`,
-                "Content-Type":"mutipart/form-data"
-            },
-            data:formData,
-            url:`${domain}/api/${this.props.location.state.title_id}/upload-ad/${this.state.file_duration}`,
-            onUploadProgress: (progressEvent) => {
-                const {loaded , total} = progressEvent;
-                let percentage = Math.floor(loaded * 100 / total);
-                console.log(percentage)
-                if(percentage<100){
-                    this.setState({percentage:percentage});
-                }
-                else{
-                    this.setState({percentage:100})
-                }
-            }
-            }).then(res=>{
-                    console.log(res.data);
-                    if(res.data.status === "file saved"){
-                        this.setState({isActive:false, changeText:false, prompt:false});
-                        setTimeout(
-                            function(){
-                                this.props.history.push("/client/edit-campaign",{
-                                    id:this.props.location.state.title_id, 
-                                    title:this.state.title
-                                })
-                            }.bind(this),
-                            1500)
-                    }
-                })
-                .catch(error=>{
-                    console.log(error.response.data)
-                    this.setState({isActive:true})
-                }) */
-
                 axios.post(`${domain}/api/complete/${this.props.location.state.title_id}/resubscribe`,null,
                 {headers:{
                     "Authorization":`Bearer ${user}`,

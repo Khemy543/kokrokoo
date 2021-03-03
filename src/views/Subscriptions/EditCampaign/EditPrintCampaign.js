@@ -1,8 +1,8 @@
 /* eslint-disable no-loop-func */
 
 import React from "react";
-import {Link} from "react-router-dom";/* 
-import NavigationPrompt from "react-router-navigation-prompt"; */
+import {Link} from "react-router-dom";
+import NavigationPrompt from "react-router-navigation-prompt";
 // reactstrap components
 import {
   Card,
@@ -27,7 +27,8 @@ import data from "data/volumeData";
 
 let user =localStorage.getItem('access_token');
 var domain = "https://backend.demo.kokrokooad.com";
-class EditPrintCalender extends React.Component{
+
+class PrintCalender extends React.Component{
     constructor(props) {
         super(props);
         this.myRef = React.createRef();
@@ -42,6 +43,7 @@ class EditPrintCalender extends React.Component{
         title: this.props.location.state.videoTitle,
         file_duration:Math.round(this.props.location.state.file_duration),
         total:0,
+        dayTotal:0,
         subscriptionid:null,
         data:[],
         no_of_weeks:"",
@@ -52,7 +54,7 @@ class EditPrintCalender extends React.Component{
         changeText:false,
         uploadModal:false,
         volumeModal:false,
-        prompt:true,
+        modalmessage:"Details Saved",
         volume:[],
         discount_amount:0
     }
@@ -102,26 +104,29 @@ class EditPrintCalender extends React.Component{
                   newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
                     grand_total = grand_total + Number(res.data[i].total_amount);
                 }
+
                 console.log("grand",grand_total);
                 for(var t=0; t<this.state.volume.length; t++){
-                    let range = this.state.volume[t].amount_range.split("-");
-                    console.log(this.state.volume[t].amount_range)
-                    if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
-                        console.log("yes")
-                        discount = (this.state.volume[t].percentile/100) * grand_total
-                        console.log(discount)
-                    }
+                let range = this.state.volume[t].amount_range.split("-");
+                console.log(this.state.volume[t].amount_range)
+                if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
+                    console.log("yes")
+                    discount = (this.state.volume[t].percentile/100) * grand_total
+                    console.log(discount)
                 }
-                this.setState({data:res.data, total_amount:grand_total, eventData:newEvents, isActive:false, discount_amount:discount})
+            }
+                this.setState({data:res.data, total_amount:grand_total, eventData:newEvents, isActive:false,discount_amount:discount})
             })
         })
         .catch(error=>{
                 console.log(error)
         });
+
       }
 
       handleDateClick=(calEvent, jsEvent, view)=>{
         let total = 0; 
+        let dayTotal = 0
         let no_of_weeks=0;
        console.log("check date:",calEvent.event.start);
        let current_datetime = calEvent.event.start;
@@ -143,11 +148,11 @@ class EditPrintCalender extends React.Component{
        if(selectedDate !== undefined){
           no_of_weeks = selectedDate.no_of_weeks;
           let twice = Number(selectedDate.no_of_weeks) +1;
-          total = selectedDate.ratecard.cost * twice
+          total = selectedDate.total_amount * twice
           console.log(selectedDate)
        }
        if(Number(id) !== 0){
-        this.setState({rateDetails:selectedCard, date:formatted_date,day_id:Number(calEvent.event._def.publicId) ,modal:true, total:total, no_of_weeks:no_of_weeks});
+        this.setState({rateDetails:selectedCard, date:formatted_date,day_id:Number(calEvent.event._def.publicId) ,modal:true, dayTotal:total, no_of_weeks:no_of_weeks});
       
        }
      }
@@ -163,79 +168,94 @@ class EditPrintCalender extends React.Component{
 
     
 
-     handleRadioChange=(index, id,checked)=>{
-      console.log("starting");
-      let tempData = this.state.data;
-      let tempDetails = this.state.rateDetails;
-      let selected = tempDetails.find(item =>item.id === id);
-      let subtotal = 0;
-      let total = 0;
-      console.log(selected)
-      let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
-      console.log("selectedDate",selectedDate);
-      if(selectedDate && selectedDate.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
-        selectedDate.details = selectedDate.details.filter(item=>item.ratecard_id !== id || (item.ratecard && item.ratecard.id !== id));
-
-        for(var i=0; i<selectedDate.details.length; i++){
-          subtotal = subtotal + Number(selectedDate.details[i].amount)
-        }
-        console.log(subtotal);
-        selectedDate.total_amount = subtotal
-        for(var t=0; t<tempData.length; t++){
-          total = total + Number(tempData[t].total_amount)
-        }
-        console.log("total",total)
-
-        this.setState({data:tempData, total:total, dayTotal:subtotal})
-
-      }
-      else{
-      if(selectedDate === undefined){
-        tempData.push({new:true,selected_date:this.state.date,no_of_weeks:0, total_amount:selected.cost, details:[
-          {
-            ratecard_id:selected.id,
-            amount:selected.cost
+    handleRadioChange=(index, id,checked)=>{
+        console.log("starting", checked, id);
+        let tempData = this.state.data;
+        let tempDetails = this.state.rateDetails;
+        let selected = tempDetails.find(item =>item.id === id);
+        let subtotal = 0;
+        let total = 0;
+        console.log(selected)
+        let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
+        if(checked){
+          if(selectedDate === undefined){
+            tempData.push({new:true,selected_date:this.state.date,no_of_weeks:0, total_amount:selected.cost, details:[
+              {
+                ratecard_id:selected.id,
+                amount:selected.cost
+              }
+            ]});
+            console.log(tempData);
+            for(var t=0; t<tempData.length; t++){
+              total = total + Number(tempData[t].total_amount)
+            }
+           this.setState({data:tempData, total:total, dayTotal:selected.cost});
           }
-        ]});
-        console.log(tempData);
-        for(var t=0; t<tempData.length; t++){
-          total = total + Number(tempData[t].total_amount)
+          else{
+            selectedDate.details.push({ratecard_id:selected.id, amount:selected.cost});
+            for(var i=0; i<selectedDate.details.length; i++){
+              subtotal = subtotal + Number(selectedDate.details[i].amount)
+            }
+            console.log(subtotal);
+            selectedDate.total_amount = subtotal
+            for(var t=0; t<tempData.length; t++){
+              total = total + Number(tempData[t].total_amount)
+            }
+            console.log("total",total)
+  
+            this.setState({data:tempData, total:total, dayTotal:subtotal}) 
+          }
+        }else{
+          if(selectedDate && selectedDate.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
+            let deleteItem = selectedDate.details.filter(item=> item.ratecard_id === id || (item.ratecard && item.ratecard.id === id));
+            let deleteId = deleteItem[0].id;
+            console.log("id",deleteId, deleteItem);
+            axios.delete(`${domain}/api/subscription-detail/${deleteId}/delete`,
+            {headers:{ 'Authorization':`Bearer ${user}`}})
+            .then(res=>{
+              console.log(res.data);
+              selectedDate.details = selectedDate.details.filter(item=> item.ratecard && item.ratecard.id !== id);
+              console.log("selectedDate",selectedDate);
+              for(var i=0; i<selectedDate.details.length; i++){
+                subtotal = subtotal + Number(selectedDate.details[i].amount)
+              }
+              console.log(subtotal);
+              selectedDate.total_amount = subtotal;
+              let key = tempData.map(function(e) { return e.selected_date; }).indexOf(this.state.date);
+              console.log('key',key);
+              tempData[key] = selectedDate
+              for(var t=0; t<tempData.length; t++){
+                total = total + Number(tempData[t].total_amount)
+              }
+              console.log("total",tempData)
+    
+              this.setState({data:tempData, total:total, dayTotal:subtotal})
+  
+            })
+            .catch(error=>{
+              console.log(error)
+            })
+          }
+          
         }
-       this.setState({data:tempData, total:total, dayTotal:selected.cost});
+      }
+
+    handleCheck=(id)=>{
+      let tempData = this.state.data;
+      let selected = tempData.find(item=>item.selected_date === this.state.date);
+      if(selected === undefined){
+        return false;
       }
       else{
-        selectedDate.details.push({ratecard_id:selected.id, amount:selected.cost});
-        for(var i=0; i<selectedDate.details.length; i++){
-          subtotal = subtotal + Number(selectedDate.details[i].amount)
-        }
-        console.log(subtotal);
-        selectedDate.total_amount = subtotal
-        for(var t=0; t<tempData.length; t++){
-          total = total + Number(tempData[t].total_amount)
-        }
-        console.log("total",total)
-
-        this.setState({data:tempData, total:total, dayTotal:subtotal})
+      if(selected.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
+          return true;
+      }
+      else{
+        return false
       }
     }
+      
   }
-
-  handleCheck=(id)=>{
-    let tempData = this.state.data;
-    let selected = tempData.find(item=>item.selected_date === this.state.date);
-    if(selected === undefined){
-      return false;
-    }
-    else{
-    if(selected.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
-        return true;
-    }
-    else{
-      return false
-    }
-  }
-    
-}
 
   getRollOver =()=>{
     let tempData = this.state.data;
@@ -257,158 +277,114 @@ class EditPrintCalender extends React.Component{
     }
 }
 
-handleSave=()=>{
-  let total = 0;
-  let tempData = this.state.data;
-  let newEvents=[...this.state.eventData]
-  let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
-  let discount = 0;
-  console.log(selectedDate)
-  this.setState({isActive:false})
-  if(selectedDate.new === true){
-    axios.post(`${domain}/api/subscription-store/${this.props.location.state.title_id}/details`,
-  {
-      subscription_title:this.state.title,
-      total_amount:selectedDate.total_amount,
-      no_of_weeks:selectedDate.no_of_weeks,
-      selected_date:this.state.date,
-      day_id:this.state.day_id,
-      segments:selectedDate.details
-  },{headers:{ 'Authorization':`Bearer ${user}`}})
-  .then(res=>{
-      console.log("backdata",res.data);
-      for(var i =0; i<res.data.length;i++){
-        total = total + Number(res.data[i].total_amount);
-        if(newEvents.some(item=>item.start === res.data[i].selected_date)){
-          continue;
-      }
-      else{
-      newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
-      }
-      }
-      
-      for(var t=0; t<this.state.volume.length; t++){
-        let range = this.state.volume[t].amount_range.split("-");
-        console.log("ha")
-        if(Number(range[0])<=total && total<=Number(range[1])){
-            console.log("yes")
-            discount = (this.state.volume[t].percentile/100) * total
-            console.log(discount)
+    handleSave=()=>{
+        let total = 0;
+        let tempData = this.state.data;
+        let newEvents=[...this.state.eventData]
+        let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
+        let discount = 0;
+        console.log(selectedDate)
+        this.setState({isActive:false})
+        if(selectedDate.new === true){
+          axios.post(`${domain}/api/subscription-store/${this.props.location.state.title_id}/details`,
+        {
+            subscription_title:this.state.title,
+            total_amount:selectedDate.total_amount,
+            no_of_weeks:selectedDate.no_of_weeks,
+            selected_date:this.state.date,
+            day_id:this.state.day_id,
+            segments:selectedDate.details
+        },{headers:{ 'Authorization':`Bearer ${user}`}})
+        .then(res=>{
+            console.log("backdata",res.data);
+            for(var i =0; i<res.data.length;i++){
+              total = total + Number(res.data[i].total_amount);
+              if(newEvents.some(item=>item.start === res.data[i].selected_date)){
+                continue;
+            }
+            else{
+            newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
+            }
+            }
+
+            for(var t=0; t<this.state.volume.length; t++){
+              let range = this.state.volume[t].amount_range.split("-");
+              console.log("ha")
+              if(Number(range[0])<=total && total<=Number(range[1])){
+                  console.log("yes")
+                  discount = (this.state.volume[t].percentile/100) * total
+                  console.log(discount)
+              }
+          }
+            
+            this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
+
+            setTimeout(
+                function(){
+                    this.setState({saveModal:false,modal:false})
+                }.bind(this),2000)
+        })
+        .catch(error=>{
+            this.setState({isActive:false})
+            console.log(error.response.data)
+        })
         }
-    }
+        else{
+          axios.patch(`${domain}/api/subscription/${selectedDate.id}/update`,
+        {
+          subscription_title:this.state.title,
+          total_amount:selectedDate.total_amount,
+          no_of_weeks:selectedDate.no_of_weeks,
+          selected_date:this.state.date,
+          day_id:this.state.day_id,
+          segments:selectedDate.details
+        },{headers:{ 'Authorization':`Bearer ${user}`}})
+        .then(res=>{
+            console.log(res.data);
+            for(var i =0; i<res.data.length;i++){
+              total = total + Number(res.data[i].total_amount)
+              if(newEvents.some(item=>item.start === res.data[i].selected_date)){
+                continue;
+            }
+            else{
+            newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
+            }
+            }
+            for(var t=0; t<this.state.volume.length; t++){
+              let range = this.state.volume[t].amount_range.split("-");
+              console.log("ha")
+              if(Number(range[0])<=total && total<=Number(range[1])){
+                  console.log("yes")
+                  discount = (this.state.volume[t].percentile/100) * total
+                  console.log(discount)
+              }
+          }
+            this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
 
-      this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents,discount_amount:discount});
-
-      setTimeout(
-          function(){
-              this.setState({saveModal:false,modal:false})
-          }.bind(this),2000)
-  })
-  .catch(error=>{
-      this.setState({isActive:false})
-      console.log(error.response.data)
-  })
-  }
-  else{
-    axios.patch(`${domain}/api/subscription/${selectedDate.id}/update`,
-  {
-    subscription_title:this.state.title,
-    total_amount:selectedDate.total_amount,
-    no_of_weeks:selectedDate.no_of_weeks,
-    selected_date:this.state.date,
-    day_id:this.state.day_id,
-    segments:selectedDate.details
-  },{headers:{ 'Authorization':`Bearer ${user}`}})
-  .then(res=>{
-      console.log(res.data);
-      for(var i =0; i<res.data.length;i++){
-        total = total + Number(res.data[i].total_amount)
-        if(newEvents.some(item=>item.start === res.data[i].selected_date)){
-          continue;
-      }
-      else{
-      newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
-      }
-      }
-
-      for(var t=0; t<this.state.volume.length; t++){
-        let range = this.state.volume[t].amount_range.split("-");
-        console.log("ha")
-        if(Number(range[0])<=total && total<=Number(range[1])){
-            console.log("yes")
-            discount = (this.state.volume[t].percentile/100) * total
-            console.log(discount)
+            setTimeout(
+                function(){
+                    this.setState({saveModal:false,modal:false})
+                }.bind(this),2000)
+        })
+        .catch(error=>{
+            this.setState({isActive:false})
+            console.log(error.response.data)
+        })
         }
-    }
+      }
 
-      this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents,discount_amount:discount});
-
-      setTimeout(
-          function(){
-              this.setState({saveModal:false,modal:false})
-          }.bind(this),2000)
-  })
-  .catch(error=>{
-      this.setState({isActive:false})
-      console.log(error.response.data)
-  })
-  }
-}
-      /* handleUpload=()=>{
-        console.log("......")
-        this.setState({uploadModal:true, changeText:true})
-       let file  =this.props.location.state.videoFile;
-       console.log(file);
-       let formData = new FormData();
-       formData.append('ad',file);
-       console.log("bdy:",formData)
-       axios({
-           method:'post',
-           headers:{
-               "Authorization":`Bearer ${user}`,
-               "Content-Type":"mutipart/form-data"
-           },
-           data:formData,
-           url:`${domain}/api/${this.props.location.state.title_id}/upload-ad`,
-           onUploadProgress: (progressEvent) => {
-               const {loaded , total} = progressEvent;
-               let percentage = Math.floor(loaded * 100 / total);
-               console.log(percentage)
-               if(percentage<100){
-                   this.setState({percentage:percentage});
-               }
-               else{
-                   this.setState({percentage:100})
-               }
-           }
-           }).then(res=>{
-                   console.log(res.data);
-                   if(res.data.status === "ad saved"){
-                       this.setState({isActive:false, changeText:false,prompt:false});
-                       setTimeout(
-                           function(){
-                               this.props.history.push("/client/edit-printcampaign",{id:this.props.location.state.title_id, title:this.state.title})
-                           }.bind(this),2000)
-                   }
-               })
-               .catch(error=>{
-                   console.log(error)
-                   this.setState({isActive:true})
-               })
-    
-   } */
-
-   handleUpload=()=>{
-    this.setState({prompt:false});
-    setTimeout(
-        function(){
-            this.props.history.push("/client/edit-printcampaign",{
-                id:this.props.location.state.title_id, 
-                title:this.state.title
-            })
-        }.bind(this),
-        500)
-}
+      handleUpload=()=>{
+        this.setState({prompt:false});
+        setTimeout(
+            function(){
+                this.props.history.push("/client/edit-printcampaign",{
+                    id:this.props.location.state.title_id, 
+                    title:this.state.title,
+                    media_house_id:this.props.location.state.media_house_id
+                })
+            }.bind(this),
+            500)
+      }
    
    handleDeleteCampaign=()=>{
     axios.delete(`${domain}/api/scheduledAd/${this.props.location.state.title_id}/delete`,
@@ -422,22 +398,6 @@ handleSave=()=>{
     render(){
     return (
       <>
-      {/* <NavigationPrompt when={this.state.prompt} 
-        afterConfirm={()=>this.handleDeleteCampaign()}
-        disableNative={true}
-        >
-        {({ onConfirm, onCancel }) => (
-            <Modal isOpen={this.state.prompt}>
-                <ModalHeader>
-                You have unsaved changes, are you sure you want to leave?
-                </ModalHeader>
-                <ModalFooter>
-                    <Button color="danger" onClick={onConfirm}>Yes</Button>
-                    <Button color="info" onClick={onCancel}>No</Button>
-                </ModalFooter>
-            </Modal>
-        )}
-        </NavigationPrompt>; */}
         <Header />
         {/* Page content */}
         <Container className=" mt--9" fluid>
@@ -448,6 +408,7 @@ handleSave=()=>{
             </Col>
           </Row>
           :
+
           <Row>
             <Col md="12">
 
@@ -455,8 +416,9 @@ handleSave=()=>{
             <Col md="12" sm="12" lg="12" xs="12" xl="12">
               <Row>
                 <Col>
-                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {this.state.total_amount}</span></h3>  
-                <h3>Expected Discount: <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
+                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {this.state.total_amount}</span></h3>
+                <h3>Discount Total Amount(Expected): <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
+                
                 <h1 style={{color:"#3788d8",fontSize:"40px", fontWeight:1000}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Available</span></h1>
                     <h1 style={{color:"red",fontSize:"40px", fontWeight:1000, marginTop:"-40px"}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Subscribed To</span></h1>
 
@@ -543,9 +505,9 @@ handleSave=()=>{
                         <td>{item.size}</td>
                         <td>{item.cost}</td>
                         <td>{item.page_section}</td>
-                        <td><input type="radio" id={`${item.id}`}  name="print" value={`${item.id}`}
-                        checked={this.handleCheck(item.id, this.state.date)}
-                         onClick={()=>this.handleRadioChange(key,item.id)}
+                        <td><input type="checkbox" id={`${item.id}`}  value={`${item.id}`}
+                        checked={this.handleCheck(item.id)}
+                         onChange={(e)=>this.handleRadioChange(key,item.id,e.target.checked)}
                          /></td>
                         </tr>
                     ))}
@@ -570,7 +532,7 @@ handleSave=()=>{
                 </Row> */}
                 <Row>
                 <Col md="5">
-                <h4>TOTAL :<span style={{color:"red"}}>GH¢ {this.state.total}</span></h4>
+                <h4>TOTAL : <span style={{color:"red"}}>GH¢ {this.state.dayTotal}</span></h4>
                 </Col>
                 <Col md="4">
 
@@ -586,7 +548,7 @@ handleSave=()=>{
                      
             <Modal isOpen={this.state.saveModal}>
             <ModalHeader  style={{textAlign:"center", display:"block"}}>
-                <h4>Details Saved </h4>
+                <h4> {this.state.modalmessage} </h4>
             </ModalHeader>
           </Modal>
           <Modal isOpen={this.state.uploadModal}>
@@ -656,9 +618,10 @@ handleSave=()=>{
         }
         </Container>
       </>
-    )
+    );
   }
 }
 
 
-export default EditPrintCalender;
+export default PrintCalender;
+

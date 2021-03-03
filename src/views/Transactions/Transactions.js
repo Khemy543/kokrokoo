@@ -16,11 +16,11 @@ const [isActive, setIsActive] = React.useState(true);
 const [data, setData] = React.useState([]);
 const [meta, setMeta] = React.useState([]);
 
-  React.useEffect(()=>{
+React.useEffect(()=>{
     getTransactions();
   },[])
 
-  function getTransactions(pageNumber=1){
+function getTransactions(pageNumber=1){
     setIsActive(true)
     axios.get(`${domain}/api/payment/transactions?page=${pageNumber}`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
@@ -79,7 +79,7 @@ const handleGetCart=(id,date,cart_id)=>{
                 <Table striped bordered>
                 <thead style={{backgroundColor:"#01a9ac",color:"black"}}>
                 <tr>
-                  <th>Invoice Id</th>
+                  <th>Transaction Id</th>
                   <th>Currency</th>
                   <th>Total(Exclusive Of Tax)</th>
                   <th>Gross Total (Tax Inclusive)</th>
@@ -91,16 +91,16 @@ const handleGetCart=(id,date,cart_id)=>{
               <tbody>
               {data.map((value,key)=>(
               <tr>
-                    <td>{value.invoice_id}</td>
+                    <td>{value.transaction_generated_id}</td>
                     <td>{value.currency}</td>
                     <td>{value.total_amount_without_charges}</td>
                     <td>{value.grand_total_amount}</td>
                     <td>{value.transaction_status}</td>
                     <td>{value.transaction_reference}</td>
-                    <td><Button color="info" style={{borderRadius:"100%", padding:"2px 5px 2px 5px"}}
-                    onClick={()=>handleGetCart(value.invoice_id, value.transaction_reference,value.cart_id)}
-                    ><i className="fa fa-eye"/></Button></td>
-                    
+                    <td>
+                      <Button color="info" style={{borderRadius:"100%", padding:"2px 5px 2px 5px"}}
+                      onClick={()=>handleGetCart(value.invoice_id, value.transaction_reference,value.cart_id)}><i className="fa fa-eye"/></Button>
+                    </td>   
               </tr>
               ))}
               </tbody>
@@ -121,10 +121,8 @@ const handleGetCart=(id,date,cart_id)=>{
               </Card>
               </Col>
               </Row>
-              </>
-              }
-              </>
-              }
+              </>}
+              </>}
           </Container>
       </>
     );
