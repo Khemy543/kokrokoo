@@ -15,10 +15,7 @@ import { Document, Page } from 'react-pdf/dist/entry.webpack';
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
-/* import {
-  Docxtemplater,
-  JSZip
-} from "docxtemplater"; */
+
 
 var domain = "https://backend.demo.kokrokooad.com";
 let user =localStorage.getItem('access_token');
@@ -52,103 +49,38 @@ function UploadFileRes(props){
     no_of_words = textArray.length
     console.log(textArray)
     console.log(no_of_words)
-/* 
-    axios.post(`${domain}/api/subscription/create`,
-    {title:title,rate_card_title_id:props.location.state.id},
-    {headers:{ 'Authorization':`Bearer ${user}`}})
-    .then(res=>{
-      console.log(res.data);
-      if(Number(localStorage.getItem("media_id")) !==3){
-        props.history.push("/client/calendar",{
-          file_duration:file_duration ,
-          videoFile:videoFile,
-          rate_card:props.location.state, 
-          videoTitle:title, 
-          title_id:res.data.id,
-          media_house_id:props.location.state.media_house_id,
-          media_house_name:props.location.state.media_house_name,
-          no_of_words:no_of_words
-        });
-        setIsActive(false);
-      }
-      else{
-        props.history.push("/client/print-calendar",{
-          videoFile:videoFile,
-          rate_card:props.location.state, 
-          videoTitle:title, 
-          title_id:res.data.id,
-          media_house_id:props.location.state.media_house_id,
-          media_house_name:props.location.state.media_house_name,
-          no_of_words:no_of_words,
-          file_duration:0
-        });
-        setIsActive(false);
-      }
-      
-      
-    })
-    .catch(error=>{
-      console.log(error.response.data)
-      if(error.response){
-          setModal(true)
-          setAlertMessage(error.response.data.errors.title);
-          setIsActive(false)
-      }
-    }) */
     setIsActive(true);
-    console.log(title)
-    let formData = new FormData();
-        formData.append('ad',videoFile);
-        formData.append('file_duration',file_duration)
-        formData.append('title', title)
-        formData.append('_method','PATCH')
-        axios({
-            method:'post',
-            headers:{
-                "Authorization":`Bearer ${user}`,
-                "Content-Type":"mutipart/form-data"
-            },
-            data:formData,
-            url:`${domain}/api/scheduledAd/${props.location.state.campaign_id}/update`,
-            onUploadProgress: (progressEvent) => {
-                const {loaded , total} = progressEvent;
-                let percent = Math.floor(loaded * 100 / total);
-                console.log(percent)
-                if(percent<100){
-                    setPercentage(percent);
-                }
-                else{
-                    setPercentage(100)
-                }
-            }
-            }).then(res=>{
+    console.log(title);
+    axios.post(`${domain}/api/subscription/create`,
+    {title:title,rate_card_title_id:props.location.state.id, campaign_type:'re_subscription', scheduled_ad_id : props.location.state.campaign_id}
+    ,{headers:{'Authorization':`Bearer ${user}`}})
+                .then(res=>{
                     console.log(res.data);
-                    setModal(true);
-                    setAlertMessage("File Updated")    
                     setTimeout(
                             function(){
-                                if(props.location.state.media_type_id !==3){
+                                if(res.data.media.mediaType != "Print"){
                                 props.history.push("/client/resubscribe/calendar",{
                                     file_duration:file_duration ,
                                     videoFile:videoFile,
                                     rate_card:props.location.state, 
                                     videoTitle:title, 
-                                    title_id:props.location.state.campaign_id,
+                                    title_id:res.data.id,
                                     media_house_id:props.location.state.media_house_id,
                                     media_house_name:props.location.state.media_house_name,
                                     no_of_words:no_of_words,
-                                    campaign_amount:props.location.state.campaign_amount
+                                    campaign_amount:res.data.rejected_campaign_amount
                                 })
                             }else{
-                                props.history.push("/client/print-calendar",{
+                                props.history.push("/client/resubscribe/print-calendar",{
                                     videoFile:videoFile,
                                     rate_card:props.location.state, 
                                     videoTitle:title, 
-                                    title_id:props.location.state.campaign_id,
+                                    title_id:res.data.id,
                                     media_house_id:props.location.state.media_house_id,
                                     media_house_name:props.location.state.media_house_name,
                                     no_of_words:no_of_words,
-                                    file_duration:0
+                                    file_duration:0,
+                                    campaign_amount:res.data.rejected_campaign_amount
                             })}
                             }.bind(this),
                             1500)

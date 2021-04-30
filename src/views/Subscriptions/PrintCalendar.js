@@ -57,7 +57,8 @@ class PrintCalender extends React.Component{
         modalmessage:"Details Saved",
         prompt:true,
         volume:[],
-        discount_amount:0
+        discount_amount:0,
+        loading:false
     }
 
 
@@ -179,7 +180,7 @@ class PrintCalender extends React.Component{
         console.log(selected)
         let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
         if(checked){
-          if(selectedDate === undefined){
+          if(selectedDate == undefined){
             tempData.push({new:true,selected_date:this.state.date,no_of_weeks:0, total_amount:selected.cost, details:[
               {
                 ratecard_id:selected.id,
@@ -210,12 +211,28 @@ class PrintCalender extends React.Component{
           if(selectedDate && selectedDate.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
             let deleteItem = selectedDate.details.filter(item=> item.ratecard_id === id || (item.ratecard && item.ratecard.id === id));
             let deleteId = deleteItem[0].id;
-            console.log("id",deleteId, deleteItem);
+            if(selectedDate.new){
+              selectedDate.details = selectedDate.details.filter(item=> item.ratecard_id != id);
+              for(var i=0; i<selectedDate.details.length; i++){
+                subtotal = subtotal + Number(selectedDate.details[i].amount)
+              }
+              console.log(subtotal);
+              selectedDate.total_amount = subtotal;
+              let key = tempData.map(function(e) { return e.selected_date; }).indexOf(this.state.date);
+              console.log('key',key);
+              tempData[key] = selectedDate
+              for(var t=0; t<tempData.length; t++){
+                total = total + Number(tempData[t].total_amount)
+              }
+              console.log("total",tempData)
+    
+              this.setState({data:tempData, total:total, dayTotal:subtotal})
+            }else{
             axios.delete(`${domain}/api/subscription-detail/${deleteId}/delete`,
             {headers:{ 'Authorization':`Bearer ${user}`}})
             .then(res=>{
               console.log(res.data);
-              selectedDate.details = selectedDate.details.filter(item=> item.ratecard && item.ratecard.id !== id);
+              selectedDate.details = selectedDate.details.filter(item=> item.ratecard && item.ratecard.id != id);
               console.log("selectedDate",selectedDate);
               for(var i=0; i<selectedDate.details.length; i++){
                 subtotal = subtotal + Number(selectedDate.details[i].amount)
@@ -236,6 +253,7 @@ class PrintCalender extends React.Component{
             .catch(error=>{
               console.log(error)
             })
+          }
           }
           
         }
@@ -285,7 +303,7 @@ class PrintCalender extends React.Component{
         let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
         let discount = 0;
         console.log(selectedDate)
-        this.setState({isActive:false})
+        this.setState({isActive:false, loading:true})
         if(selectedDate.new === true){
           axios.post(`${domain}/api/subscription-store/${this.props.location.state.title_id}/details`,
         {
@@ -318,7 +336,7 @@ class PrintCalender extends React.Component{
               }
           }
             
-            this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
+            this.setState({loading:false, isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
 
             setTimeout(
                 function(){
@@ -326,8 +344,8 @@ class PrintCalender extends React.Component{
                 }.bind(this),2000)
         })
         .catch(error=>{
-            this.setState({isActive:false})
-            console.log(error.response.data)
+            this.setState({isActive:false, loading:false})
+            console.log(error)
         })
         }
         else{
@@ -360,7 +378,7 @@ class PrintCalender extends React.Component{
                   console.log(discount)
               }
           }
-            this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
+            this.setState({loading:false,isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
 
             setTimeout(
                 function(){
@@ -368,8 +386,8 @@ class PrintCalender extends React.Component{
                 }.bind(this),2000)
         })
         .catch(error=>{
-            this.setState({isActive:false})
-            console.log(error.response.data)
+            this.setState({isActive:false, loading:false})
+            console.log(error)
         })
         }
       }
@@ -421,7 +439,7 @@ class PrintCalender extends React.Component{
                            }.bind(this),2000)
                })
                .catch(error=>{
-                   console.log(error.response.data)
+                   console.log(error)
                    this.setState({isActive:true})
                })
     
@@ -474,8 +492,8 @@ class PrintCalender extends React.Component{
             <Col md="12" sm="12" lg="12" xs="12" xl="12">
               <Row>
                 <Col>
-                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {this.state.total_amount}</span></h3>
-                <h3>Discount Total Amount(Expected): <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
+                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {(this.state.total_amount).toFixed(2)}</span></h3>
+                <h3>Discounted Total Amount (Expected): <span style={{color:"red"}}>GH¢ {(this.state.total_amount - this.state.discount_amount).toFixed(2)}</span></h3>
                 
                 <h1 style={{color:"#3788d8",fontSize:"40px", fontWeight:1000}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Available</span></h1>
                     <h1 style={{color:"red",fontSize:"40px", fontWeight:1000, marginTop:"-40px"}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Subscribed To</span></h1>
@@ -578,25 +596,20 @@ class PrintCalender extends React.Component{
                 </ModalBody>
                 </LoadingOverlay>
                 <ModalFooter style={{display:"inline"}}>
-                {/* <Row>
-                <Col>   
-                <h5>Enter the number of weeks you want to roll over this subscription for this day (optional)</h5>
-                </Col>
-                <Col>
-                <Input type="number" value={this.getRollOver()} onChange={(e)=>this.handelRollOverChange(e.target.value)} 
-                style={{width:"60px"}}
-                />
-                </Col>
-                </Row> */}
                 <Row>
                 <Col md="5">
                 <h4>TOTAL : <span style={{color:"red"}}>GH¢ {this.state.dayTotal}</span></h4>
+                <p style={{fontSize:"13px", fontWeight:500}}>Prices are VAT and NHIL exclusive</p>
                 </Col>
                 <Col md="4">
 
                 </Col>
                 <Col md="3">
+                {this.state.loading?
+                <Button color="info" className="disabled" disabled>save</Button>
+                :
                 <Button color="info" onClick={()=>this.handleSave()}>save</Button>
+                }
                 <Button color="danger" onClick={this.toggle}>close</Button>
                 </Col>
                   

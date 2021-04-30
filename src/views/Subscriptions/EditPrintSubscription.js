@@ -120,8 +120,8 @@ render(){
                   <h4 style={{textTransform:"uppercase"}}>{this.state.title}</h4>
                   </Col>
                   <Col>
-                  <h3>Total Amount : <span style={{color:'red'}}>GH¢ {this.state.total}</span></h3>
-                  <h3>Discount Total Amount(Expected) : <span style={{color:'red'}}>GH¢ {this.state.discount_amount}</span></h3>
+                  <h3>Total Amount : <span style={{color:'red'}}>GH¢ {(this.state.total).toFixed(2)}</span></h3>
+                  <h3>Discounted Total Amount (Expected) : <span style={{color:'red'}}>GH¢ {(this.state.total - this.state.discount_amount).toFixed(2)}</span></h3>
                   </Col>
                   <Col>
                   <Button

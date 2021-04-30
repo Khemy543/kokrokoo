@@ -12,12 +12,11 @@ import {
   InputGroup, InputGroupAddon, Modal, ModalHeader, ModalFooter
 } from "reactstrap";
 // core components
-import LoadingOverlay from "react-loading-overlay";
-import FadeLoader from "react-spinners/FadeLoader";
 import Header from "components/Headers/Header";
 import axios from 'axios';
 import classnames from 'classnames';
 import {RateConsumer} from "../../context.js";
+import Spinner from "reactstrap/lib/Spinner";
 
 var domain = "https://backend.demo.kokrokooad.com";
 let user =localStorage.getItem('access_token');
@@ -56,14 +55,24 @@ const handleSubmit=(e)=>{
         if(res.data.status === "success"){
           window.location=`${res.data.url}`
         }
+
+        if(res.data.message == 'paid cart items'){
+          setAlertMessage('Cart Items Paid Successfully');
+          setModal(true);
+          setTimeout(
+            function(){
+              props.history.push('/client/index')
+            }.bind(this),2000)
+        }
     })
     .catch(error=>{
-        console.log(error.response.data);
+        console.log(error);
     })
     
 }
 
 const handlePOSubmit=(e)=>{
+  setIsActive(true)
   e.preventDefault();
   if(file !== null){
     console.log(file)
@@ -77,7 +86,6 @@ const handlePOSubmit=(e)=>{
       onUploadProgress: (progressEvent) => {
           const {loaded , total} = progressEvent;
           let cal_percentage = Math.floor(loaded * 100 / total);
-          console.log(cal_percentage)
           if(percentage<100){
               setPercentage(cal_percentage)
           }
@@ -86,18 +94,24 @@ const handlePOSubmit=(e)=>{
           }
   }})
     .then(res=>{
-      console.log(res.data);
-      setModal(true)
-      setAlertMessage("PO Submitted For Review");
+      setModal(true);
+      if(res.data.status == 'saved PO'){
+        setAlertMessage("PO Submitted For Review");
+      }else{
+        setAlertMessage("PO Already Submitted")
+      }
       setTimeout(
         function(){
           props.history.push('/client/index')
-        }.bind(this),2000)
+        }.bind(this),4000)
     })
     .catch(error=>{
       console.log(error.response.data)
       setModal(true);
       setAlertMessage(error.response.data.errors.po)
+    })
+    .finally((_)=>{
+      setIsActive(false)
     })
   }
 
@@ -109,10 +123,6 @@ const toggle = tab => {
 
   return (
     <>
-      <LoadingOverlay
-        active={isActive}
-        spinner={<FadeLoader color={'#4071e1'} />}
-      >
       <Header />
       <Container className=" mt--9" fluid>
       <Row>
@@ -204,7 +214,11 @@ const toggle = tab => {
                     </Row>
                     <Row style={{marginTop:"30px"}}>
                         <Col> 
+                            {!isActive?
                             <Button color="primary" type="submit">Proceed</Button>
+                            :
+                            <Button color="primary" disabled type="button"><Spinner size="sm"/></Button>
+                            }
                         </Col>
                     </Row>
                     <p style={{textAlign:"center", marginTop:"15px", fontSize:"12px",fontWeight:600}}>Contact <a href="!#">support@kokrokooad.com</a> for any questions</p>
@@ -259,7 +273,11 @@ const toggle = tab => {
                     
                     <Row style={{marginTop:"30px"}}>
                         <Col> 
+                            {!isActive?
                             <Button color="primary" type="submit">Proceed</Button>
+                            :
+                            <Button color="primary" type="button" disabled><Spinner size="sm" /></Button>
+                            }
                         </Col>
                     </Row>
                     <p style={{textAlign:"center", marginTop:"15px", fontSize:"12px",fontWeight:600}}>Contact <a href="!#">support@kokrokooad.com</a> for any questions</p>
@@ -289,7 +307,6 @@ const toggle = tab => {
           <Button color="danger" onClick={()=>setModal(false)}>Close</Button>
         </ModalFooter>
       </Modal>
-      </LoadingOverlay>
     </>
   );
 }

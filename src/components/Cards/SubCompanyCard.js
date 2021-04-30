@@ -18,7 +18,7 @@ export default function SubCompanyCard(props){
         <>
              <Col lg="4" md="4" sm="12" xs="12">
                 <Card id={"tooltip-" + id} className="card-stats mb-4 mb-xl-0 shadow" style={{cursor:"pointer", borderRadius:"0px"}} onClick={()=>{
-                   props.history.push("/client/create-sub-rate-cards",{media_house_id:id, media_house_name:company_name,id:props.location.state.id})
+                   props.history.push("/client/create-sub-rate-cards",{media_house_id:id, media_house_name:media_house,id:props.location.state.id})
                 }}>
                     <CardBody>
                       <Row>

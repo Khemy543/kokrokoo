@@ -94,108 +94,17 @@ function LandingPage(){
     })
   }
       return (
-        <div>
+        <div style={{position:"relative"}}>
+          <div style={{position:"fixed", zIndex:"999999", bottom:20, right:20}} title="Request for Ad Production">
+            <a href="/auth/request-ad-production">
+            <div className="adProductionButton">
+              <i className="fa fa-video-camera"/>
+            </div>
+            </a>
+          </div>
           <div id="app">
-          
-            {/*Home Start */}
-              <h1 className="sr-only">Home section</h1>
-              {/*nav start*/}
-              {/* <nav className="navbar navbar-fixed-top yellow" style={{marginTop:"0px"}}>
-                <div className="container-fluid">
-                  <div className="navbar-header">
-                    <a className="navbar-brand" href="#">
-                      <img src={require("assets/img/brand/kokro-yellow.png")} alt="kokrokoo" />
-                    </a>
-                  </div>
-                  <div className="container">
-                    <div className="collapse navbar-collapse navbar-ex1-collapse">
-                      <ul className="nav navbar-nav navbar-right">
-                        <li className="nav-item active">
-                          <a href="#Home" className="scroll">
-                            Home
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a href="#about-us" className="scroll">
-                            About
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a href="#services" className="scroll">
-                            Services
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a href="#portfolio" className="scroll">
-                            How it works
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a href="#contact-us" className="scroll">
-                            Contact Us
-                          </a>
-                        </li>
-                        <li className="nav-item">
-                          <a
-                            href="#"
-                            className="btn button  pull-right"
-                            role="button"
-                          >
-                            Dashboard
-                          </a>
-                        </li>
-                        <ul className="nav navbar-nav">
-                          <li className="dropdown">
-                            <a
-                              href="#"
-                              className="dropdown-toggle"
-                              data-toggle="dropdown"
-                              role="button"
-                              aria-haspopup="true"
-                              aria-expanded="false"
-                            >
-                              Register <span className="caret" />
-                            </a>
-                            <ul className="dropdown-menu">
-                              <li>
-                                <a
-                                  href="/auth/personal-account"
-                                  style={{ color: "#0c0c0c" }}
-                                >
-                                  Personal
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  href="/auth/organization-account"
-                                  style={{ color: "#0c0c0c" }}
-                                >
-                                  Organisation
-                                </a>
-                              </li>
-                              <li>
-                                <a
-                                  href="/auth/media-account"
-                                  style={{ color: "#0c0c0c" }}
-                                >
-                                  Media house
-                                </a>
-                              </li>
-                            </ul>
-                          </li>
-                        </ul>
-                        <li>
-                          <a href="/auth/login-page">
-                            <i className="fa fa-sign-in" /> <b>Log in</b>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </nav> */}
           <Navbar className={"fixed-top " + navbarColor} expand="lg" >
-        <Container>
+          <Container>
           <div className="navbar-translate">
             <NavbarBrand
             data-placement="bottom"
@@ -552,7 +461,7 @@ function LandingPage(){
                         <h3 style={{ color: "#E6AA00",fontSize:"32px" }}>Who we are</h3>
                         <hr />
                         <p>
-                        Kokrokoo is Africa's premier advertising hub where brands, entrepreneurs, organisations and even individuals can interact directly with TV, radio stations and print media for advertisements via the internet with limited human intervention.<br/><br/>
+                        Kokrokoo is Africa's premier advertising hub where brands, entrepreneurs, organisations and even individuals interact directly with TV, radio stations and print media for advertisements via the internet with limited human intervention.<br/><br/>
 
                         In the similitude of the crow of a cock to announce the break of day, Kokrokoo also seeks to Announce you to the world.<br/><br/>
 
@@ -897,13 +806,14 @@ function LandingPage(){
               {/* service-2 end */}
             </section>
             {/*  services end*/}
-            {/* <section id="portfolio">
+            <section id="portfolio">
               <div id="portfolio3" className="mid-level-padding">
                 <div className="container">
                   <div className="row text-center">
                     <div className="col-xs-12">
                       <div className="section-top-heading">
                         <h2 className="big-text">How it works</h2>
+                        <p>All you need you have to do as a registered client is:</p>
                       </div>
                     </div>
                   </div>
@@ -916,16 +826,16 @@ function LandingPage(){
                         <div className="price">
                           <div className="row" style={{marginRight:"10px", marginLeft:"10px"}}>
                             <div className="col-xs-4 col-md-4">
-                              <span className="fa fa-user fa-2x" />
+                              <span className="fa fa-upload fa-2x" />
                             </div>
                             <div className="col-xs-8 col-md-8">
                               <p>
-                              Upload ad
+                              Upload Ad File (audio, video, image or document)
                               </p>
                             </div>
                           </div>
                         </div>
-                        <ul className="packages">
+                        {/* <ul className="packages">
                           <li>
                             <i className="fa fa-check" aria-hidden="true" />
                             Provide personal or organization details
@@ -942,7 +852,7 @@ function LandingPage(){
                             <i className="fa fa-check" aria-hidden="true" />
                             Submit details
                           </li>
-                        </ul>
+                        </ul> */}
                       </div>
                     </div>
                     <div className="col-sm-4 wow fadeInUp" data-wow-duration="3s">
@@ -956,11 +866,11 @@ function LandingPage(){
                               <span className="fa fa-sign-in fa-2x" />
                             </div>
                             <div className="col-xs-8 col-md-8">
-                              <p>Log into your kokrokoo account</p>
+                              <p>Schedule production dates and times</p>
                             </div>
                           </div>
                         </div>
-                        <ul className="packages">
+                        {/* <ul className="packages">
                           <li>
                             <i className="fa fa-check" aria-hidden="true" />
                             Click "create campaign" button{" "}
@@ -981,11 +891,11 @@ function LandingPage(){
                             <i className="fa fa-check" aria-hidden="true" />
                             Submit ad
                           </li>
-                        </ul>
+                        </ul> */}
                         <a
                           href="/auth/login-page"
                           className="btn button btn-block text-uppercase"
-                          style={{borderRadius:"20px"}}
+                          style={{borderRadius:"20px", marginTop:"5px"}}
                         >
                           Get Started
                         </a>
@@ -999,17 +909,16 @@ function LandingPage(){
                         <div className="price">
                           <div className="row" style={{marginRight:"10px", marginLeft:"10px"}}>
                             <div className="col-xs-4 col-md-4">
-                              <span className="fa fa-envelope fa-2x" />
+                              <span className="fa fa-credit-card-alt fa-2x" />
                             </div>
                             <div className="col-xs-8 col-md-8">
                               <p>
-                                Selected media house will send a confirmation
-                                email/sms for approval.
+                                Make payment instantly (Visa, Mastercard, Mobile Money)
                               </p>
                             </div>
                           </div>
                         </div>
-                        <ul className="packages">
+                        {/* <ul className="packages">
                           
                           <li>
                             <i className="fa fa-check" aria-hidden="true" />
@@ -1027,13 +936,13 @@ function LandingPage(){
                             <i className="fa fa-check" aria-hidden="true" />
                             Track your ad anytime
                           </li>
-                        </ul>
+                        </ul> */}
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </section> */}
+            </section>
             {/* payment */}
            {/*  <div id="service-3" className="mid-level-padding">
                 <div className="container">

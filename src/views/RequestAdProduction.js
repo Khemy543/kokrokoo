@@ -1,118 +1,66 @@
-import React from "react";
-import axios from "axios";
+import React,{useState} from "react";
+import AuthNavbar from "../components/Navbars/AuthNavbar.js";
+import {Link} from "react-router-dom"
 
 // reactstrap components
 import {
   Button,
+  Card,
+  CardBody,
+  FormGroup,
   Form,
   Input,
-  Modal,
-  ModalFooter,
-  ModalHeader,
-  Container,
+  InputGroupAddon,
+  InputGroupText,
+  InputGroup,
   Row,
-  Card,CardBody,
-  Col,InputGroup, InputGroupAddon,CardHeader,CardFooter, FormGroup,InputGroupText,
+  Col,Container,Alert
 } from "reactstrap";
-import RegisterNavbar from "components/Navbars/RegisterNavbar";
+import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
 var domain = "https://backend.demo.kokrokooad.com";
-class PerosnalAccount extends React.Component {
-
-    state={
-        user:false,
-        personal:true,
-        address: "",
-        email: "",
-        industry_type: "",
-        name: "",
-        password: "",
-        phone1: "",
-        phone2:"",
-        terms: false,
-        title: "Mr",
-        confirm_password:"",
-        alertmessage:"",
-        modal:false,
-        isActive:false
-    }
-
-    handleSubmit=(e)=>{
-        e.preventDefault();
-        if(this.state.password === this.state.confirm_password){
-            this.setState({isActive:true})
-        axios.post(`${domain}/api/auth/register`,{
-            account:"personal",
-            address: this.state.address,
-            email: this.state.email,
-            industry_type: this.state.industry_type,
-            name: this.state.name,
-            password: this.state.password,
-            phone1: this.state.phone1.substr(this.state.phone1.length-10),
-            phone2: this.state.phone2.substr(this.state.phone2.length-10),
-            terms: this.state.terms,
-            title: this.state.title
-        })
-        .then(res=>{
-            console.log(res.data);
-                this.setState({
-                    alertmessage:"Registration Successful!",
-                    modal:true,
-                    isActive:false
-                })
-                setTimeout(
-                    function(){
-                        this.setState({modal:false});
-                        this.props.history.push("/auth/await-verification",{
-                            email:this.state.email
-                        })
-                    }
-                    .bind(this),
-                    2000
-                )
-        })
-        .catch(error=>{
-            console.log(error.response.data);
-            if(error.response){
-                this.setState({alertmessage:error.response.data.errors.phone1 || error.response.data.errors.phone2 || error.response.data.errors.email || error.response.data.errors.password, modal:true ,isActive:false})
-            }
-        })
-    }else{
-        this.setState({alertmessage:"Passwords do not match!!", modal:true})
-    }
-}
+function RequestAdProduction({history}){
+  const [email, setEmail] = useState('')
+  const [alert, setAlert] = useState(false);
+  const [name, setName] = useState('');
+  const [company, setCompany] = useState('');
+  const [phone, setPhone] = useState('');
+  const [type, setType] = useState('');
+  const [description, setDescription] = useState('');
+  const [budget, setBudget] = useState('Medium');
+  const [isActive, setIsActive] =useState(false);
 
 
 
-  render() {
+  const handleSubmit=()=>{
+    console.log('submitted')
+  }
+
+
     return (
       <>
       <LoadingOverlay 
-      active = {this.state.isActive}
+      active = {isActive}
       spinner={<FadeLoader color={'#4071e1'}/>}
       >
-      <div
-        style={{
-          height:"100vh"
-        }}
-      >
+      <div>
       
       <div className="filter" />
-        <RegisterNavbar />
-        <div style={{marginTop:"10px"}}>
-        <Container>
-        <Form onSubmit={this.handleSubmit}>
-            
+      <AuthNavbar />
+      <Container>
+        <Row>
+        <Col md="12">
+        <Form onSubmit={handleSubmit}>
             <Row>
                 <Col md="12">
                 <div className="account">
-                    <h3>User Account Information</h3>
+                    <h3>Request Ad Production</h3>
                     
                     <hr className="my-3" />
                     <Row style={{marginTop:"20px"}}>
-                        <Col md="7" className="ml-auto mr-auto">
+                        <Col md="8" className="ml-auto mr-auto">
                         <Row>
                             <Col xs="12" sm="12" md="6" lg="6" xl="6">
                             <label>Full Name*</label>
@@ -123,7 +71,7 @@ class PerosnalAccount extends React.Component {
                                     <i className="fa fa-user" />
                                 </InputGroupText>
                                 </InputGroupAddon>
-                                <Input type="text" placeholder="Full Name" value={this.state.name} onChange={e=>this.setState({name:e.target.value})} required/>
+                                <Input type="text" placeholder="Full Name" value={name} onChange={e=>setName(e.target.value)} required/>
                             </InputGroup>
                             </FormGroup>
                             </Col>
@@ -136,7 +84,36 @@ class PerosnalAccount extends React.Component {
                                     <i className="fa fa-envelope" />
                                 </InputGroupText>
                                 </InputGroupAddon>
-                            <Input type="email" placeholder="Email" value={this.state.email} onChange={e=>this.setState({email:e.target.value})} required/>
+                            <Input type="email" placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} required/>
+                            </InputGroup>
+                            </FormGroup>
+                            </Col>
+                        </Row>
+                        
+                        <Row>
+                            <Col>
+                            <label>Name of Company/Institution</label>
+                            <FormGroup className="mb-3">
+                            <InputGroup className="input-group-alternative">
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                                <i className="fa fa-building" />
+                            </InputGroupText>
+                            </InputGroupAddon>
+                            <Input type="text" placeholder="Name of Company/Institution" value={company} onChange={e=>setCompany(e.target.value)} required/>
+                            </InputGroup>
+                            </FormGroup>
+                            </Col>
+                            <Col>
+                            <label>Phone No.</label>
+                            <FormGroup className="mb-3">
+                            <InputGroup className="input-group-alternative">
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                                <i className="fa fa-phone" />
+                            </InputGroupText>
+                            </InputGroupAddon>
+                            <Input required type="text" placeholder="Phone" value={phone} onChange={e=>setPhone(e.target.value)} />
                             </InputGroup>
                             </FormGroup>
                             </Col>
@@ -144,7 +121,21 @@ class PerosnalAccount extends React.Component {
                         
                         <Row>
                             <Col md="6">
-                            <label>Title*</label>
+                            <label>Type of Production</label>
+                            <FormGroup className="mb-3">
+                            <InputGroup className="input-group-alternative">
+                            <InputGroupAddon addonType="prepend">
+                            <InputGroupText>
+                                <i className="fa fa-feed" />
+                            </InputGroupText>
+                            </InputGroupAddon>
+                            <Input type="text" value={type} onChange={e=>setType(e.target.value)} required placeholder="Jingle, TV Commercial, Documentary Shoot..."/>
+                            </InputGroup>
+                            </FormGroup>
+                            </Col>
+
+                            <Col>
+                            <label>Budget</label>
                             <FormGroup className="mb-3">
                             <InputGroup className="input-group-alternative">
                             <InputGroupAddon addonType="prepend">
@@ -152,73 +143,31 @@ class PerosnalAccount extends React.Component {
                                 <i className="fa fa-user" />
                             </InputGroupText>
                             </InputGroupAddon>
-                            <Input type="select" value={this.state.title} onChange={e=>this.setState({title:e.target.value})} required>
-                            <option value="Mr">Mr</option>
-                            <option value="Mrs">Mrs</option>
-                            <option value="Ms">Ms</option>
+                            <Input type="select" value={budget} onChange={e=>setBudget(e.target.value)} required>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
                             </Input>
                             </InputGroup>
                             </FormGroup>
                             </Col>
-                            
-                            <Col>
-                            <label>Industrial type*</label>
-                            <FormGroup className="mb-3">
-                            <InputGroup className="input-group-alternative">
-                                <InputGroupAddon addonType="prepend">
-                                <InputGroupText>
-                                    <i className="fa fa-industry" />
-                                </InputGroupText>
-                                </InputGroupAddon>
-                            <Input type="text" placeholder="Industry Type" value={this.state.industry_type} onChange={e=>this.setState({industry_type:e.target.value})} required/>
-                            </InputGroup>
-                            </FormGroup>
-                            </Col>
                         </Row>
                         <Row>
                             <Col>
-                            <label>Phone No. 1*</label>
+                            <label>Description</label>
                             <FormGroup className="mb-3">
                             <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                                <i className="fa fa-phone" />
-                            </InputGroupText>
-                            </InputGroupAddon>
-                            <Input type="text" placeholder="Phone Number" value={this.state.phone1} onChange={e=>this.setState({phone1:e.target.value})} required/>
-                            </InputGroup>
-                            </FormGroup>
-                            </Col>
-                            <Col>
-                            <label>Phone No. 2</label>
-                            <FormGroup className="mb-3">
-                            <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
-                            <InputGroupText>
-                                <i className="fa fa-phone" />
-                            </InputGroupText>
-                            </InputGroupAddon>
-                            <Input type="text" placeholder="Optional" value={this.state.phone2} onChange={e=>this.setState({phone2:e.target.value})} />
-                            </InputGroup>
-                            </FormGroup>
-                            </Col>
-                        </Row>
-                        <Row>
-                            <Col>
-                            <label>Address*</label>
-                            <FormGroup className="mb-3">
-                            <InputGroup className="input-group-alternative">
-                            <InputGroupAddon addonType="prepend">
+                            {/* <InputGroupAddon addonType="prepend">
                             <InputGroupText>
                                 <i className="fa fa-map-marker" />
                             </InputGroupText>
-                            </InputGroupAddon>
-                            <Input style={{height:"70px"}} type="textarea" placeholder="Address" value={this.state.address} onChange={e=>this.setState({address:e.target.value})} required/>
+                            </InputGroupAddon> */}
+                            <Input style={{height:"70px"}} type="textarea" placeholder="Concept or Description Summary" value={description} onChange={e=>setDescription(e.target.value)} required/>
                             </InputGroup>
                             </FormGroup>
                             </Col>
                         </Row>
-                        <Row>
+                        {/* <Row>
                             <Col>
                             <label>Password*</label>
                             <FormGroup className="mb-3">
@@ -250,7 +199,7 @@ class PerosnalAccount extends React.Component {
                             <Col md="6" style={{marginLeft:"20px"}}>
                             <Input type="checkbox" value={this.state.terms} onChange={e=>this.setState({terms:e.target.checked})} required/> <p style={{fontSize:"13px", fontWeight:700}}>Agree To <a href="/auth/terms&conditions-client">Terms And Conditions</a></p>
                         </Col>
-                        </Row>
+                        </Row> */}
                     <Row>
                         <Col>
                         <Button
@@ -272,23 +221,12 @@ class PerosnalAccount extends React.Component {
                 </Col>
             </Row>
         </Form>
-        <Modal isOpen={this.state.modal}>
-            <ModalHeader style={{color:"black"}}>
-            {this.state.alertmessage}
-            </ModalHeader>
-            <ModalFooter>
-            <Button color="danger" onClick={()=>this.setState({modal:false})}>
-              close
-            </Button>
-            </ModalFooter>
-          </Modal>
-        </Container>
-        </div>
-        </div>
-        </LoadingOverlay>
-      </>
-    );
-  }
+        </Col>
+        </Row>
+    </Container>
+    </div>
+    </LoadingOverlay>
+    </>
+    )
 }
-
-export default PerosnalAccount;
+export default RequestAdProduction;

@@ -56,7 +56,8 @@ class PrintCalender extends React.Component{
         volumeModal:false,
         modalmessage:"Details Saved",
         volume:[],
-        discount_amount:0
+        discount_amount:0,
+        loading:false
     }
 
 
@@ -284,7 +285,7 @@ class PrintCalender extends React.Component{
         let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
         let discount = 0;
         console.log(selectedDate)
-        this.setState({isActive:false})
+        this.setState({isActive:false,loading:true})
         if(selectedDate.new === true){
           axios.post(`${domain}/api/subscription-store/${this.props.location.state.title_id}/details`,
         {
@@ -317,7 +318,7 @@ class PrintCalender extends React.Component{
               }
           }
             
-            this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
+            this.setState({loading:false,isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
 
             setTimeout(
                 function(){
@@ -325,8 +326,8 @@ class PrintCalender extends React.Component{
                 }.bind(this),2000)
         })
         .catch(error=>{
-            this.setState({isActive:false})
-            console.log(error.response.data)
+            this.setState({isActive:false, loading:false})
+            console.log(error)
         })
         }
         else{
@@ -359,7 +360,7 @@ class PrintCalender extends React.Component{
                   console.log(discount)
               }
           }
-            this.setState({isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
+            this.setState({loading:false,isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
 
             setTimeout(
                 function(){
@@ -367,8 +368,8 @@ class PrintCalender extends React.Component{
                 }.bind(this),2000)
         })
         .catch(error=>{
-            this.setState({isActive:false})
-            console.log(error.response.data)
+            this.setState({isActive:false, loading:false})
+            console.log(error)
         })
         }
       }
@@ -416,8 +417,8 @@ class PrintCalender extends React.Component{
             <Col md="12" sm="12" lg="12" xs="12" xl="12">
               <Row>
                 <Col>
-                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {this.state.total_amount}</span></h3>
-                <h3>Discount Total Amount(Expected): <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
+                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {(this.state.total_amount).toFixed(2)}</span></h3>
+                <h3>Discounted Total Amount (Expected): <span style={{color:"red"}}>GH¢ {(this.state.total_amount - this.state.discount_amount).toFixed(2)}</span></h3>
                 
                 <h1 style={{color:"#3788d8",fontSize:"40px", fontWeight:1000}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Available</span></h1>
                     <h1 style={{color:"red",fontSize:"40px", fontWeight:1000, marginTop:"-40px"}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Subscribed To</span></h1>
@@ -533,12 +534,17 @@ class PrintCalender extends React.Component{
                 <Row>
                 <Col md="5">
                 <h4>TOTAL : <span style={{color:"red"}}>GH¢ {this.state.dayTotal}</span></h4>
+                <p style={{fontWeight:500, fontSize:"13px"}}>Prices are VAT and NHIL exclusive</p>
                 </Col>
                 <Col md="4">
 
                 </Col>
                 <Col md="3">
+                {this.state.loading?
+                <Button color="info" disabled className="disabled">save</Button>
+                :
                 <Button color="info" onClick={()=>this.handleSave()}>save</Button>
+                }
                 <Button color="danger" onClick={this.toggle}>close</Button>
                 </Col>
                   

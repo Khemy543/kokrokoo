@@ -27,6 +27,7 @@ import PrivacyPolicy from "views/Registration/PrivacyPolicy";
 import ForgetPassword from "views/PasswordReset/forgetPassword.js"
 import BankDetails from "views/Registration/BankDetails";
 import ResetPassword from "views/PasswordReset/PasswordReset.js";
+import RequestAdProduction from "views/RequestAdProduction";
 
 
 class App extends React.Component{
@@ -48,9 +49,8 @@ class App extends React.Component{
       <Route exact path="/auth/media-account" component ={MediaAccount} />
       <Route exact path="/auth/bank-details" component ={BankDetails} />
       <ProtectedLoginRoute exact path="/auth/login-page" component = {Login}/>
-      <ProtectedLoginRoute exact path="/auth/landing-page" component = {LandingPage}/>{/* 
-      <ProtectedRoute exact path ="/payment/details" key="15" component={UserDetails}/>
-      <ProtectedRoute exact path ="/payment/account-information" key="16" component={AccountDetails}/> */}
+      <ProtectedLoginRoute exact path="/auth/request-ad-production" component = {RequestAdProduction}/>
+      <ProtectedLoginRoute exact path="/auth/landing-page" component = {LandingPage}/>
       <Redirect from="/" to="/auth/landing-page" />
       <Redirect from="/homepage" to="/client/index" />
     </Switch>

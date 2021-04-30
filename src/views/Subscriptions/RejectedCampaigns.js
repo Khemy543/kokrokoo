@@ -88,53 +88,37 @@ import {
               <td>{index+1}</td>
               <td>{value.generated_id}</td>
               <td>{value.title}</td>
-              {value.rejected_messages.rejected_message_id === 5?
-              <td>{value.rejected_messages.other_message}</td>
+              {value[0].rejected_message.id == 5?
+              <td>{value[0].other_message}</td>
               :
-              <td>{value.rejected_messages.other_message}</td>
+              <td>{value[0].rejected_message.message}</td>
               }
               <td>{value.rate_card_title.title}</td>
               <td>{value.company.media_house}</td>
               <td>{value.company.media_type}</td>
-              <td>{value.total_amount}</td>
+              <td>{value.total_amount.campaign_grand_total_with_tax}</td>
               <td>{value.date} {value.time}</td>
               <td>
+                {!value.re_subscribed?
                 <Row>
                   <Col className="ml-auto mr-auto">
-                    {value.rejected_messages.rejected_message_id===1 || value.rejected_messages.rejected_message_id===2?
-                    <>
-                    <Button color="info" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.props.history.push('/client/resubscribe/media-type',{
+                    {/* <Button title="Resubscribe"  color="info" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.props.history.push('/client/resubscribe/media-type',{
                         campaign_id:value.id,
                         campaign_title:value.title,
                         campaign_amount:value.total_amount
-                        })}><i className="fa fa-repeat"/></Button>
-                    <Button color="danger" style={{padding:"5px 10px 5px 10px"}}
-                        onClick={()=>{
-                            this.props.history.push("/client/change-adfile",{
-                            title_id:value.id, 
-                            file_types:value.rate_card_title.file_types,
-                            ad_duration:value.ad_duration,
-                            title:value.rate_card_title.title,
-                            videoTitle:value.title
-                        })
-                        }}
-                    ><i className="fa fa-upload"/></Button>
-                    </>
-                    :
-                    value.rejected_messages.rejected_message_id ===3 || value.rejected_messages.rejected_message_id===5?
-                    <Button color="info" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.props.history.push('/client/resubscribe/media-type',{
-                        campaign_id:value.id,
-                        campaign_title:value.title,
-                        campaign_amount:value.total_amount
-                        })}><i className="fa fa-repeat"/></Button>
-                    :
-                    value.rejected_message_id === 4?
-                    <></>
-                    :
-                    <></>
-                    }
+                        })}><i className="fa fa-repeat"/>
+                      </Button> */}
+                      <Button title="View" color="info" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.props.history.push('/client/completed-details',{
+                        id:value.id,
+                        title:value.title
+                      })}>
+                      <i className="fa fa-eye"/>
+                      </Button> 
                   </Col>
                 </Row>  
+                :
+                null
+                }
                 </td>
             </tr>
             ))}  

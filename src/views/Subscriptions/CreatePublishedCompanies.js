@@ -33,7 +33,6 @@ function CreatePublishedCompanies(props) {
     axios.get(`${domain}/api/view/${props.location.state.id}/published-companies`,{
     headers:{ 'Authorization':`Bearer ${user}`}}
 ).then(res=>{
-    console.log("media-houses:",res.data);
     setMedia_houses(res.data);
     setIsActive(false)
 }).catch(error=>{

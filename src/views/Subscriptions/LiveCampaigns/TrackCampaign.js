@@ -76,11 +76,11 @@ class TrackCampaign extends React.Component {
           <Row style={{marginTop:"20px"}}>
             <Col lg="12" md="12" xl="12" sm="12" xs="12">
             <Card style={{boxShadow:"0 2px 12px rgba(0,0,0,0.1)"}}>
-            <CardBody>
+            <CardBody style={{overflowX:"auto"}}>
             <Table striped bordered>
             <thead style={{backgroundColor:"#01a9ac",color:"black",height:""}}>
             <tr>
-              <th>#</th>
+              <th>Campaign Id</th>
               <th>Campaign Title</th>
               <th>Production Date</th>
               <th>Media House</th>
@@ -91,7 +91,7 @@ class TrackCampaign extends React.Component {
           <tbody>
             {this.state.data.map((value, index)=>(
               <tr>
-              <td>{index+1}</td>
+              <td>{value.campaign_title_generated_id}</td>
               <td>{value.campaign_title}</td>
               <td>{value.selected_date}</td>
               <td>{value.media_house}</td>

@@ -24,21 +24,25 @@ class Invoice extends React.Component{
     isActive:true,
     cart:[],
     user:[],
-    total:0
+    total:0,
+    account_balance:{},
+    service_total:0
   }
 
 
 
   componentDidMount() {
     let total = 0;
+    let service_total = 0;
     axios.get(`${domain}/api/get/cart/${this.props.location.state.cart_id}/campaign/breakdown-calculation`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
       console.log(res.data);
       for(var i=0; i<res.data.length; i++){
-        total = total + Number(res.data[i].total_amount.campaign_total_amount_with_discount)
+        total = total + Number(res.data[i].total_amount.campaign_total_amount_with_discount);
+        service_total = service_total + Number(res.data[i].total_amount.campaign_total_amount_without_discount);
       }
-      this.setState({cart:res.data,isActive:false, total:total});
+      this.setState({cart:res.data,isActive:false, total:total, service_total:service_total});
     })
     .catch(error=>{
       console.log(error)
@@ -52,6 +56,14 @@ class Invoice extends React.Component{
         console.log(res.data);
         this.setState({user:res.data.user, isActive:false})
         });
+    axios.get(`${domain}/api/fetch/user/account/balance/${this.props.location.state.cart_id}`,
+    {headers:{ 'Authorization':`Bearer ${user}`}})
+    .then(response=>{
+      this.setState({account_balance:response.data})
+    })
+    .catch(error=>{
+
+    })
   }
 
 
@@ -74,6 +86,7 @@ class Invoice extends React.Component{
           content={() => this.componentRef}
         />
         <Row>
+          {console.log(this.props.location.state)}
             <InvoiceCard data={this.state} next={this.props.location.state} ref={el => (this.componentRef = el)}/>
             
         </Row>

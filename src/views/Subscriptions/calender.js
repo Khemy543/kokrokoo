@@ -57,8 +57,8 @@ class Calender extends React.Component{
         prompt:true,
         volume:[],
         discount_amount:0,
-        modalmessage:'Schedule Saved'
-
+        modalmessage:'Schedule Saved',
+        loading:false
     }
 
 
@@ -284,25 +284,21 @@ class Calender extends React.Component{
         let selectedIndex = tempData[index];
         let selectedDuration =  selectedIndex.duration.find(item=>item.id === id);
         let selectedDate = data.find(item=>item.selected_date == date);
-        if(checked){
         if(selectedDate == undefined){
             data.push({
                 selected_date:this.state.date,
                 no_of_weeks:0, 
-                new:true,
                 details:[{duration_id:selectedDuration.id, ratecard_id:ratecard_id, duration:selectedDuration, selected_spots:1, ratecard:{id:ratecard_id}, amount:selectedDuration.rate}]
             });
-            for(var i=0; i<data[0].details.length; i++){
-                total = total + data[0].details[i].duration.rate * data[0].details[i].selected_spots
+            for(var i=0; i<data[data.length-1].details.length; i++){
+                total = total + data[data.length-1].details[i].duration.rate * data[data.length-1].details[i].selected_spots
             }
             this.setState({data:data, total:total});
         }
         else
-        {
-            if(selectedDate != undefined){
-                let selectedRateDetails = selectedDate.details.find(item=>item.ratecard.id === ratecard_id);
+            {
+                let selectedRateDetails = selectedDate.details.find(item=>item.ratecard.id == ratecard_id);
                 if(selectedRateDetails != undefined){
-                    selectedDate.new = false
                     selectedRateDetails.duration_id=selectedDuration.id;
                     selectedRateDetails.duration = selectedDuration;
                     selectedRateDetails.selected_spots =1;
@@ -325,26 +321,9 @@ class Calender extends React.Component{
                 }
                 let twice = Number(selectedDate.no_of_weeks)+1;
                 total = total* twice
-                this.setState({data:data, total:total})
-            }
-            
+                this.setState({data:data, total:total})    
         }
-    }else{
-        if(selectedDate != undefined){
-            let selectedRateDetails = selectedDate.details.find(item=>item.ratecard.id === ratecard_id);
-            if(selectedRateDetails != undefined){
-                selectedRateDetails = selectedRateDetails.filter(item=>item.duration_id == selectedRateDetails.id)
-            }
-        }
-        for(var i=0; i<selectedDate.details.length; i++){
-            total = total + selectedDate.details[i].duration.rate * selectedDate.details[i].selected_spots;
-
-        }
-        let twice = Number(selectedDate.no_of_weeks)+1;
-        total = total* twice
-        this.setState({data:data, total:total})
     }
-}
 
     handleSpotChange=(id, value)=>{
         let data = this.state.data;
@@ -407,7 +386,7 @@ class Calender extends React.Component{
                         console.log(discount)
                     }
                 }
-                 this.setState({data:newDataArray, total:0, modal:false, eventData:newEvents, total_amount:grand_total, discount_amount:discount})
+                 this.setState({data:newDataArray, total:0, eventData:newEvents, total_amount:grand_total, discount_amount:discount})
                }
                else{
                 selectedDate.details=newArray;
@@ -444,7 +423,7 @@ class Calender extends React.Component{
                 console.log(newArray);
                 if(newArray.length <= 0){
                     newDataArray = tempData.filter(item=>item.selected_date != this.state.date);
-                    this.setState({data:newDataArray, total:0, modal:false})
+                    this.setState({data:newDataArray, total:0})
                 }
                 else{
                     selectedDate.details=newArray;
@@ -471,12 +450,12 @@ class Calender extends React.Component{
         let segments =[];
         let newEvents = [...this.state.eventData];
         let discount = 0;
-        if(selectedDate !== undefined){
+        if(selectedDate != undefined){
             no_of_weeks = selectedDate.no_of_weeks;
             segments = selectedDate.details;
-        }
-        this.setState({isActive:false})
-        if(selectedDate.new === true){
+            this.setState({isActive:false, loading:true})
+
+        if(!selectedDate.details[0].saved){
             axios.post(`${domain}/api/subscription-store/${this.props.location.state.title_id}/details`,
         {
             subscription_title:this.state.title,
@@ -505,7 +484,7 @@ class Calender extends React.Component{
                     console.log(discount)
                 }
             }
-                this.setState({no_of_weeks:0, saveModal:true, modalmessage:"Schedule Saved", data:res.data,total_amount:grand_total, eventData:newEvents, discount_amount:discount});
+                this.setState({loading:false,no_of_weeks:0, saveModal:true, modalmessage:"Schedule Saved", data:res.data,total_amount:grand_total, eventData:newEvents, discount_amount:discount});
 
                 setTimeout(
                     function(){
@@ -513,8 +492,8 @@ class Calender extends React.Component{
                     }.bind(this),2000)
         })
         .catch(error=>{
-            this.setState({isActive:false})
-            console.log(error.response.data)
+            this.setState({isActive:false, loading:false})
+            console.log(error)
         })
         }
         else{
@@ -547,7 +526,7 @@ class Calender extends React.Component{
                     discount = (this.state.volume[t].percentile/100) * grand_total
                 }
             }
-                this.setState({no_of_weeks:0, saveModal:true, modalmessage:"Schedule Saved", data:res.data,total_amount:grand_total, eventData:newEvents,discount_amount:discount});
+                this.setState({loading:false,no_of_weeks:0, saveModal:true, modalmessage:"Schedule Saved", data:res.data,total_amount:grand_total, eventData:newEvents,discount_amount:discount});
 
                 setTimeout(
                     function(){
@@ -555,11 +534,14 @@ class Calender extends React.Component{
                     }.bind(this),2000)
         })
         .catch(error=>{
-            this.setState({isActive:false})
-            console.log(error.response.data)
+            this.setState({isActive:false, loading:false})
+            console.log(error)
         })
         }
+      }else{
+          this.setState({modal:false})
       }
+    }
 
       handleUpload=()=>{
         if(this.state.data.length <= 0){
@@ -661,8 +643,8 @@ class Calender extends React.Component{
             <Row>
                 <Col>
 
-                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {this.state.total_amount}</span></h3>
-                <h3>Discount Total Amount(Expected): <span style={{color:"red"}}>GH¢ {this.state.discount_amount}</span></h3>
+                <h3>Total Campaign Amount: <span style={{color:"red"}}>GH¢ {(this.state.total_amount).toFixed(2)}</span></h3>
+                <h3>Discounted Total Amount (Expected): <span style={{color:"red"}}>GH¢ {(this.state.total_amount - this.state.discount_amount).toFixed(2)}</span></h3>
                 <div>
                     <h1 style={{color:"#3788d8",fontSize:"40px", fontWeight:1000}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Available</span></h1>
                     <h1 style={{color:"red",fontSize:"40px", fontWeight:1000, marginTop:"-40px"}}>. <span style={{fontSize:"13px", color:"black",fontWeight:500}}>Days Subscribed To</span></h1>
@@ -803,12 +785,17 @@ class Calender extends React.Component{
                 <Row>
                 <Col md="5">
                 <h4>TOTAL : <span style={{color:"red"}}>GH¢ {this.state.total}</span></h4>
+                <p style={{fontWeight:500, fontSize:"13px"}}>Prices are VAT and NHIL exclusive</p>
                 </Col>
                 <Col md="4">
 
                 </Col>
                 <Col md="3">
+                {this.state.loading?
+                <Button color="info" className="disabled" disabled>save</Button>
+                :
                 <Button color="info" onClick={()=>this.handleSave()}>save</Button>
+                }
                 <Button color="danger" onClick={this.toggle}>close</Button>
                 </Col>
                   

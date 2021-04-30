@@ -43,6 +43,7 @@ import SelectCompanyRes from "views/Resubscribe/SelectCompanyRes.js";
 import SelectRateCardRes from "views/Resubscribe/SelectRateCardRes.js";
 import UploadFileRes from "views/Resubscribe/UploadAdRes.js";
 import VideoResubscribeCalender from "views/Resubscribe/VideoResubscribe.js";
+import PrintResubscribeCalendar from "views/Resubscribe/PrintResubscribe.js";
 
 var routes = [
   {
@@ -335,7 +336,7 @@ var routes = [
   },
   {
     path: "/completed-details",
-    name: "Campaign",
+    name: "Campaign Details",
     invisible:true,
     component: SubCompletedDetails,
     layout: "/client"
@@ -380,6 +381,13 @@ var routes = [
     name: "Resubscribe",
     invisible:true,
     component: VideoResubscribeCalender,
+    layout: "/client"
+  },
+  {
+    path: "/resubscribe/print-calendar",
+    name: "Resubscribe",
+    invisible:true,
+    component: PrintResubscribeCalendar,
     layout: "/client"
   },
   

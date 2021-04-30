@@ -94,8 +94,8 @@ class MediaAccount extends React.Component {
         bodyFormData.append('name',this.state.name);
         bodyFormData.append('email',this.state.email);
         bodyFormData.append('title',this.state.title);
-        bodyFormData.append('phone1',this.state.phone1);
-        bodyFormData.append('phone2',this.state.phone2);
+        bodyFormData.append('phone1',this.state.phone1.substr(this.state.phone1.length-10));
+        bodyFormData.append('phone2',this.state.phone2.substr(this.state.phone2.length-10));
         bodyFormData.append('password',this.state.password);
         bodyFormData.append('terms',this.state.terms);
         bodyFormData.append('account',"media");
@@ -463,7 +463,7 @@ class MediaAccount extends React.Component {
                                 />
                             </Col>
                             <Col>
-                            <label>Operating License</label>
+                            <label>Ratecard</label>
                             <Input type="file" onChange={e=>{
                                 const file = e.target.files[0];
                                 console.log(file)

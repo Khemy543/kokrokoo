@@ -37,7 +37,7 @@ function Login({history}){
     axios.post(`${domain}/oauth/token`,{
       grant_type: "password",
       client_id: 1,
-      client_secret:"6wbQEcqNmWCSkY13sUZLCMRKBQwzEIHZss8Nr5ln",
+      client_secret:"UhJpDIR5od53fmjQntzxk4QvlSfni8yrK6exIk1z",
       username: username,
       password: password,
       provider: "clients",

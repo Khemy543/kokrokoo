@@ -41,7 +41,8 @@ class RateProvider extends React.Component{
     componentDidMount(){
         this.isTokenExpired();/* 
         localStorage.clear(); */
-
+        
+        if(user !== null){
         axios.get(`${domain}/api/client`,{
             headers:{ 'Authorization':`Bearer ${user}`}
                 }
@@ -62,6 +63,7 @@ class RateProvider extends React.Component{
                 }).catch(error=>{
                   console.log(error)
                 });
+        }
         
     } 
 

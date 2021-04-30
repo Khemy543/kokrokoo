@@ -1,7 +1,20 @@
 .bg-white{
     background-color: red;
 }
+.adProductionButton{
+  border-radius:100px;
+  background-color:#fabe28;
+  height:50px;
+  width:50px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  cursor: pointer;
+}
 
+.adProductionButton:hover{
+  background-color: #eead08;
+}
 .custom-modal-style{
     width:1000px;
 }
@@ -15,6 +28,10 @@
   .nav-tabs-navigation {
     text-align: center;
     margin-bottom: 30px;
+}
+
+.form-control:focus{
+  color: black !important;
 }
 
 .nav-tabs-wrapper {

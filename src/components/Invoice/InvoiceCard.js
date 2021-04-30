@@ -19,7 +19,7 @@ class InvoiceCard extends React.Component{
         return(
             <>
             <Col md="12">
-                <Card style={{overflowX:"scroll"}}>
+                <Card style={{overflowX:"auto"}}>
                     <CardHeader>
                       <Row>
                         <Col>
@@ -36,8 +36,8 @@ class InvoiceCard extends React.Component{
                     <CardBody style={{paddingTop:"0px"}}>
                         <Row style={{backgroundColor:"whitesmoke"}}>
                           <Col md="12" style={{marginBottom:"15px", marginTop:"15px"}}>
-                            <h2 style={{marginBottom:"0px"}}>Invoice {this.props.next.invoice.generated_invoice_id}</h2>
-                            <p style={{marginBottom:"0px", fontSize:"14px"}}>Invoice Date {this.props.next.invoice.created_at}</p>
+                            <h2 style={{marginBottom:"0px"}}>Invoice {this.props.next.transaction_id || (this.props.next.invoice && this.props.next.invoice.generated_invoice_id)}</h2>
+                            <p style={{marginBottom:"0px", fontSize:"14px"}}>Invoice Date {this.props.next.transaction_reference || (this.props.next.invoice && this.props.next.invoice.created_at)}</p>
                           </Col>
                         </Row>
                         <Row>
@@ -63,7 +63,7 @@ class InvoiceCard extends React.Component{
                               </thead>
                                 <thead style={{backgroundColor:"#01a9ac",color:"black",height:""}}>
                                 <tr>
-                                <td>duration</td>
+                                <td>Duration</td>
                                 <td>Rate</td>
                                 <td>Selected Spots</td>
                                 <td>Time Segment</td>
@@ -130,7 +130,7 @@ class InvoiceCard extends React.Component{
                                 ))}
                                 <tr>
                                   <td colSpan="6">
-                                    Total Amount : GH¢ {thing.total_amount.campaign_total_amount_without_discount}<br/>
+                                    Total Campaign Amount : GH¢ {thing.total_amount.campaign_total_amount_without_discount}<br/>
                                     Discount : GH¢ {thing.total_amount.discount_amount}<br/>
                                     Total Due : GH¢ {thing.total_amount.campaign_total_amount_with_discount}
                                   </td>
@@ -148,11 +148,20 @@ class InvoiceCard extends React.Component{
                     <CardBody>
                         <Row>
                           <Col md="8">
-                              <p style={{fontSize:"14px", fontWeight:600}}>Total Excluding Tax: GHS {this.props.data.total}</p>
+                              <p style={{fontSize:"14px", fontWeight:600}}>Service Amount : GHS {this.props.data.service_total.toFixed(2)}</p>
+                              <p style={{fontSize:"14px", fontWeight:600}}>Discounted Service Amount : GHS {this.props.data.total.toFixed(2)}</p>
                               <p style={{fontSize:"14px", fontWeight:600}}>VAT (12.5%) : GHS {(this.props.data.total * 0.125).toFixed(2)}</p>
-                              <p style={{fontSize:"14px", fontWeight:600}}>Total After VAT : GHS {(this.props.data.total * 1.125).toFixed(2)}</p>
+                              <p style={{fontSize:"14px", fontWeight:600}}>Subtotal : GHS {(this.props.data.total * 1.125).toFixed(2)}</p>
                               <p style={{fontSize:"14px", fontWeight:600}}>GetFund + NHIL (5%) : GHS {(this.props.data.total * 1.125 * 0.05).toFixed(2)}</p>
-                              <p style={{fontSize:"14px", fontWeight:600}}>Total Including Tax: GHS {(this.props.data.total * 1.125 * 1.05).toFixed(2)}</p>
+                              <p style={{fontSize:"14px", fontWeight:600}}>Total Sales Amount: GHS {(this.props.data.total * 1.125 * 1.05).toFixed(2)}</p>
+                              {this.props.data.account_balance && this.props.data.account_balance.total_amount_of_rejected_campaign >0?
+                              <>
+                              <p style={{fontSize:"14px", fontWeight:600}}>Balance: GHS {((this.props.data.total * 1.125 * 1.05) - (-this.props.data.account_balance.account_balance)).toFixed(2)}</p>
+                              <p style={{fontSize:"14px", fontWeight:600}}>Total Amount to Pay: GHS {Math.abs((this.props.data.account_balance.account_balance).toFixed(2))}</p>
+                              </>
+                              :
+                              null
+                              }
                           </Col>
                         </Row>
                         </CardBody>

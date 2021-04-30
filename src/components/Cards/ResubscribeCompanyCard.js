@@ -19,7 +19,7 @@ export default function ResubscribeCompanyCard(props){
              <Col lg="4" md="4" sm="12" xs="12">
                 <Card id={"tooltip-" + id} className="card-stats mb-4 mb-xl-0 shadow" style={{cursor:"pointer", borderRadius:"0px"}} onClick={()=>{
                    props.history.push("/client/resubscribe/rate-card",{media_house_id:id, 
-                   media_house_name:company_name,
+                   media_house_name:media_house,
                    id:props.location.state.id, 
                    campaign_id:props.location.state.campaign_id,
                    campaign_title:props.location.state.campaign_title,

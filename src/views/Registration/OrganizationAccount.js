@@ -58,8 +58,8 @@ class OrganizationAccount extends React.Component {
         bodyFormData.append('industry_type',this.state.industry_type);
         bodyFormData.append('name',this.state.name);
         bodyFormData.append('password',this.state.password);
-        bodyFormData.append('phone1',this.state.phone1);
-        bodyFormData.append('phone2',this.state.phone2);
+        bodyFormData.append('phone1',this.state.phone1.substr(this.state.phone1.length-10));
+        bodyFormData.append('phone2',this.state.phone2.substr(this.state.phone2.length-10));
         bodyFormData.append('terms',this.state.terms);
         bodyFormData.append('title',this.state.title);
         bodyFormData.append('website',this.state.website);

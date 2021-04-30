@@ -31,7 +31,8 @@ class Index extends React.Component {
     expired:0,
     rejected:0,
     approved:0,
-    total:0
+    total:0,
+    completed_campaigns:[]
   }
 
   componentDidMount(){
@@ -45,7 +46,8 @@ class Index extends React.Component {
         expired:res.data.expired,
         rejected:res.data.rejected,
         approved:res.data.approved,
-        total:res.data.total_subscriptions
+        total:res.data.total_subscriptions,
+        completed_campaigns : res.data.completed_campaigns
       })
     })
     .catch(error=>{
@@ -115,9 +117,9 @@ class Index extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                       click to view <span className="text-info">all </span>campaigns
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
             </Col>
@@ -144,16 +146,16 @@ class Index extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                        all <span className="text-warning">apporved </span>campaigns
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
             </Col>
             
             </Row>
             <Row style={{marginTop:"30px"}}>
-            <Col md="6">
+            {/* <Col md="6">
             <Card className="card-stats mb-4 mb-xl-0 shadow"
                   style={{cursor:"pointer"}}
                   >
@@ -181,7 +183,7 @@ class Index extends React.Component {
                       </p>
                     </CardBody>
                   </Card>
-            </Col>
+            </Col> */}
             <Col md="6">
             <Card className="card-stats mb-4 mb-xl-0 shadow"
                   style={{cursor:"pointer"}}
@@ -196,7 +198,7 @@ class Index extends React.Component {
                             COMPLETED CAMPAIGN
                           </CardTitle>
                           <span className="h2 font-weight-bold mb-0">
-                            {this.state.expired}
+                            {this.state.completed_campaigns.length}
                           </span>
                         </div>
                         <Col className="col-auto">
@@ -205,16 +207,13 @@ class Index extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                        all <span className="text-warning">completed </span>campaigns
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
             </Col>
-            
-          </Row>
-          <Row style={{marginTop:"30px"}}>
-          <Col md="6">
+            <Col md="6">
             <Card className="card-stats mb-4 mb-xl-0 shadow"
                   style={{cursor:"pointer"}}
                   >
@@ -237,12 +236,14 @@ class Index extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                        all <span className="text-primary">pending </span>campaigns
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
             </Col>
+          </Row>
+          <Row style={{marginTop:"30px"}}>
           <Col md="6">
             <Card className="card-stats mb-4 mb-xl-0 shadow"
                   style={{cursor:"pointer"}}
@@ -266,9 +267,9 @@ class Index extends React.Component {
                           </div>
                         </Col>
                       </Row>
-                      <p className="mt-3 mb-0 text-muted text-sm">
+                      {/* <p className="mt-3 mb-0 text-muted text-sm">
                       all <span className="text-danger">rejected </span>campaigns
-                      </p>
+                      </p> */}
                     </CardBody>
                   </Card>
             </Col>

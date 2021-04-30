@@ -164,6 +164,7 @@ import EmptyCart from "./EmptyCart.js";
           <Row>
           <Col md="12" sm="12" xl="12" xs="12" lg="12">
           <p style={{fontSize:"13px", fontWeight:500}}>View Your Cart. Which Campaign do you want to <span style={{color:"red"}}>Pay Later</span>.</p>
+                <p style={{fontWeight:500, fontSize:"13px"}}>Prices are VAT and NHIL exclusive</p>
           <Card style={{margin:"10px",boxShadow:"0 2px 12px rgba(0,0,0,0.1)"}}>
           <CardBody style={{overflowX:"scroll"}}>
           <Table stripped bordered>

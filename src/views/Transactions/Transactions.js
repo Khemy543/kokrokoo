@@ -36,8 +36,8 @@ function getTransactions(pageNumber=1){
     })
 }
 
-const handleGetCart=(id,date,cart_id)=>{
-  axios.get(`${domain}/api/get/${id}/invoice`,
+const handleGetCart=(transaction_id, transaction_reference, id)=>{
+  /* axios.get(`${domain}/api/get/${id}/invoice`,
   {headers:{ 'Authorization':`Bearer ${user}`}})
   .then(res=>{
     console.log(res.data)
@@ -45,7 +45,8 @@ const handleGetCart=(id,date,cart_id)=>{
   })
   .catch(error=>{
     console.log(error)
-  })
+  }) */
+  props.history.push('/client/transactions-details',{transaction_id, transaction_reference, id})
 }
 
 
@@ -99,7 +100,7 @@ const handleGetCart=(id,date,cart_id)=>{
                     <td>{value.transaction_reference}</td>
                     <td>
                       <Button color="info" style={{borderRadius:"100%", padding:"2px 5px 2px 5px"}}
-                      onClick={()=>handleGetCart(value.invoice_id, value.transaction_reference,value.cart_id)}><i className="fa fa-eye"/></Button>
+                      onClick={()=>handleGetCart(value.transaction_generated_id, value.transaction_reference, value.id)}><i className="fa fa-eye"/></Button>
                     </td>   
               </tr>
               ))}

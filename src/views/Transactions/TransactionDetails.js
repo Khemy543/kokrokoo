@@ -24,21 +24,24 @@ class TransactionDetails extends React.Component{
     isActive:true,
     cart:[],
     user:[],
-    total:0
+    total:0,
+    service_total:0
   }
 
 
 
   componentDidMount() {
     let total = 0;
-    axios.get(`${domain}/api/get/cart/${this.props.location.state.cart_id}/campaign/breakdown-calculation`,
+    let service_total = 0;
+    axios.get(`${domain}/api/fetch/transaction/${this.props.location.state.id}/detail`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
       console.log(res.data);
       for(var i=0; i<res.data.length; i++){
-        total = total + Number(res.data[i].total_amount.campaign_total_amount_with_discount)
+        total = total + Number(res.data[i].total_amount.campaign_total_amount_with_discount);
+        service_total = service_total + Number(res.data[i].total_amount.campaign_total_amount_without_discount)
       }
-      this.setState({cart:res.data,isActive:false, total:total});
+      this.setState({cart:res.data,isActive:false, total:total, service_total:service_total});
     })
     .catch(error=>{
       console.log(error)
