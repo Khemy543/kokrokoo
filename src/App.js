@@ -28,6 +28,7 @@ import ForgetPassword from "views/PasswordReset/forgetPassword.js"
 import BankDetails from "views/Registration/BankDetails";
 import ResetPassword from "views/PasswordReset/PasswordReset.js";
 import RequestAdProduction from "views/RequestAdProduction";
+import RequestAdsResponse from 'views/RequestAdsResponse.js'
 
 
 class App extends React.Component{
@@ -48,6 +49,7 @@ class App extends React.Component{
       <Route exact path="/auth/reset-password" component ={ResetPassword} />
       <Route exact path="/auth/media-account" component ={MediaAccount} />
       <Route exact path="/auth/bank-details" component ={BankDetails} />
+      <Route exact path="/auth/ad-production-response" component ={RequestAdsResponse} />
       <ProtectedLoginRoute exact path="/auth/login-page" component = {Login}/>
       <ProtectedLoginRoute exact path="/auth/request-ad-production" component = {RequestAdProduction}/>
       <ProtectedLoginRoute exact path="/auth/landing-page" component = {LandingPage}/>

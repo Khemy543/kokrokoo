@@ -159,16 +159,14 @@ function Login({history}){
               >
                 <small style={{fontWeight:600}}>Forgot password?</small>
               </Link>
-            </Col>{/* 
+            </Col>
             <Col className="text-right" xs="6">
-              <a
-                className="text-light"
-                href="#pablo"
-                onClick={e => e.preventDefault()}
+              <a 
+                href="/auth/landing-page"
               >
-                <small>Create new account</small>
+                <small>Register Here</small>
               </a>
-            </Col> */}
+            </Col>
           </Row>
             </CardBody>
           </Card>

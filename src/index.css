@@ -237,6 +237,10 @@
     margin-top: 43px !important;
   }
 
+  .phone-view-hide{
+    display:block;
+  }
+
   /* .heading-linear{
     margin-bottom: 15px !important;
   } */
@@ -246,11 +250,14 @@
   /* .tp-caption{
     margin-bottom: 30px;
   } */
- 
-  
 }
-
+@media screen and (max-width: 991px) and (min-width: 767px) {
+  /* .navbar-expand-lg > .container, .navbar-expand-lg > .container-fluid {
+    flex-wrap: nowrap !important;
+  } */
+}
 @media screen and (min-width: 991px){
+
 .news-liner{
   font-size: 16px !important;
 }

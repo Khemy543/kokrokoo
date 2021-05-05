@@ -126,7 +126,7 @@ function LandingPage(){
               aria-expanded={collapseOpen}
             >
             <i className="fa fa-bars" style={{color:"rgb(230, 170, 0)"}}/>
-            </div>
+          </div>
           <Collapse
             className="justify-content-end"
             isOpen={collapseOpen}
@@ -594,6 +594,7 @@ function LandingPage(){
                             height={470}
                             alt="pineapple"
                             className="element-center"
+                            style={{objectFit:"cover"}}
                           />
                         </div>
                         <div className="col-md-6">
@@ -629,6 +630,7 @@ function LandingPage(){
                             height={470}
                             alt="pineapple"
                             className="element-center"
+                            style={{objectFit:"cover"}}
                           />
                         </div>
                         <div className="col-md-6">
@@ -701,6 +703,7 @@ function LandingPage(){
                             height={470}
                             alt="pineapple"
                             className="element-center"
+                            style={{objectFit:"cover"}}
                           />
                         </div>
                         <div className="col-md-6">

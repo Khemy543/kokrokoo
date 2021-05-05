@@ -14,7 +14,11 @@ import {
   InputGroupText,
   InputGroup,
   Row,
-  Col,Container,Alert
+  Col,Container,Alert,
+  Modal,
+  ModalBody,
+  ModalHeader,
+  ModalFooter
 } from "reactstrap";
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
@@ -29,13 +33,30 @@ function RequestAdProduction({history}){
   const [phone, setPhone] = useState('');
   const [type, setType] = useState('');
   const [description, setDescription] = useState('');
-  const [budget, setBudget] = useState('Medium');
+  const [budget, setBudget] = useState('Middle');
   const [isActive, setIsActive] =useState(false);
 
+  var domain = "https://backend.demo.kokrokooad.com";
 
-
-  const handleSubmit=()=>{
-    console.log('submitted')
+  const handleSubmit=(e)=>{
+    e.preventDefault();
+    setIsActive(true)
+    axios.post(`${domain}/api/send/ad/production/request`,{
+        name:name,
+        email:email,
+        company_name:company,
+        phone:phone,
+        production_type:type,
+        budget:budget,
+        description:description
+    })
+    .then(response=>{
+        setAlert(true);
+    })
+    .catch(error=>{
+        console.log(error)
+    })
+    .finally((_)=>{setIsActive(false)})
   }
 
 
@@ -91,7 +112,7 @@ function RequestAdProduction({history}){
                         </Row>
                         
                         <Row>
-                            <Col>
+                            <Col md="6" sm="12" xs="12">
                             <label>Name of Company/Institution</label>
                             <FormGroup className="mb-3">
                             <InputGroup className="input-group-alternative">
@@ -145,7 +166,7 @@ function RequestAdProduction({history}){
                             </InputGroupAddon>
                             <Input type="select" value={budget} onChange={e=>setBudget(e.target.value)} required>
                             <option value="Low">Low</option>
-                            <option value="Medium">Medium</option>
+                            <option value="Middle">Middle</option>
                             <option value="High">High</option>
                             </Input>
                             </InputGroup>
@@ -209,7 +230,8 @@ function RequestAdProduction({history}){
                             borderRadius:"20px",
                             color: "#1b1e21",
                             background: "#F1CF00",
-                            border:"1px solid #F1CF00"
+                            border:"1px solid #F1CF00",
+                            marginBottom:"10px"
                         }}
                         >Submit</Button>
                     </Col>
@@ -223,6 +245,17 @@ function RequestAdProduction({history}){
         </Form>
         </Col>
         </Row>
+        
+        <Modal isOpen={alert}>
+            <ModalHeader style={{color:"black"}}>
+                        
+            </ModalHeader>
+            <ModalFooter>
+            <Button color="danger" onClick={()=>history.push('/ad-production-response')}>
+              close
+            </Button>
+            </ModalFooter>
+          </Modal>
     </Container>
     </div>
     </LoadingOverlay>

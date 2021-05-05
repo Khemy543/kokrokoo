@@ -127,8 +127,8 @@ class MediaAccount extends React.Component {
                 setTimeout(
                     function(){
                         this.setState({modal:false});
-                        this.props.history.push("/auth/await-verification",{
-                            email:this.state.email
+                        this.props.history.push("/auth/bank-details",{
+                            email:this.state.email, id:res.data.company
                         })
                     }
                     .bind(this),

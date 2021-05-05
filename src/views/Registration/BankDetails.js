@@ -4,6 +4,7 @@ import {
     Form, Col, Row, Input, Button
 } from "reactstrap";
 import axios from "axios";
+import Container from "reactstrap/lib/Container";
 
 
 var domain = "https://backend.demo.kokrokooad.com";
@@ -14,13 +15,14 @@ class BankDetails extends React.Component{
         bank_branch:"",
         bank_name:"",
         account_number:"",
-        account_name:""
+        account_name:"",
+        email:this.props.location.state.email
     }
 
     handleBankSubmit=(e)=>{
         e.preventDefault();
         this.setState({isActive:true})
-        axios.post(`${domain}/api/auth/add-bank/${this.state.id}/details`,
+        axios.post(`${domain}/api/auth/add-bank/${this.props.location.state.id}/details`,
         {
             bank_name:this.state.bank_name,
             bank_branch:this.state.bank_branch,
@@ -51,8 +53,10 @@ class BankDetails extends React.Component{
         return(
             <>
             <RegisterNavbar />
-                <div>
-                <Form onSubmit={this.handleBankSubmit}>
+            <Container>
+                <Row>
+                    <Col md="12">
+                    <Form onSubmit={this.handleBankSubmit}>
                 <Row>
                     <Col md="12">
                     <div className="account">
@@ -109,7 +113,9 @@ class BankDetails extends React.Component{
                     </Col>
                     </Row>
             </Form>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
             </>
         )
     }
