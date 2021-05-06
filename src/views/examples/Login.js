@@ -19,6 +19,7 @@ import {
 import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
+import LoginNavbar from "components/Navbars/LoginNavBar.js";
 
 var domain = "https://backend.demo.kokrokooad.com";
 function Login({history}){
@@ -84,7 +85,7 @@ function Login({history}){
       >
       
       <div className="filter" />
-      <AuthNavbar />
+      <LoginNavbar />
       <Container>
         <Row>
         <Col lg="5" md="7" className="ml-auto mr-auto mt-7 mb-auto">
