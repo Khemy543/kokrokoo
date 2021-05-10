@@ -4,7 +4,7 @@ import decode from "jwt-decode";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 const RateContext = React.createContext();
 
 

@@ -17,7 +17,7 @@ import axios from "axios";
 import Subcard from "components/Cards/SubCard.js"
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 function CreateRateCards(props) {
     const [ratecards, setRatecards] = React.useState([]);

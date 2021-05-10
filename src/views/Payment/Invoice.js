@@ -16,7 +16,7 @@ import InvoiceCard from "components/Invoice/InvoiceCard";
 import ReactToPrint from "react-to-print";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class Invoice extends React.Component{
 

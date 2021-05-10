@@ -20,7 +20,7 @@ import FadeLoader from "react-spinners/FadeLoader";
   JSZip
 } from "docxtemplater"; */
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function UploadFile(props){
 

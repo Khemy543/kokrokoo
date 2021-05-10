@@ -20,7 +20,7 @@ import "@fullcalendar/timegrid/main.css";
 import axios from "axios";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 
 class Index extends React.Component {

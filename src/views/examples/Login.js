@@ -21,7 +21,7 @@ import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 import LoginNavbar from "components/Navbars/LoginNavBar.js";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 function Login({history}){
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
@@ -38,7 +38,7 @@ function Login({history}){
     axios.post(`${domain}/oauth/token`,{
       grant_type: "password",
       client_id: 1,
-      client_secret:"UhJpDIR5od53fmjQntzxk4QvlSfni8yrK6exIk1z",
+      client_secret:"NNFyA9IvQd9bBwMEkkiXNNvuUS5GFYPGkqtUgeMp",
       username: username,
       password: password,
       provider: "clients",

@@ -14,7 +14,7 @@ import{
     Button, Alert, Input
 } from "reactstrap";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 export default function ForgetPassword(props){
     const [message, setMessage] = React.useState("");
     const [visible, setVisible] = React.useState(false);

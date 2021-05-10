@@ -7,7 +7,7 @@ import axios from "axios";
 import Container from "reactstrap/lib/Container";
 
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class BankDetails extends React.Component{
 

@@ -12,7 +12,7 @@ import Pagination from "react-js-pagination";
 
 // core components
 import Header from "components/Headers/Header.js";
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 
 class SubDetails extends React.Component {

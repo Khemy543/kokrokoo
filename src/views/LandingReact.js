@@ -18,7 +18,7 @@ import axios from "axios";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 function LandingPage(){
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
@@ -178,8 +178,8 @@ function LandingPage(){
               <UncontrolledPopover trigger="legacy" isOpen={dropdownOpen} placement="bottom" toggle={toggle} target="Popover2">
                   <PopoverBody style={{paddingLeft:"0px",paddingRight:"0px"}}>
                    <ListGroup >  
-                   <a href="/auth/personal-account"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(PERSONAL)</ListGroupItem></a>
-                   <a href="/auth/organization-account"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(ORGANIZATION)</ListGroupItem></a>
+                   <a href="/auth/blog"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(PERSONAL)</ListGroupItem></a>
+                   <a href="/auth/blog"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(ORGANIZATION)</ListGroupItem></a>
                    <a href="/auth/media-house"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">MEDIA HOUSE</ListGroupItem></a>
                   </ListGroup>
                   </PopoverBody>
@@ -188,8 +188,8 @@ function LandingPage(){
               <NavItem className="phone-view">
                 <NavLink onClick={()=>toggleRegisterCollapse()}>REGISTER <i className={!registerCollpase?"fa fa-chevron-down ml-2":"fa fa-chevron-up ml-2" }/></NavLink>
                 <Collapse isOpen={registerCollpase} style={{backgroundColor:"#f5f5f5"}}>
-                  <NavLink href="/auth/personal-account">CLIENT(PERSONAL)</NavLink>
-                  <NavLink href="/auth/organization-account">CLIENT(ORGANIZATION)</NavLink>
+                  <NavLink href="/auth/blog">CLIENT(PERSONAL)</NavLink>
+                  <NavLink href="/auth/blog">CLIENT(ORGANIZATION)</NavLink>
                   <NavLink href="/auth/media-house">MEDIA HOUSE</NavLink>
                 </Collapse>
               </NavItem>{/* 
@@ -208,7 +208,7 @@ function LandingPage(){
                   <PopoverBody style={{paddingLeft:"0px",paddingRight:"0px"}}>
                    <ListGroup >  
                    <a href="/auth/login-page"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT</ListGroupItem></a>
-                   <a href="https://demo.media.kokrokooad.com/" target="_blank" rel="noopener noreferrer"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">MEDIA HOUSE</ListGroupItem></a>
+                   <a href="https://media.kokrokooad.com/" target="_blank" rel="noopener noreferrer"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">MEDIA HOUSE</ListGroupItem></a>
                   </ListGroup>
                   </PopoverBody>
                   </UncontrolledPopover>
@@ -217,7 +217,7 @@ function LandingPage(){
                 <NavLink onClick={()=>toggleLoginCollapse()}>LOGIN <i className="fa fa-sign-in" /></NavLink>
                 <Collapse isOpen={loginCollapse} style={{backgroundColor:"#f5f5f5"}}>
                   <NavLink href="/auth/login-page">CLIENT</NavLink>
-                  <NavLink href="https://demo.media.kokrokooad.com/">MEDIA HOUSE</NavLink>
+                  <NavLink href="https://media.kokrokooad.com/">MEDIA HOUSE</NavLink>
                 </Collapse>
               </NavItem>
             </Nav>

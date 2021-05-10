@@ -12,7 +12,7 @@ import {
 
 
   let user =localStorage.getItem('access_token');
-  var domain = "https://backend.demo.kokrokooad.com";
+  var domain = "https://backend.kokrokooad.com";
   class CompletedCampaigns extends React.Component{
 
     state={

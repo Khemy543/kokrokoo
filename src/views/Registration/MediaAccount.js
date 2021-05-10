@@ -18,7 +18,7 @@ import { Animated } from "react-animated-css";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class MediaAccount extends React.Component {
 

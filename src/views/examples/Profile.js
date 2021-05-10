@@ -19,7 +19,7 @@ import axios from "axios";
 import Header from "components/Headers/Header";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class Profile extends React.Component {
 
   state={
