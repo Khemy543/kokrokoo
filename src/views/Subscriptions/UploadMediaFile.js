@@ -188,7 +188,7 @@ function UploadFile(props){
     else if(my_type ==="image"){
       return(
         <div>
-        <img src={URL.createObjectURL(videoFile)} alt="#" style={{height:"80vh",width:"70vh"}}/>
+        <img src={URL.createObjectURL(videoFile)} alt="#" style={{height:"80vh",width:"100%", objectFit:"cover"}}/>
         </div>
       )
     }

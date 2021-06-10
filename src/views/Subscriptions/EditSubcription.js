@@ -155,13 +155,13 @@ render(){
                         <Table  bordered striped>
                         <thead style={{backgroundColor:"#01a9ac",color:"black",height:""}}>
                         <tr>
-                        <td>#</td>
-                        <td>duration</td>
-                        <td>Rate</td>
-                        <td>Selected Spots</td>
-                        <td>Time Segment</td>
-                        <td>Amount</td>
-                        <td>Delete</td>
+                          <td>#</td>
+                          <td>duration</td>
+                          <td>Rate</td>
+                          <td>Selected Spots</td>
+                          <td>Time Segment</td>
+                          <td>Amount</td>
+                          <td>Delete</td>
                         </tr>
                         </thead>
                         <tbody>

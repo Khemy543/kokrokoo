@@ -1,8 +1,6 @@
-/* eslint-disable no-loop-func */
-
 import React from "react";
-import  { Prompt } from 'react-router-dom';
 import NavigationPrompt from "react-router-navigation-prompt";
+
 // reactstrap components
 import {
   Card,
@@ -14,6 +12,7 @@ import {
   Button,Modal, ModalBody,ModalHeader, ModalFooter,Spinner,
   InputGroup,Table,Progress
 } from "reactstrap";
+
 // core components
 import Header from "components/Headers/Header.js";
 import axios from "axios";
@@ -22,7 +21,6 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from "@fullcalendar/interaction"; 
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
-import data from "data/volumeData";
 
 let user =localStorage.getItem('access_token');
 var domain = "https://backend.kokrokooad.com";
@@ -187,29 +185,29 @@ class Calender extends React.Component{
         if(unit === 'Hr'){
             duration = duration*3600;
             if(this.state.file_duration-duration > 0){
-                return true
+                return true;
             }
             else{
-                return false
+                return false;
             }
         }else
 
         if(unit === 'Min'){
             duration = duration*60;
             if(this.state.file_duration-duration > 0){
-                return true
+                return true;
             }else{
-                return false
+                return false;
             }
         }else
 
         if(unit === 'Sec'){
             if(this.state.file_duration-duration > 0){
                 
-                return true
+                return true;
             }
             else{
-                return false
+                return false;
             }
         }
 
@@ -217,10 +215,10 @@ class Calender extends React.Component{
         
         if(unit === "Words"){
             if(duration <= this.props.location.state.no_of_words){
-                return true
+                return true;
             }
             else{
-                return false
+                return false;
             }
         }
     }

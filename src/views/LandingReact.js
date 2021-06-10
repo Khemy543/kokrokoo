@@ -207,7 +207,7 @@ function LandingPage(){
               <UncontrolledPopover trigger="legacy" isOpen={LoginOpen} placement="bottom" toggle={toggleLogin} target="Popover3">
                   <PopoverBody style={{paddingLeft:"0px",paddingRight:"0px"}}>
                    <ListGroup >  
-                   <a href="/auth/login-page"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT</ListGroupItem></a>
+                   <a href="/auth/blog"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT</ListGroupItem></a>
                    <a href="https://media.kokrokooad.com/" target="_blank" rel="noopener noreferrer"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">MEDIA HOUSE</ListGroupItem></a>
                   </ListGroup>
                   </PopoverBody>
@@ -896,7 +896,7 @@ function LandingPage(){
                           </li>
                         </ul> */}
                         <a
-                          href="/auth/login-page"
+                          href="/auth/blog"
                           className="btn button btn-block text-uppercase"
                           style={{borderRadius:"20px", marginTop:"5px"}}
                         >

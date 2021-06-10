@@ -63,11 +63,11 @@ class InvoiceCard extends React.Component{
                               </thead>
                                 <thead style={{backgroundColor:"#01a9ac",color:"black",height:""}}>
                                 <tr>
+                                <td>Date</td>
+                                <td>Time Segment</td>
+                                <td>Number of Spots</td>
                                 <td>Duration</td>
                                 <td>Rate</td>
-                                <td>Selected Spots</td>
-                                <td>Time Segment</td>
-                                <td>Date</td>
                                 <td>Amount</td>
                                 </tr>
                                 </thead>
@@ -76,11 +76,11 @@ class InvoiceCard extends React.Component{
                                   <>
                                 {item.details.map((value,index)=>(
                                   <tr>
+                                    <td>{item.selected_date} - {item.day.day}</td>
+                                    <td>{value.ratecard.start_time} - {value.ratecard.end_time}</td>
+                                    <td>{value.selected_spots}</td>
                                     <td>{value.duration.duration} {value.duration.unit.unit}</td>
                                     <td>{value.duration.rate}</td>
-                                    <td>{value.selected_spots}</td>
-                                    <td>{value.ratecard.start_time} - {value.ratecard.end_time}</td>
-                                    <td>{item.selected_date} - {item.day.day}</td>
                                     <td>{(Math.round(Number(value.amount) * (item.no_of_weeks+1) * 100) / 100).toFixed(2)}</td>
                                   </tr>
                                   ))}
@@ -107,10 +107,10 @@ class InvoiceCard extends React.Component{
                               </thead>
                               <thead style={{backgroundColor:"#01a9ac",color:"black",height:""}}>
                                 <tr>
+                                <td>Date</td>
                                 <td>Size</td>
                                 <td>Page Section</td>
                                 <td>Cost</td>
-                                <td>Date</td>
                                 <td>Amount</td>
                                 </tr>
                                 </thead>
@@ -119,10 +119,10 @@ class InvoiceCard extends React.Component{
                                   <>
                                   {item.details.map((value,index)=>(
                                   <tr>
+                                    <td>{item.selected_date} - {item.day.day}</td>
                                     <td>{value.ratecard.size}</td>
                                     <td>{value.ratecard.page_section}</td>
                                     <td>{value.ratecard.cost}</td>
-                                    <td>{item.selected_date} - {item.day.day}</td>
                                     <td>{Number(value.ratecard.cost) * (item.no_of_weeks+1)}</td>
                                   </tr>
                                   ))}
