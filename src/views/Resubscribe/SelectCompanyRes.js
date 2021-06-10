@@ -24,7 +24,7 @@ function SelectCompanyRes(props) {
  const toggle = () => setTooltipOpen(!tooltipOpen);
 
  let user =localStorage.getItem('access_token');
- var domain = "https://backend.kokrokooad.com";
+ var domain = "https://backend.demo.kokrokooad.com";
  React.useEffect(()=>{
    setIsActive(true)
    if(props.location.state === undefined){

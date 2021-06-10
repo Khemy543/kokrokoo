@@ -13,7 +13,7 @@ import {
 import Header from "components/Headers/Header.js";
 import axios from "axios";
 
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 function SelectEditType(props) {
   const [radio, setRadio] = React.useState('');
   const [modal, setModal] = React.useState(false)

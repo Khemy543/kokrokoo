@@ -8,7 +8,7 @@ import axios from "axios";
 import data from "data/volumeData.js"
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 class VolumeDiscount extends React.Component{
     
     state={

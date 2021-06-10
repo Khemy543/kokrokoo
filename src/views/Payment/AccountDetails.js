@@ -18,7 +18,7 @@ import axios from "axios";
 import Header from "components/Headers/Header";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 class AccountDetails extends React.Component{
     state={
         isActive:false,

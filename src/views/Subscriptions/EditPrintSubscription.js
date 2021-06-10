@@ -15,7 +15,7 @@ import Header from "components/Headers/Header.js";
 import axios from "axios";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 class EditPrintSubscription extends React.Component{
 
     state={

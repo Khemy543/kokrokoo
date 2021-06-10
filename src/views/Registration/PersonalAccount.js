@@ -18,7 +18,7 @@ import RegisterNavbar from "components/Navbars/RegisterNavbar";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 class PerosnalAccount extends React.Component {
 
     state={

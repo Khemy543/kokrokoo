@@ -18,7 +18,7 @@ import classnames from 'classnames';
 import {RateConsumer} from "../../context.js";
 import Spinner from "reactstrap/lib/Spinner";
 
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function UserDetails(props) {
 const [isActive, setIsActive] = React.useState(false);

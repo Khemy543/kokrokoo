@@ -18,7 +18,7 @@ import axios from "axios";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 
 function LandingPage(){
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");

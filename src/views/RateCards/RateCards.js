@@ -17,7 +17,7 @@ import axios from "axios";
 import Ratecard from "components/Cards/RateCard.js"
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 function RateCards(props) {
     const [ratecards, setRatecards] = React.useState([]);
     const [isActive, setIsActive] = React.useState(true);

@@ -15,7 +15,7 @@ import axios from "axios";
 //import history from "../history";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 class EditSubscription extends React.Component{
 
     state={

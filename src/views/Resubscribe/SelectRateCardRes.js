@@ -17,7 +17,7 @@ import axios from "axios";
 import ResubscribeRateCard from "components/Cards/ResubscribeRateCard";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 
 function SelectRateCardRes(props) {
     const [ratecards, setRatecards] = React.useState([]);

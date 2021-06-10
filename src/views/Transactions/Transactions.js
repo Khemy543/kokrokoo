@@ -9,7 +9,7 @@ import Header from "components/Headers/Header.js";
 import Pagination from "react-js-pagination";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 function Transactions(props) {
 const [transactions, setTransactions] = React.useState([])
 const [isActive, setIsActive] = React.useState(true);

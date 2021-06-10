@@ -26,7 +26,7 @@ import data from "data/volumeData";
 
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.kokrokooad.com";
+var domain = "https://backend.demo.kokrokooad.com";
 
 class PrintResubscribe extends React.Component{
     constructor(props) {
