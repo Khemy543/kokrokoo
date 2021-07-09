@@ -15,10 +15,6 @@ import{
 
 export default function RequestAdsResponse(props){
 
-    /* React.useEffect(()=>{
-        console.log(props.location.state.email)
-    },[]) */
-
     return(
     
             <div>

@@ -15,7 +15,7 @@ import axios from "axios";
 //import history from "../history";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class EditSubscription extends React.Component{
 
     state={
@@ -39,7 +39,6 @@ componentDidMount(){
     axios.get(`${domain}/api/subscription/${this.props.location.state.id}/details`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-      console.log(res.data);
       for(var i=0; i<res.data.length; i++){
         total = total + Number(res.data[i].total_amount);
       }
@@ -49,24 +48,19 @@ componentDidMount(){
             this.setState({volume:response.data});
             for(var t=0; t<response.data.length; t++){
               let range = response.data[t].amount_range.split("-");
-              console.log(response.data[t].amount_range)
               if(Number(range[0])<=total && total<=Number(range[1])){
-                  console.log("yes")
                   discount = (response.data[t].percentile/100) * total
-                  console.log(discount)
               }
           }
           this.setState({selectedSub:res.data,isActive:false, total:total,discount_amount:discount})
         });
     })
     .catch(error=>{
-      console.log(error)
       this.setState({isActive:false})
     })
 }
 
 handleDelete=(id)=>{
-  console.log(id)
   let tempData = this.state.selectedSub;
   let total = 0;
   let GrandTotal = 0;
@@ -74,11 +68,9 @@ handleDelete=(id)=>{
   axios.delete(`${domain}/api/subscription-detail/${id}/delete`,
   {headers:{ 'Authorization':`Bearer ${user}`}})
   .then(res=>{
-    console.log(res.data);
     let newDetails = this.state.detailsArray.filter(item=>item.id !==id);
     if(newDetails.length<=0){
       tempData = tempData.filter(item=> item.id != tempData[this.state.index].id);
-      console.log(tempData)
       for(var k=0; k<tempData.length; k++){
         GrandTotal = GrandTotal + Number(tempData[k].total_amount)
       }
@@ -88,7 +80,6 @@ handleDelete=(id)=>{
       total = total + Number(newDetails[i].amount);
     }
     tempData[this.state.index].total_amount = total;
-    console.log(total, tempData)
 
     for(var k=0; k<tempData.length; k++){
       GrandTotal = GrandTotal + Number(tempData[k].total_amount);
@@ -97,9 +88,7 @@ handleDelete=(id)=>{
   for(var t=0; t<this.state.volume.length; t++){
     let range = this.state.volume[t].amount_range.split("-");
     if(Number(range[0])<=total && total<=Number(range[1])){
-        console.log("yes")
         discount = (this.state.volume[t].percentile/100) * GrandTotal
-        console.log(discount)
     }
   }
     this.setState({selectedSub:tempData, total:GrandTotal, modal:false, discount_amount:discount})

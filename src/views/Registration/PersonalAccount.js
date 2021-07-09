@@ -18,7 +18,7 @@ import RegisterNavbar from "components/Navbars/RegisterNavbar";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class PerosnalAccount extends React.Component {
 
     state={
@@ -56,7 +56,6 @@ class PerosnalAccount extends React.Component {
             title: this.state.title
         })
         .then(res=>{
-            console.log(res.data);
                 this.setState({
                     alertmessage:"Registration Successful!",
                     modal:true,
@@ -74,7 +73,6 @@ class PerosnalAccount extends React.Component {
                 )
         })
         .catch(error=>{
-            console.log(error.response.data);
             if(error.response){
                 this.setState({alertmessage:error.response.data.errors.phone1 || error.response.data.errors.phone2 || error.response.data.errors.email || error.response.data.errors.password, modal:true ,isActive:false})
             }
@@ -248,7 +246,7 @@ class PerosnalAccount extends React.Component {
                         </Row>
                         <Row>
                             <Col md="6" style={{marginLeft:"20px"}}>
-                            <Input type="checkbox" value={this.state.terms} onChange={e=>this.setState({terms:e.target.checked})} required/> <p style={{fontSize:"13px", fontWeight:700}}>Agree To <a href="/auth/terms&conditions-client">Terms And Conditions</a></p>
+                            <Input type="checkbox" value={this.state.terms} onChange={e=>this.setState({terms:e.target.checked})} required/> <p style={{fontSize:"13px", fontWeight:700}}>Agree To <a target="_blank" href="/auth/terms&conditions-client">Terms And Conditions</a></p>
                         </Col>
                         </Row>
                     <Row>

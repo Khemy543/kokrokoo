@@ -17,7 +17,7 @@ import axios from "axios";
 import Subcard from "components/Cards/SubCard.js"
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 function CreateRateCards(props) {
     const [ratecards, setRatecards] = React.useState([]);
@@ -27,14 +27,11 @@ function CreateRateCards(props) {
     const toggle = () => setTooltipOpen(!tooltipOpen);
 
 
-    console.log("meida ghouse",props.location.state)
-
 React.useEffect(()=>{
   setIsActive(true)
     axios.get(`${domain}/api/view/${props.location.state.media_house_id}/ratecards`,{
     headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log("message:",res.data);
         setRatecards(res.data);
         setIsActive(false)
     })

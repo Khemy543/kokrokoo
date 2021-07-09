@@ -23,7 +23,7 @@ import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class Calender extends React.Component{
     constructor(props) {
         super(props);
@@ -66,11 +66,9 @@ class Calender extends React.Component{
 
       
       componentDidMount(){
-        console.log(this.props.location.state.file_duration,this.props.location.state.no_of_words)
         axios.get(`${domain}/api/company/${this.props.location.state.media_house_id}/volume-discounts`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("discount here")
             this.setState({volume:res.data})
         })
 
@@ -81,13 +79,10 @@ class Calender extends React.Component{
         var mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = tomorrow.getFullYear();
         var today = yyyy + '-' + mm + '-' + dd;
-        console.log("today:",today)
-        console.log("ne:",this.props.location.state)
         let newEvents = [];
         axios.get(`${domain}/api/view-ratecard/${this.props.location.state.rate_card.id}/details`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("details:",res.data);
             this.setState({rateCards:res.data})
             for(var i=0; i<res.data.length; i++){
                 if(newEvents.some(item=>item.id === res.data[i].day.id)){
@@ -107,7 +102,6 @@ class Calender extends React.Component{
             axios.get(`${domain}/api/subscription/${this.props.location.state.title_id}/details`,
             {headers:{ 'Authorization':`Bearer ${user}`}})
             .then(res=>{
-                console.log("mafia",res.data);
                 for(var i=0; i<res.data.length;i++){
                     grand_total = Number(res.data[i].total_amount) + grand_total;
                     if(newEvents.some(item=>item.start === res.data[i].selected_date)){
@@ -116,14 +110,10 @@ class Calender extends React.Component{
                     newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
                     }
                 }
-                 console.log("grand",grand_total);
                     for(var t=0; t<this.state.volume.length; t++){
                     let range = this.state.volume[t].amount_range.split("-");
-                    console.log(this.state.volume[t].amount_range)
                     if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
-                        console.log("yes")
                         discount = (this.state.volume[t].percentile/100) * grand_total
-                        console.log(discount)
                     }
                 }
                 this.setState({data:res.data, total_amount:grand_total,eventData:newEvents,discount_amount:discount});
@@ -134,9 +124,6 @@ class Calender extends React.Component{
         .catch(error=>{
             if(!error.response){
                 alert("check your internet connection");
-            }
-            else{
-                console.log(error)
             }
         });
         
@@ -327,7 +314,6 @@ class Calender extends React.Component{
         let data = this.state.data;
         let total = 0;
         let selectedDate = data.find(item=>item.selected_date === this.state.date);
-        console.log(selectedDate)
         if(selectedDate !== undefined){
             let itemselect = selectedDate.details.find(item=>item.ratecard.id === id);
             if(itemselect !== undefined){
@@ -340,7 +326,6 @@ class Calender extends React.Component{
             let twice = Number(selectedDate.no_of_weeks)+1;
             total = total * twice;
             this.setState({data:data,total:total});
-            console.log(data, total)
         }
         
         
@@ -364,7 +349,6 @@ class Calender extends React.Component{
             newEvents = newEvents.filter(item=>item.start != this.state.date);
                newArray = selectedDate.details.filter(item=>item.ratecard.id !== id);
                selectedItem.selected_spots = 0;
-               console.log(newArray);
                if(newArray.length <= 0){
                 newDataArray = tempData.filter(item=>item.selected_date != this.state.date);
                 for(var i=0; i<newDataArray.length;i++){
@@ -381,7 +365,6 @@ class Calender extends React.Component{
                     let range = this.state.volume[t].amount_range.split("-");
                     if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
                         discount = (this.state.volume[t].percentile/100) * grand_total
-                        console.log(discount)
                     }
                 }
                  this.setState({data:newDataArray, total:0, eventData:newEvents, total_amount:grand_total, discount_amount:discount})
@@ -408,17 +391,14 @@ class Calender extends React.Component{
                     let range = this.state.volume[t].amount_range.split("-");
                     if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
                         discount = (this.state.volume[t].percentile/100) * grand_total
-                        console.log(discount)
                     }
                 }
                 this.setState({data:tempData, total:total, eventData:newEvents, total_amount:grand_total, discount_amount:discount})   
                }
             }).catch(error=>{
-                console.log(error.response.status)
                 if(error.response.status == 404){
                 newArray = selectedDate.details.filter(item=>item.ratecard.id !== id);
                 selectedItem.selected_spots = 0;
-                console.log(newArray);
                 if(newArray.length <= 0){
                     newDataArray = tempData.filter(item=>item.selected_date != this.state.date);
                     this.setState({data:newDataArray, total:0})
@@ -479,7 +459,6 @@ class Calender extends React.Component{
                 let range = this.state.volume[t].amount_range.split("-");
                 if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
                     discount = (this.state.volume[t].percentile/100) * grand_total
-                    console.log(discount)
                 }
             }
                 this.setState({loading:false,no_of_weeks:0, saveModal:true, modalmessage:"Schedule Saved", data:res.data,total_amount:grand_total, eventData:newEvents, discount_amount:discount});
@@ -491,7 +470,6 @@ class Calender extends React.Component{
         })
         .catch(error=>{
             this.setState({isActive:false, loading:false})
-            console.log(error)
         })
         }
         else{
@@ -505,7 +483,6 @@ class Calender extends React.Component{
             segments: segments
         },{headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log(res.data)
             this.setState({isActive:false})
             let grand_total=0;
             for(var i=0; i<res.data.length;i++){
@@ -533,7 +510,6 @@ class Calender extends React.Component{
         })
         .catch(error=>{
             this.setState({isActive:false, loading:false})
-            console.log(error)
         })
         }
       }else{
@@ -564,7 +540,6 @@ class Calender extends React.Component{
             onUploadProgress: (progressEvent) => {
                 const {loaded , total} = progressEvent;
                 let percentage = Math.floor(loaded * 100 / total);
-                console.log(percentage)
                 if(percentage<100){
                     this.setState({percentage:percentage});
                 }
@@ -573,7 +548,6 @@ class Calender extends React.Component{
                 }
             }
             }).then(res=>{
-                    console.log(res.data);
                     if(res.data.status === "file saved"){
                         this.setState({isActive:false, changeText:false, prompt:false});
                         setTimeout(
@@ -588,7 +562,6 @@ class Calender extends React.Component{
                     }
                 })
                 .catch(error=>{
-                    console.log(error.response.data)
                     this.setState({isActive:true})
                 })
      

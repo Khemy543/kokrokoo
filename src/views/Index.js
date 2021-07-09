@@ -20,7 +20,7 @@ import "@fullcalendar/timegrid/main.css";
 import axios from "axios";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 
 class Index extends React.Component {
@@ -32,14 +32,14 @@ class Index extends React.Component {
     rejected:0,
     approved:0,
     total:0,
-    completed_campaigns:[]
+    completed_campaigns:[],
+    balance : 0,
   }
 
   componentDidMount(){
     axios.get(`${domain}/api/dashboard-stats`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-      console.log(res.data);
       this.setState({
         active:res.data.active,
         pending:res.data.pending,
@@ -51,7 +51,17 @@ class Index extends React.Component {
       })
     })
     .catch(error=>{
-      console.log(error)
+    })
+
+    axios.get(`${domain}/api/fetch/user/account/balance`,
+    {headers : { 'Authorization' : `Bearer ${user}` }})
+    .then(response => {
+      this.setState({
+        balance : response.data.account_balance
+      })
+    })
+    .catch(error => {
+
     })
   }
 
@@ -76,22 +86,14 @@ class Index extends React.Component {
             
           </Col>
         </Row>
-        
-          {/* <Row style={{marginTop:"20px"}}>
+          {Number(this.state.balance) > 0 ?
+          <Row style={{marginTop:"20px"}}>
             <Col className="mb-5 mb-xl-0" xl="12" md="12" lg="12" sm="12" xs="12">
-              <Card className="shadow">
-              <CardBody>
-              <FullCalendar
-              headerToolbar= {{
-                center: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek' // buttons for switching between views
-              }}
-              plugins={[dayGridPlugin, timeGridPlugin, listPlugin ]}
-              height="75vh"
-              />
-            </CardBody>
-              </Card>
+                <h1><span style={{fontSize:"14px"}}>Balance : </span> GHS {this.state.balance}</h1>
             </Col>
-          </Row> */}
+          </Row>
+          :
+          null}
 
           <Row style={{marginTop:"30px"}}>
             <Col md="6">

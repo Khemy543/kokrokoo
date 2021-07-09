@@ -14,8 +14,6 @@ export default function Ratecard(props) {
     const [tooltipOpen, setTooltipOpen] = React.useState(false);
 
     const toggle = () => setTooltipOpen(!tooltipOpen);
-
-    console.log(localStorage.getItem("media_id"))
     const {id,title,file_types,description} = props.data;
 
     return(

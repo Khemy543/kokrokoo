@@ -10,15 +10,11 @@ import {
   import axios from "axios";
 
   let user =localStorage.getItem('access_token');
-  var domain = "https://backend.demo.kokrokooad.com";
+  var domain = "https://backend.kokrokooad.com";
   class SearchResults extends React.Component{
 
     state={
         isActive:false,
-    }
-
-    componentDidMount(){
-       console.log(this.props.location.state)
     }
 
     render(){
@@ -124,7 +120,6 @@ import {
               <td>{value.searchable.rate_card_title}</td>
               <td>{value.searchable.service_description}</td>
               <td>{value.searchable.company.media_house}</td>
-              {console.log(value.searchable.file_types.slice(1,-1))}
               <td>{value.searchable.file_types.slice(1,-1)}</td>
               <td>
                 <Row>

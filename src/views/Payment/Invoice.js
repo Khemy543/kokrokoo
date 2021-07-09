@@ -16,7 +16,7 @@ import InvoiceCard from "components/Invoice/InvoiceCard";
 import ReactToPrint from "react-to-print";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class Invoice extends React.Component{
 
@@ -37,7 +37,6 @@ class Invoice extends React.Component{
     axios.get(`${domain}/api/get/cart/${this.props.location.state.cart_id}/campaign/breakdown-calculation`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-      console.log(res.data);
       for(var i=0; i<res.data.length; i++){
         total = total + Number(res.data[i].total_amount.campaign_total_amount_with_discount);
         service_total = service_total + Number(res.data[i].total_amount.campaign_total_amount_without_discount);
@@ -45,7 +44,6 @@ class Invoice extends React.Component{
       this.setState({cart:res.data,isActive:false, total:total, service_total:service_total});
     })
     .catch(error=>{
-      console.log(error)
     })
 
     axios.get(`${domain}/api/client`,{
@@ -53,7 +51,6 @@ class Invoice extends React.Component{
         }
         )
         .then(res=>{
-        console.log(res.data);
         this.setState({user:res.data.user, isActive:false})
         });
     axios.get(`${domain}/api/fetch/user/account/balance/${this.props.location.state.cart_id}`,
@@ -86,7 +83,6 @@ class Invoice extends React.Component{
           content={() => this.componentRef}
         />
         <Row>
-          {console.log(this.props.location.state)}
             <InvoiceCard data={this.state} next={this.props.location.state} ref={el => (this.componentRef = el)}/>
             
         </Row>

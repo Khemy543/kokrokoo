@@ -15,10 +15,6 @@ import{
 
 export default function AwaitVerification(props){
 
-    /* React.useEffect(()=>{
-        console.log(props.location.state.email)
-    },[]) */
-
     return(
     
             <div>

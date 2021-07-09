@@ -12,7 +12,7 @@ import {
 
 
   let user =localStorage.getItem('access_token');
-  var domain = "https://backend.demo.kokrokooad.com";
+  var domain = "https://backend.kokrokooad.com";
   class RejectedCampaigns extends React.Component{
 
     state={
@@ -31,11 +31,9 @@ import {
       axios.get(`${domain}/api/rejected-campaigns?page=${pageNumber}`,
       {headers:{ 'Authorization':`Bearer ${user}`}})
       .then(res=>{
-        console.log(res.data);
         this.setState({campaigns:res.data, data:res.data.data, meta:res.data.meta, isActive:false})
       })
       .catch(error=>{
-        console.log(error)
       })
   }
 
@@ -99,15 +97,14 @@ import {
               <td>{value.total_amount.campaign_grand_total_with_tax}</td>
               <td>{value.date} {value.time}</td>
               <td>
-                {!value.re_subscribed?
                 <Row>
                   <Col className="ml-auto mr-auto">
-                    {/* <Button title="Resubscribe"  color="info" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.props.history.push('/client/resubscribe/media-type',{
+                    <Button title="Resubscribe"  color="info" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.props.history.push('/client/resubscribe/media-type',{
                         campaign_id:value.id,
                         campaign_title:value.title,
                         campaign_amount:value.total_amount
                         })}><i className="fa fa-repeat"/>
-                      </Button> */}
+                      </Button>
                       <Button title="View" color="info" style={{padding:"5px 10px 5px 10px"}} onClick={()=>this.props.history.push('/client/completed-details',{
                         id:value.id,
                         title:value.title
@@ -116,9 +113,6 @@ import {
                       </Button> 
                   </Col>
                 </Row>  
-                :
-                null
-                }
                 </td>
             </tr>
             ))}  

@@ -9,7 +9,7 @@ import Header from "components/Headers/Header.js";
 import Pagination from "react-js-pagination";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 function Transactions(props) {
 const [transactions, setTransactions] = React.useState([])
 const [isActive, setIsActive] = React.useState(true);
@@ -25,27 +25,17 @@ function getTransactions(pageNumber=1){
     axios.get(`${domain}/api/payment/transactions?page=${pageNumber}`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         setTransactions(res.data);
         setData(res.data.data);
         setMeta(res.data.meta)
         setIsActive(false)
     })
     .catch(error=>{
-        console.log(error);
     })
 }
 
 const handleGetCart=(transaction_id, transaction_reference, id)=>{
-  /* axios.get(`${domain}/api/get/${id}/invoice`,
-  {headers:{ 'Authorization':`Bearer ${user}`}})
-  .then(res=>{
-    console.log(res.data)
-    props.history.push("/client/transactions-details",{invoice:{generated_invoice_id:id, created_at:date},cart_id:cart_id})
-  })
-  .catch(error=>{
-    console.log(error)
-  }) */
+ 
   props.history.push('/client/transactions-details',{transaction_id, transaction_reference, id})
 }
 

@@ -19,7 +19,7 @@ import axios from "axios";
 import Header from "components/Headers/Header";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class Profile extends React.Component {
 
   state={
@@ -54,7 +54,6 @@ componentDidMount(){
         }
         )
         .then(res=>{
-        console.log(res.data)
         if(res.data.user !== null){
           this.setState({
             username:res.data.user.name, 
@@ -93,7 +92,6 @@ componentDidMount(){
             this.setState({isActive:false});
           }
           else{
-            console.log(error.response.data)
           this.setState({isActive:false});
           }
         });
@@ -102,13 +100,10 @@ componentDidMount(){
 
 handleSubmit=(e)=>{
   e.preventDefault();
-  console.log(e);
-  console.log(this.state.id)
   axios.post(`${domain}/api/client/${this.state.id}/update`,{ _method:"PATCH",
   name:this.state.username, email:this.state.email,phone1:this.state.phone1,phone2:this.state.phone2,title:this.state.title, industry_type:"organisation"},{
     headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-      console.log(res.data)
       this.setState({message:"UPDATED!!",modal:true});
   
       /* setTimeout(
@@ -118,7 +113,6 @@ handleSubmit=(e)=>{
     
     })
   .catch(error=>{
-    console.log(error.response.data)
     if(!error.response){
       this.setState({
         modal:true,
@@ -151,15 +145,12 @@ handleCompanySubmit=(e)=>{
   address:this.state.address},
  { headers:{ 'Authorization':`Bearer ${user}`}})
  .then(res=>{
-   console.log(res.data)
    this.setState({message:"UPDATED!!",modal:true});
  })
  .catch(error=>{
-  console.log(error.response.data)
   if(error.response.data.status === "Forbidden"){
     this.setState({modal:true, message:"Access Denied"})
   }else{
-      console.log(error);
       this.setState({
           modal:true, isActive:false, 
           message: error.response.data.errors.company_name || 
@@ -172,14 +163,12 @@ handleCompanySubmit=(e)=>{
   }
 })
 
- console.log(this.state.logo, this.state.newBusinesscCert)
  let bodyFormData = new FormData();
  bodyFormData.append('logo', this.state.logo);
  bodyFormData.append('business_cert', this.state.newBusinesscCert);
  bodyFormData.append('_method',"PATCH")
 
  for(var pair of bodyFormData.entries()) {
-  console.log(pair[0]+ ': '+ pair[1]); 
 }
 
 axios({
@@ -189,11 +178,9 @@ axios({
   headers: {'Content-Type': 'multipart/form-data','Authorization':`Bearer ${user}`}
 })
 .then(res=>{
-  console.log("data",res.data);
   this.setState({message:"UPDATED!!",modal:true});
 })
 .catch(error=>{
-  console.log(error)
   if(error.response.data.status === "Forbidden"){
     this.setState({modal:true, message:"Access Denied"})
   }else{
@@ -210,10 +197,8 @@ axios({
  },
  { headers:{'Content-Type': 'multipart/form-data','Authorization':`Bearer ${user}`}})
  .then(res=>{
-   console.log(res.data)
  })
  .catch(error=>{
-   console.log(error.response.data)
  }) */
   /*let bodyFormData = new FormData();
   bodyFormData.append('company_name', this.state.company_name);
@@ -226,7 +211,6 @@ axios({
   bodyFormData.append('country', this.state.country);
 
   for(var pair of bodyFormData.entries()) {
-    console.log(pair[0]+ ': '+ pair[1]); 
 }
 
   axios({
@@ -237,7 +221,6 @@ axios({
     onUploadProgress: (progressEvent) => {
         const {loaded , total} = progressEvent;
         let percentage = Math.floor(loaded * 100 / total);
-        console.log(percentage)
         if(percentage<100){
             this.setState({percentage:percentage});
         }
@@ -246,7 +229,6 @@ axios({
         }
 }})
 .then(res=>{
-    console.log("data",res.data);
     setTimeout(
         function(){
             this.setState({modal:false});
@@ -259,9 +241,7 @@ axios({
     )
 })
 .catch(error=>{
-    console.log(error.response.data)
    if(error.response){
-        console.log(error.response.data);
         this.setState({
             modal:true, isActive:false, message:error.response.data.errors.business_cert || error.response.data.errors.operation_cert || error.response.data.errors.logo || error.response.data.errors.company_name || error.response.data.errors.media_house || error.response.data.errors.website
             || error.response.data.errors.email || error.response.data.errors.phone1 || error.response.data.errors.phone2

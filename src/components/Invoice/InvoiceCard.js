@@ -15,7 +15,6 @@ class InvoiceCard extends React.Component{
  
 
     render(){
-      console.log("props:",this.props)
         return(
             <>
             <Col md="12">

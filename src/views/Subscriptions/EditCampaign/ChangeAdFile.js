@@ -16,7 +16,7 @@ import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function ChangeAdFile(props){
 
@@ -31,17 +31,12 @@ function ChangeAdFile(props){
   const [percentage, setPercentage] = React.useState(0);
 
 
- React.useEffect(()=>{
-   console.log(props.location)
- }) 
  
   const pass=(e)=>{
     e.preventDefault();
     if(videoFile !== null){
-      console.log(Math.round(file_duration), props.location.state.ad_duration);
       if(Math.round(file_duration) === Number(props.location.state.ad_duration)){
     setIsActive(true);
-    console.log(title)
     let formData = new FormData();
         formData.append('ad',videoFile);
         formData.append('file_duration',file_duration)
@@ -58,7 +53,6 @@ function ChangeAdFile(props){
             onUploadProgress: (progressEvent) => {
                 const {loaded , total} = progressEvent;
                 let percent = Math.floor(loaded * 100 / total);
-                console.log(percent)
                 if(percent<100){
                     setPercentage(percent);
                 }
@@ -67,7 +61,6 @@ function ChangeAdFile(props){
                 }
             }
             }).then(res=>{
-                    console.log(res.data);
                     setModal(true);
                     setAlertMessage("File Updated")    
                     setTimeout(
@@ -77,7 +70,6 @@ function ChangeAdFile(props){
                             1500)
                 })
                 .catch(error=>{
-                    console.log(error.response.data)
                     isActive(false)
                 })
       
@@ -100,7 +92,6 @@ function ChangeAdFile(props){
   }
 
   const nextPage = () => {
-    console.log("start next...")
     const currentPageNumber = pageNumber;
     let nextPageNumber;
  
@@ -115,7 +106,6 @@ function ChangeAdFile(props){
 
   const renderPreview=(type)=>{
     let file_types = props.location.state.file_types;
-    console.log(file_types)
     let video_type = type;
     let new_type =[];
     let checker =[];
@@ -131,7 +121,6 @@ function ChangeAdFile(props){
       }
     }
     let my_type = new_type.join('');
-    console.log(my_type)
 
     //compare file type to media file types
     for(var j =0; j<file_types.length; j++){
@@ -139,7 +128,6 @@ function ChangeAdFile(props){
         checker.push(file_types[j]);
         break;
       }else{
-        console.log("not found")
         continue;
       }
     }
@@ -232,7 +220,6 @@ function ChangeAdFile(props){
                           type="file"
                           onChange={e => {
                             const file = e.target.files[0];
-                            console.log(file)
                             setVideoFile(file);
                           }}
                         />

@@ -12,7 +12,7 @@ import Pagination from "react-js-pagination";
 
 // core components
 import Header from "components/Headers/Header.js";
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 
 class TrackCampaign extends React.Component {
@@ -31,7 +31,6 @@ class TrackCampaign extends React.Component {
     axios.get(`${domain}/api/track-live-subscriptions?page=${pageNumber}`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         this.setState({
           data:res.data.data,
           liveCampaigns:res.data,
@@ -39,7 +38,6 @@ class TrackCampaign extends React.Component {
         })
     })
     .catch(error=>{
-        console.log(error)
     })
   }
 

@@ -16,7 +16,7 @@ import {RateConsumer} from "../../context.js";
 
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class AdminNavbar extends React.Component {
 
@@ -30,7 +30,6 @@ class AdminNavbar extends React.Component {
     axios.get(`${domain}/api/search/item`,{
       params:{search:this.state.searchKey}
     }).then(res=>{
-      console.log(res.data);
       let companies = res.data.filter(item=>item.type === "companies");
       let ratecards = res.data.filter(item=>item.type === "rate_card_titles");
       let campaigns = res.data.filter(item=>item.type === "scheduled_ads");
@@ -48,7 +47,6 @@ class AdminNavbar extends React.Component {
         });
     })
     .catch(error=>{
-      console.log(error)
     })
   }
   

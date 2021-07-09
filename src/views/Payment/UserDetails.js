@@ -18,7 +18,7 @@ import classnames from 'classnames';
 import {RateConsumer} from "../../context.js";
 import Spinner from "reactstrap/lib/Spinner";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function UserDetails(props) {
 const [isActive, setIsActive] = React.useState(false);
@@ -34,7 +34,6 @@ const [modal, setModal] = React.useState(false);
 const [alertMessage, setAlertMessage] = React.useState("")
 
 React.useEffect(()=>{
-  console.log(props.location.state)
 },[])
 
 const handleSubmit=(e)=>{
@@ -51,7 +50,6 @@ const handleSubmit=(e)=>{
         email:email
     },{headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data.status);
         if(res.data.status === "success"){
           window.location=`${res.data.url}`
         }
@@ -66,7 +64,6 @@ const handleSubmit=(e)=>{
         }
     })
     .catch(error=>{
-        console.log(error);
     })
     
 }
@@ -75,7 +72,6 @@ const handlePOSubmit=(e)=>{
   setIsActive(true)
   e.preventDefault();
   if(file !== null){
-    console.log(file)
     var bodyFormData = new FormData();
     bodyFormData.append('po',file)
     axios({
@@ -106,7 +102,6 @@ const handlePOSubmit=(e)=>{
         }.bind(this),4000)
     })
     .catch(error=>{
-      console.log(error.response.data)
       setModal(true);
       setAlertMessage(error.response.data.errors.po)
     })
@@ -266,7 +261,6 @@ const toggle = tab => {
                         <label  style={{fontSize:"13px" , fontWeight:600}}>Upload P.O</label>
                         <Input type="file" required onChange={e=>{
                                 const po = e.target.files[0];
-                                console.log(po)
                                 setFile(po)}} />
                         </Col>
                     </Row>

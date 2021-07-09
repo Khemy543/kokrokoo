@@ -13,7 +13,7 @@ import {
 import Header from "components/Headers/Header.js";
 import axios from "axios";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 function SelectMediaTypeRes(props) {
 
   const [media_types, setMedia_types] = React.useState([]);
@@ -22,7 +22,6 @@ function SelectMediaTypeRes(props) {
   React.useEffect(() => {
     axios.get(`${domain}/api/media-types`)
       .then(res => {
-        console.log(res.data);
         setMedia_types(res.data);
       })
       .catch(error=>{
@@ -67,7 +66,7 @@ function SelectMediaTypeRes(props) {
                 <CardBody>
                   <Row className=" icon-examples">
 
-                    <Input type="select" value={media_id} onChange={e => { setMedia_id(e.target.value); console.log(media_id) }}>
+                    <Input type="select" value={media_id} onChange={e => { setMedia_id(e.target.value); }}>
                       {media_types.map(value => <option key={value.id} value={value.id}>{value.mediaType}</option>)}
                     </Input>
                     <br />

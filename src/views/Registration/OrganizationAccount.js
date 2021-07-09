@@ -16,7 +16,7 @@ import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class OrganizationAccount extends React.Component {
 
     state={
@@ -66,10 +66,6 @@ class OrganizationAccount extends React.Component {
         bodyFormData.append('country',this.state.country);
         bodyFormData.append('account',"company");
 
-        for(var pair of bodyFormData.entries()) {
-            console.log(pair[0]+ ': '+ pair[1]); 
-        }
-
         axios({
             method:'post',
             url:`${domain}/api/auth/register`,
@@ -78,7 +74,6 @@ class OrganizationAccount extends React.Component {
             onUploadProgress: (progressEvent) => {
                 const {loaded , total} = progressEvent;
                 let percentage = Math.floor(loaded * 100 / total);
-                console.log(percentage)
                 if(percentage<100){
                     this.setState({percentage:percentage});
                 }
@@ -87,7 +82,6 @@ class OrganizationAccount extends React.Component {
                 }
         }})
         .then(res=>{
-            console.log("data",res.data);
             this.setState({isActive:false, message:"Registration Successful!", modal:true
             })
             setTimeout(
@@ -103,9 +97,7 @@ class OrganizationAccount extends React.Component {
         })
         .catch(error=>{
             this.setState({isActive:false});
-            console.log(error.response.data)
             if(error.response){
-                console.log(error.response.data);
                 this.setState({
                     modal:true, isActive:false, 
                     message:error.response.data.errors.business_cert 
@@ -430,7 +422,7 @@ class OrganizationAccount extends React.Component {
                         </Row>
                         <Row>
                         <Col style={{marginLeft:"20px"}}>
-                        <Input type="checkbox" value={this.state.terms} onChange={e=>this.setState({terms:e.target.checked})}/> <p style={{fontSize:"13px", fontWeight:700}}>Agree To <a href="/auth/terms&conditions-client">Terms And Conditions</a></p>
+                        <Input type="checkbox" value={this.state.terms} onChange={e=>this.setState({terms:e.target.checked})}/> <p style={{fontSize:"13px", fontWeight:700}}>Agree To <a target="_blank" href="/auth/terms&conditions-client">Terms And Conditions</a></p>
                         
                         </Col>
                         </Row>

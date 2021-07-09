@@ -6,7 +6,7 @@ import Header from "components/Headers/Header.js";
 import axios from "axios";
 
 let user = localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class ChangePassword extends React.Component{
 
     state={
@@ -33,12 +33,10 @@ class ChangePassword extends React.Component{
             new_password:this.state.password
         },{headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log(res.data);
             this.setState({modal:true,message:res.data.status})
         })
         .catch(error=>{
             if(error.response){
-            console.log(error.response.data)
             }
         })
     }

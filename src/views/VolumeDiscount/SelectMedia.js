@@ -16,7 +16,7 @@ import {
 import Header from "components/Headers/Header.js";
 import axios from "axios";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 
 
@@ -31,20 +31,16 @@ React.useEffect(()=>{
    axios.get(`${domain}/api/view/${props.location.state.id}/published-companies`,{
    headers:{ 'Authorization':`Bearer ${user}`}}
 ).then(res=>{
-   console.log(res.data);
    setMediaHouses(res.data);
    setMedia_id(res.data[0].id)
    setIsActive(false)
 }).catch(error=>{
- console.log(error)
 })
 },[])
 
 const pass=()=>{
   let tempMedia = mediaHouses;
   let selected = tempMedia.find(item=>item.id === Number(media_id))
-  console.log(media_id)
-  console.log(selected)
   props.history.push("/client/volume-discount",{id:media_id,mediaHouse:selected})
 }
 

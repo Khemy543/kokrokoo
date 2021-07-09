@@ -18,7 +18,7 @@ import axios from "axios";
 import Header from "components/Headers/Header";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class AccountDetails extends React.Component{
     state={
         isActive:false,
@@ -43,11 +43,6 @@ handleCardSubmit=(e)=>{
     e.preventDefault();
     let tempDate = this.state.date;
     let splitArray = tempDate.split("/");
-    console.log(splitArray[0], splitArray[1])
-
-    console.log(
-        "firstname:",this.state.firstname
-    )
     axios.post(`${domain}/api/make-card-payment`,
     {
         cart_id:this.props.location.state.cart_id,
@@ -57,11 +52,9 @@ handleCardSubmit=(e)=>{
         country:"Ghana"
     },{headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         this.setState({authurl:res.data.authurl,modalOpen:true, isActive:false})
     })
     .catch(error=>{
-        console.log(error.response.data);
     })
 }
 
@@ -82,11 +75,9 @@ handleMobileSubmit=(e)=>{
         is_momo_pay:true
     },{headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         this.setState({authurl:res.data.authurl,modalOpen:true,isActive:false})
     })
     .catch(error=>{
-        console.log(error.response.data);
     })
 }
     render(){

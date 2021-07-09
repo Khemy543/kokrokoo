@@ -17,7 +17,7 @@ import axios from "axios";
 import Ratecard from "components/Cards/RateCard.js"
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 function RateCards(props) {
     const [ratecards, setRatecards] = React.useState([]);
     const [isActive, setIsActive] = React.useState(true);
@@ -28,12 +28,10 @@ React.useEffect(()=>{
     axios.get(`${domain}/api/view/${props.location.state.media_house_id}/ratecards`,{
     headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         setRatecards(res.data);
         setIsActive(false);
     })
     .catch(error=>{
-      console.log(error)
         if(!error.response){
         alert("check your internet connection")
         setIsActive(false)

@@ -20,7 +20,7 @@ import FadeLoader from "react-spinners/FadeLoader";
   JSZip
 } from "docxtemplater"; */
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function UploadFile(props){
 
@@ -35,28 +35,19 @@ function UploadFile(props){
   const [text, setMyText] = React.useState("")
 
 
- React.useEffect(()=>{
-   console.log(props.location)
-   console.log(localStorage.getItem("media_id"))
- })
 
   const pass=(e)=>{
     e.preventDefault();
     if(videoFile !== null){
     setIsActive(true);
-    console.log("going ...",text)
-    console.log(file_duration,videoFile.type[0]);
     let no_of_words=0;
     let textArray = text.split(' ' || "/n");
     no_of_words = textArray.length
-    console.log(textArray)
-    console.log(no_of_words)
 
     axios.post(`${domain}/api/subscription/create`,
     {title:title,rate_card_title_id:props.location.state.id},
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-      console.log(res.data);
       if(Number(localStorage.getItem("media_id")) !==3){
         props.history.push("/client/calendar",{
           file_duration:file_duration ,
@@ -87,7 +78,6 @@ function UploadFile(props){
       
     })
     .catch(error=>{
-      console.log(error.response.data)
       if(error.response){
           setModal(true)
           setAlertMessage(error.response.data.errors.title);
@@ -102,7 +92,6 @@ function UploadFile(props){
   }
 
   const nextPage = () => {
-    console.log("start next...")
     const currentPageNumber = pageNumber;
     let nextPageNumber;
  
@@ -117,7 +106,6 @@ function UploadFile(props){
 
   const renderPreview=(type)=>{
     let file_types = props.location.state.file_types;
-    console.log(file_types)
     let video_type = type;
     let new_type =[];
     let checker =[];
@@ -133,7 +121,6 @@ function UploadFile(props){
       }
     }
     let my_type = new_type.join('');
-    console.log(my_type)
 
     //compare file type to media file types
     for(var j =0; j<file_types.length; j++){
@@ -141,7 +128,6 @@ function UploadFile(props){
         checker.push(file_types[j]);
         break;
       }else{
-        console.log("not found")
         continue;
       }
     }
@@ -155,7 +141,6 @@ function UploadFile(props){
     if(my_type === "application"){
       let extensionArray = videoFile.name.split(".");
       let extension = extensionArray[1]
-      console.log("extenstion:",extension)
       if(extension !== "docx"){
       return(
         <div onClick={()=>nextPage()}>
@@ -170,10 +155,6 @@ function UploadFile(props){
       )
     }
     else{
-      /* var zip = new JSZip(videoFile);
-      var doc=new Docxtemplater().loadZip(zip)
-      var text= doc.getFullText();
-      console.log(text); */
 
       var reader = new FileReader()
       reader.onload=function(){
@@ -254,7 +235,6 @@ function UploadFile(props){
                           type="file"
                           onChange={e => {
                             const file = e.target.files[0];
-                            console.log(file)
                             setVideoFile(file);
                           }}
                         />

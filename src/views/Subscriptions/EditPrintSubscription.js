@@ -15,7 +15,7 @@ import Header from "components/Headers/Header.js";
 import axios from "axios";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class EditPrintSubscription extends React.Component{
 
     state={
@@ -40,7 +40,6 @@ componentDidMount(){
     axios.get(`${domain}/api/subscription/${this.props.location.state.id}/details`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-      console.log(res.data);
       for(var i=0; i<res.data.length; i++){
         total = total + Number(res.data[i].total_amount);
       }
@@ -50,11 +49,8 @@ componentDidMount(){
             this.setState({volume:response.data});
             for(var t=0; t<response.data.length; t++){
               let range = response.data[t].amount_range.split("-");
-              console.log(response.data[t].amount_range)
               if(Number(range[0])<=total && total<=Number(range[1])){
-                  console.log("yes")
                   discount = (response.data[t].percentile/100) * total
-                  console.log(discount)
               }
           }
           this.setState({selectedSub:res.data,isActive:false, total:total,discount_amount:discount})
@@ -62,7 +58,6 @@ componentDidMount(){
 
     })
     .catch(error=>{
-      console.log(error)
       this.setState({isActive:false})
     })
 }
@@ -81,7 +76,6 @@ handleDelete=(id, index)=>{
     }else{
     tempData[index].total_amount = Number(tempData[index].total_amount) - Number(deleted.amount);
     }
-    console.log(tempData)
     for(var i=0; i<tempData.length; i++){
         total = total + Number(tempData[i].total_amount)
     }

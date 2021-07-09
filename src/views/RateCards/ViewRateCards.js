@@ -15,7 +15,7 @@ import {
 import Header from "components/Headers/Header.js";
 import axios from "axios";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 function ViewRateCard({history}){
 
 const [media_types, setMedia_types] = React.useState([]);
@@ -23,12 +23,10 @@ const [media_id , setMedia_id] = React.useState(1);
 React.useEffect(()=>{
       axios.get(`${domain}/api/media-types`)
       .then(res=>{
-          console.log(res.data);
           const media_types = res.data;
           setMedia_types(media_types);
       })
       .catch(error=>{
-        console.log(error)
       })
   },[])
 
@@ -62,7 +60,7 @@ React.useEffect(()=>{
                 <CardBody>
                   <Row className=" icon-examples">
                     
-                      <Input type="select" value={media_id} onChange={e=>{setMedia_id(e.target.value); console.log(media_id)}}>
+                      <Input type="select" value={media_id} onChange={e=>{setMedia_id(e.target.value); }}>
                       {media_types.map(value => <option key={value.id} value={value.id}>{value.mediaType}</option>)}
                       </Input>
                     <br/>

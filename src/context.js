@@ -4,16 +4,14 @@ import decode from "jwt-decode";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 const RateContext = React.createContext();
 
 
 axios.interceptors.request.use(request=>{
-  console.log(request);
   return request;
 },
 error=>{
-    console.log(error);
     if(!error.response){
         alert("Please Check Your Internet Connection")
     }
@@ -21,7 +19,6 @@ error=>{
 
 
 axios.interceptors.response.use(response=>{
-  console.log(response);
   return response;
 })
 
@@ -48,7 +45,6 @@ class RateProvider extends React.Component{
                 }
                 )
                 .then(res=>{
-                console.log(res.data);
                 this.setState({
                     username:res.data.user.name,
                     user:res.data
@@ -61,7 +57,6 @@ class RateProvider extends React.Component{
                 }
 
                 }).catch(error=>{
-                  console.log(error)
                 });
         }
         
@@ -83,14 +78,12 @@ class RateProvider extends React.Component{
         axios.post(`${domain}/api/client/logout`,null,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log(res.data);
             if(res.data.status === "logout success"){
                 localStorage.clear();
                 window.location.reload("/")
             }
         })
         .catch(error=>{
-            console.log(error);
         })
     }
 

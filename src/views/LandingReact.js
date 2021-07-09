@@ -18,7 +18,7 @@ import axios from "axios";
 import AOS from 'aos';
 import 'aos/dist/aos.css';
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 function LandingPage(){
   const [navbarColor, setNavbarColor] = React.useState("navbar-transparent");
@@ -80,7 +80,6 @@ function LandingPage(){
       message:message
     })
     .then(res=>{
-      console.log(res.data);
       if(res.data.status === "message sent"){
         alert("Message Sent!!")
         setName("");
@@ -90,17 +89,34 @@ function LandingPage(){
       }
     })
     .catch(error=>{
-      console.log(error.response.data)
     })
   }
       return (
         <div style={{position:"relative"}}>
-          <div style={{position:"fixed", zIndex:"999999", bottom:20, right:20}} title="Request for Ad Production">
-            <a href="/auth/request-ad-production">
-            <div className="adProductionButton">
-              <i className="fa fa-video-camera"/>
+          <div style={{position:"fixed", zIndex:"999999",  bottom:20, right:20}} title="Request for Ad Production">
+            
+            <div style={{
+              display:"flex", justifyContent:"center", justifyItems:"center"
+            }}>
+
+              <div>
+                {/* <div style={{
+                  background:"white",
+                  padding:"3px 6px",
+                  borderRadius:"50px",
+                  marginBottom:"5px"
+                }}>
+                  <h4>Ad Production</h4>
+                </div> */}
+                <a href="/auth/request-ad-production" style={{float:"right"}}>
+                <div className="adProductionButton">
+                  <i className="fa fa-video-camera"/>
+                </div>
+                </a>
+              </div>
+
             </div>
-            </a>
+
           </div>
           <div id="app">
           <Navbar className={"fixed-top " + navbarColor} expand="lg" >
@@ -178,8 +194,8 @@ function LandingPage(){
               <UncontrolledPopover trigger="legacy" isOpen={dropdownOpen} placement="bottom" toggle={toggle} target="Popover2">
                   <PopoverBody style={{paddingLeft:"0px",paddingRight:"0px"}}>
                    <ListGroup >  
-                   <a href="/auth/blog"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(PERSONAL)</ListGroupItem></a>
-                   <a href="/auth/blog"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(ORGANIZATION)</ListGroupItem></a>
+                   <a href="/auth/personal-account"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(PERSONAL)</ListGroupItem></a>
+                   <a href="/auth/organization-account"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT(ORGANIZATION)</ListGroupItem></a>
                    <a href="/auth/media-house"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">MEDIA HOUSE</ListGroupItem></a>
                   </ListGroup>
                   </PopoverBody>
@@ -188,8 +204,8 @@ function LandingPage(){
               <NavItem className="phone-view">
                 <NavLink onClick={()=>toggleRegisterCollapse()}>REGISTER <i className={!registerCollpase?"fa fa-chevron-down ml-2":"fa fa-chevron-up ml-2" }/></NavLink>
                 <Collapse isOpen={registerCollpase} style={{backgroundColor:"#f5f5f5"}}>
-                  <NavLink href="/auth/blog">CLIENT(PERSONAL)</NavLink>
-                  <NavLink href="/auth/blog">CLIENT(ORGANIZATION)</NavLink>
+                  <NavLink href="/auth/personal-account">CLIENT(PERSONAL)</NavLink>
+                  <NavLink href="/auth/organization-account">CLIENT(ORGANIZATION)</NavLink>
                   <NavLink href="/auth/media-house">MEDIA HOUSE</NavLink>
                 </Collapse>
               </NavItem>{/* 
@@ -207,7 +223,7 @@ function LandingPage(){
               <UncontrolledPopover trigger="legacy" isOpen={LoginOpen} placement="bottom" toggle={toggleLogin} target="Popover3">
                   <PopoverBody style={{paddingLeft:"0px",paddingRight:"0px"}}>
                    <ListGroup >  
-                   <a href="/auth/blog"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT</ListGroupItem></a>
+                   <a href="/auth/login-page"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">CLIENT</ListGroupItem></a>
                    <a href="https://media.kokrokooad.com/" target="_blank" rel="noopener noreferrer"><ListGroupItem style={{border:"none", textAlign:"left", color:"black"}} className="userdrop">MEDIA HOUSE</ListGroupItem></a>
                   </ListGroup>
                   </PopoverBody>
@@ -896,7 +912,7 @@ function LandingPage(){
                           </li>
                         </ul> */}
                         <a
-                          href="/auth/blog"
+                          href="/auth/personal-account"
                           className="btn button btn-block text-uppercase"
                           style={{borderRadius:"20px", marginTop:"5px"}}
                         >
@@ -1022,7 +1038,7 @@ function LandingPage(){
                                 </span>
                               </div>
                               <div>
-                                <p style={{marginLeft:"10px", color:"white"}}>Kokrokoo is coming soon! </p>
+                                {/* <p style={{marginLeft:"10px", color:"white"}}>Kokrokoo is coming soon! </p> */}
                                 <div className="subscriber">
                                   <span className="btn button" style={{borderRadius:"20px"}}>
                                     visit page
@@ -1044,7 +1060,7 @@ function LandingPage(){
                             <span style={{fontSize:"14px", fontWeight:700}}>Follow Us</span>
                           </div>
                           <div>
-                            <p style={{color:"white"}}>Kokrokoo is coming soon.</p>
+                            {/* <p style={{color:"white"}}>Kokrokoo is coming soon.</p> */}
                             <div className="subscriber">
                               <span className="btn  button" style={{borderRadius:"20px"}}>visit page</span>
                             </div>

@@ -13,19 +13,14 @@ import {
 import Header from "components/Headers/Header.js";
 import axios from "axios";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 function SelectEditType(props) {
   const [radio, setRadio] = React.useState('');
   const [modal, setModal] = React.useState(false)
 
-  React.useEffect(() => {
-    console.log(props.location.state)
-  }, []);
-
 
   const handleSubmit=(e)=>{
     e.preventDefault()
-    console.log("type",props.location.state.mediaType)
     if(radio === "details"){
         if(props.location.state.payment_status !== null && props.location.state.payment_status.payment_status==="paid"){
           setModal(true)

@@ -8,7 +8,7 @@ import axios from "axios";
 import data from "data/volumeData.js"
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class VolumeDiscount extends React.Component{
     
     state={
@@ -17,15 +17,12 @@ class VolumeDiscount extends React.Component{
     }
 
     componentDidMount(){
-        console.log(this.props.location.state)
         axios.get(`${domain}/api/company/${this.props.location.state.id}/volume-discounts`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log(res.data);
             this.setState({volume:res.data, isActive:false});
         })
         .catch(error=>{
-            console.log(error)
         })
     }
     render(){

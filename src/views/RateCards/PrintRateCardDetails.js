@@ -15,7 +15,7 @@ import Header from "components/Headers/Header.js";
 import axios from "axios";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class PrintRateCardDetails extends React.Component{
 
     state={
@@ -38,7 +38,6 @@ class PrintRateCardDetails extends React.Component{
           axios.get(`${domain}/api/view-ratecard/${this.props.location.state.id}/details`,
           {headers:{ 'Authorization':`Bearer ${user}`}})
           .then(res=>{
-              console.log("details:",res.data);
               if(res.data !== null){
               this.setState({details:res.data, isActive:false});
 
@@ -60,7 +59,6 @@ class PrintRateCardDetails extends React.Component{
 
           axios.get(`https://media.test.backend.kokrokooad.com/api/fetch-days-and-units`)
             .then(res=>{
-                console.log(res.data)
                 this.setState({days:res.data.days,isActive:false})
             })
 
@@ -71,7 +69,6 @@ class PrintRateCardDetails extends React.Component{
         let tempData = this.state.details;
         const newId = Number(id)
         let selectedDetaisl = tempData.filter(item=> item.day.id === newId);
-        console.log("selected",selectedDetaisl)
         if(selectedDetaisl != undefined){
           this.setState({data:selectedDetaisl})
         }

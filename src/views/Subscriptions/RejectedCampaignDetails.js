@@ -12,7 +12,7 @@ import Pagination from "react-js-pagination";
 
 // core components
 import Header from "components/Headers/Header.js";
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 
 class RejectedCampaignDetails extends React.Component {
@@ -34,26 +34,21 @@ class RejectedCampaignDetails extends React.Component {
       axios.get(`${domain}/api/subscription/${id}/details`,
       {headers:{ 'Authorization':`Bearer ${user}`}})
       .then(res=>{
-        console.log(res.data);
         let data=res.data;
         if(res.data[0].details[0].duration !== null){
          for(var i=0; i<data.length; i++){
-           console.log(data[i].total_amount)
            total = Number(data[i].total_amount) + total;
          }
-         console.log(total)
         this.setState({selectedSub:res.data, total:total, title:title,isActive:false})
          }
          else{
            for(var i=0; i<data.length; i++){
-             console.log(data[i].total_amount)
              total = Number(data[i].total_amount) + total;
            }
            this.setState({selectedPrintSub:res.data, title:title, isActive:false, total:total})
          }
        })
       .catch(error=>{
-        console.log(error)
         this.setState({isActive:false})
       })
      }

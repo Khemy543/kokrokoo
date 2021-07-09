@@ -14,7 +14,7 @@ import{
     Button, Alert, Input, FormGroup,InputGroup,InputGroupAddon,InputGroupText
 } from "reactstrap";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 export default function PasswordReset(props){
     const [message, setMessage] = React.useState("");
     const [visible, setVisible] = React.useState(false);
@@ -32,14 +32,12 @@ export default function PasswordReset(props){
         e.preventDefault();
         if(password === confirm_password){
         const param = queryString.parse(props.location.search);
-        console.log(param.token);
         let token = param.token;
         axios.post(`${domain}/api/reset/password`, {
             password:password,
             token:token
         })
         .then(res=>{
-            console.log(res.data);
             setVisible(true);
             setMessage("Password Reset Successful")
             setColor("success")
@@ -52,7 +50,6 @@ export default function PasswordReset(props){
         })
         .catch(error=>{
             if(error.response){
-            console.log(error.response.data)
             setMessage(error.response.data.status);
             setVisible(true)
             setColor("danger")

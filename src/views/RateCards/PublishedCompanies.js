@@ -22,17 +22,15 @@ function PublishedCompanies(props) {
  const [isActive, setIsActive] = React.useState(true)
 
  let media_id =localStorage.getItem('media_id');
- var domain = "https://backend.demo.kokrokooad.com";
+ var domain = "https://backend.kokrokooad.com";
  React.useEffect(()=>{
    setIsActive(true)
     axios.get(`${domain}/api/view/${media_id}/published-companies`,{
     headers:{ 'Authorization':`Bearer ${user}`}}
 ).then(res=>{
-    console.log(res.data);
     setMedia_houses(res.data);
     setIsActive(false);
 }).catch(error=>{
-  console.log(error.response.data)
 })
  },[])
 

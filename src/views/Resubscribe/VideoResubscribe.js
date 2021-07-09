@@ -25,7 +25,7 @@ import FadeLoader from "react-spinners/FadeLoader";
 import data from "data/volumeData";
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 class VideoResubscribeCalender extends React.Component{
     constructor(props) {
         super(props);
@@ -69,11 +69,9 @@ class VideoResubscribeCalender extends React.Component{
 
       
       componentDidMount(){
-        console.log(this.props.location.state.file_duration,this.props.location.state.no_of_words)
         axios.get(`${domain}/api/company/${this.props.location.state.media_house_id}/volume-discounts`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("discount here")
             this.setState({volume:res.data})
         })
 
@@ -84,13 +82,10 @@ class VideoResubscribeCalender extends React.Component{
         var mm = String(tomorrow.getMonth() + 1).padStart(2, '0'); //January is 0!
         var yyyy = tomorrow.getFullYear();
         var today = yyyy + '-' + mm + '-' + dd;
-        console.log("today:",today)
-        console.log("ne:",this.props.location.state)
         let newEvents = [];
         axios.get(`${domain}/api/view-ratecard/${this.props.location.state.rate_card.id}/details`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("details:",res.data);
             this.setState({rateCards:res.data})
             for(var i=0; i<res.data.length; i++){
                 if(newEvents.some(item=>item.id === res.data[i].day.id)){
@@ -110,7 +105,6 @@ class VideoResubscribeCalender extends React.Component{
             axios.get(`${domain}/api/subscription/${this.props.location.state.title_id}/details`,
             {headers:{ 'Authorization':`Bearer ${user}`}})
             .then(res=>{
-                console.log("mafia",res.data);
                 for(var i=0; i<res.data.length;i++){
                     grand_total = Number(res.data[i].total_amount) + grand_total;
                     if(newEvents.some(item=>item.start === res.data[i].selected_date)){
@@ -119,14 +113,10 @@ class VideoResubscribeCalender extends React.Component{
                     newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
                     }
                 }
-                 console.log("grand",grand_total);
                     for(var t=0; t<this.state.volume.length; t++){
                     let range = this.state.volume[t].amount_range.split("-");
-                    console.log(this.state.volume[t].amount_range)
                     if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
-                        console.log("yes")
                         discount = (this.state.volume[t].percentile/100) * grand_total
-                        console.log(discount)
                     }
                 }
                 this.setState({data:res.data, total_amount:grand_total,eventData:newEvents,discount_amount:discount});
@@ -567,7 +557,6 @@ class VideoResubscribeCalender extends React.Component{
             onUploadProgress: (progressEvent) => {
                 const {loaded , total} = progressEvent;
                 let percentage = Math.floor(loaded * 100 / total);
-                console.log(percentage)
                 if(percentage<100){
                     this.setState({percentage:percentage});
                 }
@@ -576,7 +565,6 @@ class VideoResubscribeCalender extends React.Component{
                 }
             }
             }).then(res=>{
-                    console.log(res.data);
                     if(res.data.status === "file saved"){
                         this.setState({isActive:false, changeText:false, prompt:false});
                         setTimeout(
@@ -591,7 +579,6 @@ class VideoResubscribeCalender extends React.Component{
                     }
                 })
                 .catch(error=>{
-                    console.log(error.response.data)
                     this.setState({isActive:true})
                 })
      

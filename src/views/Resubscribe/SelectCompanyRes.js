@@ -24,7 +24,7 @@ function SelectCompanyRes(props) {
  const toggle = () => setTooltipOpen(!tooltipOpen);
 
  let user =localStorage.getItem('access_token');
- var domain = "https://backend.demo.kokrokooad.com";
+ var domain = "https://backend.kokrokooad.com";
  React.useEffect(()=>{
    setIsActive(true)
    if(props.location.state === undefined){
@@ -33,13 +33,9 @@ function SelectCompanyRes(props) {
     axios.get(`${domain}/api/view/${props.location.state.id}/published-companies`,{
     headers:{ 'Authorization':`Bearer ${user}`}}
 ).then(res=>{
-    console.log("media-houses:",res.data);
     setMedia_houses(res.data);
     setIsActive(false)
 }).catch(error=>{
-  if(!error.response){
-    alert("check your internet connection");
-}
 })
  }},[])
 

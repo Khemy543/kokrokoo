@@ -26,7 +26,7 @@ import data from "data/volumeData";
 
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class PrintCalender extends React.Component{
     constructor(props) {
@@ -79,14 +79,11 @@ class PrintCalender extends React.Component{
         var yyyy = tomorrow.getFullYear();
         var today = yyyy + '-' + mm + '-' + dd;
         let discount =0;
-        console.log("today:",today)
           this.setState({isActive:true})
-        console.log("ne:",this.props.location.state)
         let newEvents = [];
         axios.get(`${domain}/api/view-ratecard/${this.props.location.state.rate_card.id}/details`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("details:",res.data);
             this.setState({rateCards:res.data})
             for(var i=0; i<res.data.length; i++){
                 if(newEvents.some(item=>item.id === res.data[i].day.id)){
@@ -100,27 +97,21 @@ class PrintCalender extends React.Component{
             axios.get(`${domain}/api/subscription/${this.props.location.state.title_id}/details`,
             {headers:{ 'Authorization':`Bearer ${user}`}})
             .then(res=>{
-                console.log("mafia",res.data);
                 for(var i=0; i<res.data.length;i++){
                   newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
                     grand_total = grand_total + Number(res.data[i].total_amount);
                 }
 
-                console.log("grand",grand_total);
                 for(var t=0; t<this.state.volume.length; t++){
                 let range = this.state.volume[t].amount_range.split("-");
-                console.log(this.state.volume[t].amount_range)
                 if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
-                    console.log("yes")
                     discount = (this.state.volume[t].percentile/100) * grand_total
-                    console.log(discount)
                 }
             }
                 this.setState({data:res.data, total_amount:grand_total, eventData:newEvents, isActive:false,discount_amount:discount})
             })
         })
         .catch(error=>{
-                console.log(error)
         });
 
       }
@@ -129,7 +120,6 @@ class PrintCalender extends React.Component{
         let total = 0; 
         let dayTotal = 0
         let no_of_weeks=0;
-       console.log("check date:",calEvent.event.start);
        let current_datetime = calEvent.event.start;
           let year = current_datetime.getFullYear();
           let month = current_datetime.getMonth()+1;
@@ -142,7 +132,6 @@ class PrintCalender extends React.Component{
           month = '0' + month;
           }
        let formatted_date = year+'-' + month + '-'+dt;
-       console.log("formated:",`${formatted_date}`)
        var id = calEvent.event._def.publicId;
        const selectedCard = this.getRateCard(id);
        let selectedDate = this.state.data.find(item=>item.selected_date === formatted_date);
@@ -150,7 +139,6 @@ class PrintCalender extends React.Component{
           no_of_weeks = selectedDate.no_of_weeks;
           let twice = Number(selectedDate.no_of_weeks) +1;
           total = selectedDate.total_amount * twice
-          console.log(selectedDate)
        }
        if(Number(id) !== 0){
         this.setState({rateDetails:selectedCard, date:formatted_date,day_id:Number(calEvent.event._def.publicId) ,modal:true, dayTotal:total, no_of_weeks:no_of_weeks});
@@ -163,20 +151,17 @@ class PrintCalender extends React.Component{
          let tempRateCards = [...this.state.rateCards];
          const newId = Number(id)
          let selectedRateCard = tempRateCards.filter(item=> item.day.id === newId);
-         console.log("selected",selectedRateCard)
          return selectedRateCard;
      }
 
     
 
     handleRadioChange=(index, id,checked)=>{
-        console.log("starting", checked, id);
         let tempData = this.state.data;
         let tempDetails = this.state.rateDetails;
         let selected = tempDetails.find(item =>item.id === id);
         let subtotal = 0;
         let total = 0;
-        console.log(selected)
         let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
         if(checked){
           if(selectedDate === undefined){
@@ -186,7 +171,6 @@ class PrintCalender extends React.Component{
                 amount:selected.cost
               }
             ]});
-            console.log(tempData);
             for(var t=0; t<tempData.length; t++){
               total = total + Number(tempData[t].total_amount)
             }
@@ -197,12 +181,10 @@ class PrintCalender extends React.Component{
             for(var i=0; i<selectedDate.details.length; i++){
               subtotal = subtotal + Number(selectedDate.details[i].amount)
             }
-            console.log(subtotal);
             selectedDate.total_amount = subtotal
             for(var t=0; t<tempData.length; t++){
               total = total + Number(tempData[t].total_amount)
             }
-            console.log("total",total)
   
             this.setState({data:tempData, total:total, dayTotal:subtotal}) 
           }
@@ -210,31 +192,26 @@ class PrintCalender extends React.Component{
           if(selectedDate && selectedDate.details.some(item=>item.ratecard_id === id || (item.ratecard && item.ratecard.id === id))){
             let deleteItem = selectedDate.details.filter(item=> item.ratecard_id === id || (item.ratecard && item.ratecard.id === id));
             let deleteId = deleteItem[0].id;
-            console.log("id",deleteId, deleteItem);
             axios.delete(`${domain}/api/subscription-detail/${deleteId}/delete`,
             {headers:{ 'Authorization':`Bearer ${user}`}})
             .then(res=>{
-              console.log(res.data);
               selectedDate.details = selectedDate.details.filter(item=> item.ratecard && item.ratecard.id !== id);
-              console.log("selectedDate",selectedDate);
+              
               for(var i=0; i<selectedDate.details.length; i++){
                 subtotal = subtotal + Number(selectedDate.details[i].amount)
               }
-              console.log(subtotal);
               selectedDate.total_amount = subtotal;
               let key = tempData.map(function(e) { return e.selected_date; }).indexOf(this.state.date);
-              console.log('key',key);
+              
               tempData[key] = selectedDate
               for(var t=0; t<tempData.length; t++){
                 total = total + Number(tempData[t].total_amount)
               }
-              console.log("total",tempData)
     
               this.setState({data:tempData, total:total, dayTotal:subtotal})
   
             })
             .catch(error=>{
-              console.log(error)
             })
           }
           
@@ -284,7 +261,6 @@ class PrintCalender extends React.Component{
         let newEvents=[...this.state.eventData]
         let selectedDate = tempData.find(item=>item.selected_date === this.state.date);
         let discount = 0;
-        console.log(selectedDate)
         this.setState({isActive:false,loading:true})
         if(selectedDate.new === true){
           axios.post(`${domain}/api/subscription-store/${this.props.location.state.title_id}/details`,
@@ -297,7 +273,6 @@ class PrintCalender extends React.Component{
             segments:selectedDate.details
         },{headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("backdata",res.data);
             for(var i =0; i<res.data.length;i++){
               total = total + Number(res.data[i].total_amount);
               if(newEvents.some(item=>item.start === res.data[i].selected_date)){
@@ -310,11 +285,8 @@ class PrintCalender extends React.Component{
 
             for(var t=0; t<this.state.volume.length; t++){
               let range = this.state.volume[t].amount_range.split("-");
-              console.log("ha")
               if(Number(range[0])<=total && total<=Number(range[1])){
-                  console.log("yes")
                   discount = (this.state.volume[t].percentile/100) * total
-                  console.log(discount)
               }
           }
             
@@ -327,7 +299,6 @@ class PrintCalender extends React.Component{
         })
         .catch(error=>{
             this.setState({isActive:false, loading:false})
-            console.log(error)
         })
         }
         else{
@@ -341,7 +312,6 @@ class PrintCalender extends React.Component{
           segments:selectedDate.details
         },{headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log(res.data);
             for(var i =0; i<res.data.length;i++){
               total = total + Number(res.data[i].total_amount)
               if(newEvents.some(item=>item.start === res.data[i].selected_date)){
@@ -353,11 +323,8 @@ class PrintCalender extends React.Component{
             }
             for(var t=0; t<this.state.volume.length; t++){
               let range = this.state.volume[t].amount_range.split("-");
-              console.log("ha")
               if(Number(range[0])<=total && total<=Number(range[1])){
-                  console.log("yes")
                   discount = (this.state.volume[t].percentile/100) * total
-                  console.log(discount)
               }
           }
             this.setState({loading:false,isActive:false,data:res.data,saveModal:true, total_amount:total,eventData:newEvents, discount_amount:discount});
@@ -369,7 +336,6 @@ class PrintCalender extends React.Component{
         })
         .catch(error=>{
             this.setState({isActive:false, loading:false})
-            console.log(error)
         })
         }
       }
@@ -391,7 +357,6 @@ class PrintCalender extends React.Component{
     axios.delete(`${domain}/api/scheduledAd/${this.props.location.state.title_id}/delete`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data)
     })
 }
 

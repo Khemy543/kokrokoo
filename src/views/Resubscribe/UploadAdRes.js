@@ -17,7 +17,7 @@ import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function UploadFileRes(props){
 
@@ -33,29 +33,18 @@ function UploadFileRes(props){
   const [percentage, setPercentage] = React.useState(0)
 
 
- React.useEffect(()=>{
-   console.log(props.location)
-   console.log(localStorage.getItem("media_id"))
- })
-
   const pass=(e)=>{
     e.preventDefault();
     if(videoFile !== null){
     setIsActive(true);
-    console.log("going ...",text)
-    console.log(file_duration,videoFile.type[0]);
     let no_of_words=0;
     let textArray = text.split(' ' || "/n");
     no_of_words = textArray.length
-    console.log(textArray)
-    console.log(no_of_words)
     setIsActive(true);
-    console.log(title);
     axios.post(`${domain}/api/subscription/create`,
     {title:title,rate_card_title_id:props.location.state.id, campaign_type:'re_subscription', scheduled_ad_id : props.location.state.campaign_id}
     ,{headers:{'Authorization':`Bearer ${user}`}})
                 .then(res=>{
-                    console.log(res.data);
                     setTimeout(
                             function(){
                                 if(res.data.media.mediaType != "Print"){
@@ -86,7 +75,6 @@ function UploadFileRes(props){
                             1500)
                 })
                 .catch(error=>{
-                    console.log(error.response.data)
                     isActive(false)
                 })
 
@@ -98,7 +86,6 @@ function UploadFileRes(props){
   }
 
   const nextPage = () => {
-    console.log("start next...")
     const currentPageNumber = pageNumber;
     let nextPageNumber;
  
@@ -113,7 +100,6 @@ function UploadFileRes(props){
 
   const renderPreview=(type)=>{
     let file_types = props.location.state.file_types;
-    console.log(file_types)
     let video_type = type;
     let new_type =[];
     let checker =[];
@@ -129,7 +115,6 @@ function UploadFileRes(props){
       }
     }
     let my_type = new_type.join('');
-    console.log(my_type)
 
     //compare file type to media file types
     for(var j =0; j<file_types.length; j++){
@@ -137,7 +122,6 @@ function UploadFileRes(props){
         checker.push(file_types[j]);
         break;
       }else{
-        console.log("not found")
         continue;
       }
     }
@@ -151,7 +135,6 @@ function UploadFileRes(props){
     if(my_type === "application"){
       let extensionArray = videoFile.name.split(".");
       let extension = extensionArray[1]
-      console.log("extenstion:",extension)
       if(extension !== "docx"){
       return(
         <div onClick={()=>nextPage()}>
@@ -166,10 +149,6 @@ function UploadFileRes(props){
       )
     }
     else{
-      /* var zip = new JSZip(videoFile);
-      var doc=new Docxtemplater().loadZip(zip)
-      var text= doc.getFullText();
-      console.log(text); */
 
       var reader = new FileReader()
       reader.onload=function(){
@@ -250,7 +229,6 @@ function UploadFileRes(props){
                           type="file"
                           onChange={e => {
                             const file = e.target.files[0];
-                            console.log(file)
                             setVideoFile(file);
                           }}
                         />

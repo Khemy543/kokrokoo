@@ -44,6 +44,7 @@ import SelectRateCardRes from "views/Resubscribe/SelectRateCardRes.js";
 import UploadFileRes from "views/Resubscribe/UploadAdRes.js";
 import VideoResubscribeCalender from "views/Resubscribe/VideoResubscribe.js";
 import PrintResubscribeCalendar from "views/Resubscribe/PrintResubscribe.js";
+import ResubscribedCampaigns from "views/Subscriptions/ResubscribedCampaigns.js";
 
 var routes = [
   {
@@ -152,6 +153,15 @@ var routes = [
     name: "Rejected Campaigns",
     header:"subscriptions",
     component: RejectedCampaigns,
+    layout: "/client"
+  },
+  
+  {
+    
+    path: "/resubscribed-campaigns",
+    name: "Resubscribed Campaigns",
+    header:"subscriptions",
+    component: ResubscribedCampaigns,
     layout: "/client"
   },
   

@@ -7,7 +7,7 @@ import axios from "axios";
 import Container from "reactstrap/lib/Container";
 
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class BankDetails extends React.Component{
 
@@ -30,7 +30,6 @@ class BankDetails extends React.Component{
             account_number:this.state.account_number
         })
         .then(res=>{
-            console.log(res.data);
             this.setState({modal:true, message:"Bank Details Saved!"})
             setTimeout(
                 function(){
@@ -44,7 +43,6 @@ class BankDetails extends React.Component{
         .catch(error=>{
             if(error.response){
                 
-            console.log(error.response.data)
             }
         })
     }

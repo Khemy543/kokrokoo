@@ -12,7 +12,7 @@ import Pagination from "react-js-pagination";
 
 // core components
 import Header from "components/Headers/Header.js";
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 
 class MySubscription extends React.Component {
@@ -23,6 +23,9 @@ class MySubscription extends React.Component {
     meta:[],
     selectedSub:[],
     title:"",
+    media_house:"",
+    media_type:"",
+    rate_card_title:"",
     modal:false,
     deleteModal:false,
     rateDetails:[],
@@ -51,51 +54,51 @@ class MySubscription extends React.Component {
       params:{order:order, column_name:column},
     })
     .then(res=>{
-      console.log(res.data);
       this.setState({subscriptions:res.data, data:res.data.data, meta:res.data.meta, spinnerActive:false})
     })
     .catch(error=>{
-      console.log(error)
     })
   }
 
-   handleView=(id, title)=>{
+   handleView=(id, title, media_house, media_type, rate_card_title)=>{
      this.setState({isActive:true})
      let total =0;
    axios.get(`${domain}/api/subscription/${id}/details`,
    {headers:{ 'Authorization':`Bearer ${user}`}})
    .then(res=>{
-     console.log(res.data);
      let data=res.data;
      if(res.data[0].details[0].duration !== null){
       for(var i=0; i<data.length; i++){
-        console.log(data[i].total_amount)
         total = Number(data[i].total_amount) + total;
       }
-      console.log(total)
-     this.setState({selectedSub:res.data, total:total, title:title,modal:true,isActive:false})
+     this.setState({
+       selectedSub:res.data, 
+       total:total, 
+       media_house:media_house,
+       rate_card_title:rate_card_title,
+       media_type:media_type,
+       title:title,
+       modal:true,
+       isActive:false
+      })
       }
       else{
         for(var i=0; i<data.length; i++){
-          console.log(data[i].total_amount)
           total = Number(data[i].total_amount) + total;
         }
         this.setState({selectedPrintSub:res.data, title:title, printmodal:true, isActive:false, total:total})
       }
     })
    .catch(error=>{
-     console.log(error)
      this.setState({isActive:false})
    })
   }
 
   handleDelete=(id)=>{
-    console.log(id);
     this.setState({deleteModal:false})
     axios.delete(`${domain}/api/scheduledAd/${id}/delete`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-      console.log(res.data);
       if(res.data.status === "deleted"){
         let newSubs = this.state.data.filter(item=>item.id !== id);
         this.setState({data:newSubs})
@@ -103,7 +106,6 @@ class MySubscription extends React.Component {
 
     })
     .catch(error=>{
-      console.log(error)
     })
   }
 
@@ -207,7 +209,7 @@ class MySubscription extends React.Component {
                   <Col md="6" lg="6" sm="6" xs="6" >
 
                   <Button color="info" style={{borderRadius:"100%", padding:"2px 5px 2px 5px"}}
-                  onClick={()=>this.handleView(value.id,value.title)}
+                  onClick={()=>this.handleView(value.id,value.title, value.company.media_house, value.company.media_type, value.rate_card_title.title)}
                   ><i className="fa fa-eye"/></Button>
 
                   {value.status === 'approved'?
@@ -263,7 +265,12 @@ class MySubscription extends React.Component {
           <div>
           <Row>
             <Col>
-              <h4 style={{textTransform:"uppercase"}}>{this.state.title}</h4>
+              <h4 style={{textTransform:"uppercase"}}>
+                Campaign Title - {this.state.title}<br/>
+                Media House : {this.state.media_house}<br/>
+                Media Type : {this.state.media_type}<br/>
+                Ratecard Service : {this.state.rate_card_title}
+              </h4>
             </Col>
             <Col>
             <div style={{float:"right"}}>
@@ -322,7 +329,13 @@ class MySubscription extends React.Component {
           <div>
           <Row>
             <Col>
-              <h4 style={{textTransform:"uppercase"}}>{this.state.title}</h4>
+             
+            <h4 style={{textTransform:"uppercase"}}>
+                Campaign Title - {this.state.title}<br/>
+                Media House : {this.state.media_house}<br/>
+                Media Type : {this.state.media_type}<br/>
+                Ratecard Service : {this.state.rate_card_title}
+              </h4>
             </Col>
             <Col>
             <div style={{float:"right"}}>

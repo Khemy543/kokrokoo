@@ -15,7 +15,7 @@ import Header from "components/Headers/Header";
 import axios from 'axios';
 import classnames from 'classnames';
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function CreateUsers(props) {
 const [isActive, setIsActive] = React.useState(false);
@@ -35,11 +35,9 @@ React.useEffect(()=>{
     axios.get(`${domain}/api/get-roles`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data)
         setGetRoles(res.data)
     })
     .catch(error=>{
-        console.log(error)
     })
 },[])
 
@@ -57,7 +55,6 @@ const handleSubmit=(e)=>{
     },
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data)
         setModal(true);
         setMessage("User Created!")
             setTimeout(
@@ -68,7 +65,6 @@ const handleSubmit=(e)=>{
             )
     })
     .catch(error=>{
-        console.log(error.response.data)
         if(error.response.data.status === "Forbidden"){
             setModal(true)
             setMessage("Access Denied")

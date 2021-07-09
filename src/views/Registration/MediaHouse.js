@@ -54,11 +54,11 @@ class MediaHouse extends React.Component {
 
                       </p>
 
-                      <p style={{fontSize:"15px",color:"#E6AA00"}}> <i className="fa fa-podcast"> </i> <strong>Online Advertising</strong></p>
+                      {/* <p style={{fontSize:"15px",color:"#E6AA00"}}> <i className="fa fa-podcast"> </i> <strong>Online Advertising</strong></p>
                       <p style={{lineHeight:"20px",fontSize: "13px",
                         fontWeight: 400}}>
                         Coming soon
-                      </p>
+                      </p> */}
                       
                       <Row style={{paddingTop:"10px"}}>
                           <Col md="6" sm="12" xs="12" lg="6" xl="6">

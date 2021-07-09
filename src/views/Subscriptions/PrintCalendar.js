@@ -26,7 +26,7 @@ import data from "data/volumeData";
 
 
 let user =localStorage.getItem('access_token');
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class PrintCalender extends React.Component{
     constructor(props) {
@@ -80,14 +80,11 @@ class PrintCalender extends React.Component{
         var yyyy = tomorrow.getFullYear();
         var today = yyyy + '-' + mm + '-' + dd;
         let discount =0;
-        console.log("today:",today)
           this.setState({isActive:true})
-        console.log("ne:",this.props.location.state)
         let newEvents = [];
         axios.get(`${domain}/api/view-ratecard/${this.props.location.state.rate_card.id}/details`,
         {headers:{ 'Authorization':`Bearer ${user}`}})
         .then(res=>{
-            console.log("details:",res.data);
             this.setState({rateCards:res.data})
             for(var i=0; i<res.data.length; i++){
                 if(newEvents.some(item=>item.id === res.data[i].day.id)){
@@ -101,28 +98,19 @@ class PrintCalender extends React.Component{
             axios.get(`${domain}/api/subscription/${this.props.location.state.title_id}/details`,
             {headers:{ 'Authorization':`Bearer ${user}`}})
             .then(res=>{
-                console.log("mafia",res.data);
                 for(var i=0; i<res.data.length;i++){
                   newEvents.push({title:"", start:`${res.data[i].selected_date}`, display:"list-item", allDay: true, backgroundColor:"red"})
                     grand_total = grand_total + Number(res.data[i].total_amount);
                 }
-
-                console.log("grand",grand_total);
                 for(var t=0; t<this.state.volume.length; t++){
                 let range = this.state.volume[t].amount_range.split("-");
-                console.log(this.state.volume[t].amount_range)
                 if(Number(range[0])<=grand_total && grand_total<=Number(range[1])){
-                    console.log("yes")
                     discount = (this.state.volume[t].percentile/100) * grand_total
-                    console.log(discount)
                 }
             }
                 this.setState({data:res.data, total_amount:grand_total, eventData:newEvents, isActive:false,discount_amount:discount})
             })
         })
-        .catch(error=>{
-                console.log(error)
-        });
 
       }
 

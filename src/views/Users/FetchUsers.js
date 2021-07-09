@@ -15,7 +15,7 @@ import FadeLoader from "react-spinners/FadeLoader";
 import Header from "components/Headers/Header";
 import axios from 'axios';
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 let user =localStorage.getItem('access_token');
 function GetUsers(props) {
 const [isActive, setIsActive] = React.useState(false);
@@ -34,12 +34,10 @@ function getUsers(pageNumber=1){
     axios.get(`${domain}/api/super-admin/get-all/users?page=${pageNumber}`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         setUsers(res.data);
         setData(res.data.data)
     })
     .catch(error=>{
-        console.log(error)
         if(error.response.status === 403){
           setAlertModal(true);
           setMessage("Access Denied")
@@ -53,7 +51,6 @@ const handleBlock=(id)=>{
     axios.post(`${domain}/api/super-admin/block/${id}`,null,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         let selected = tempData.find(item=>item.id === id);
         selected.isActive = "inactive";
         setData(tempData);
@@ -65,7 +62,6 @@ const handleBlock=(id)=>{
           }.bind(this),1500)
     })
     .catch(error=>{
-        console(error)
     })
 }
 
@@ -75,7 +71,6 @@ const handleUnBlock=(id)=>{
     axios.post(`${domain}/api/super-admin/unblock/${id}`,null,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         let selected = tempData.find(item=>item.id === id);
         selected.isActive = "active";
         setData(tempData);
@@ -87,7 +82,6 @@ const handleUnBlock=(id)=>{
           }.bind(this),1500)
     })
     .catch(error=>{
-        console(error)
     })
 }
 
@@ -96,13 +90,11 @@ const deleteUser=(id)=>{
     axios.delete(`${domain}/api/super-admin/delete/${id}`,
     {headers:{ 'Authorization':`Bearer ${user}`}})
     .then(res=>{
-        console.log(res.data);
         let newData = tempData.filter(item=>item.id !== id);
         setData(newData);
         setModal(false)
     })
     .catch(error=>{
-        console.log(error)
     })
 }
 

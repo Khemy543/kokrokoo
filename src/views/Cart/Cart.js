@@ -12,7 +12,7 @@ import EmptyCart from "./EmptyCart.js";
 
 
   let user =localStorage.getItem('access_token');
-  var domain = "https://backend.demo.kokrokooad.com";
+  var domain = "https://backend.kokrokooad.com";
   class Cart extends React.Component{
 
     state={
@@ -34,7 +34,6 @@ import EmptyCart from "./EmptyCart.js";
       axios.get(`${domain}/api/cart/campaigns`,
       {headers:{ 'Authorization':`Bearer ${user}`}})
       .then(res=>{
-        console.log(res.data);
         tempCart = res.data.filter(item=>item.pay_later === 0);
         tempPayLater = res.data.filter(item=>item.pay_later === 1);
         for(var i =0; i<tempCart.length; i++){
@@ -43,7 +42,6 @@ import EmptyCart from "./EmptyCart.js";
         this.setState({cart:tempCart, payLater:tempPayLater, cartTotal:cartTotal, allData:res.data, isActive:false})
       })
       .catch(error=>{
-        console.log(error)
       })
     }
 
@@ -53,7 +51,6 @@ import EmptyCart from "./EmptyCart.js";
       axios.post(`${domain}/api/move/${id}/to-pay-later`,null,
       {headers:{ 'Authorization':`Bearer ${user}`}})
       .then(res=>{
-        console.log(res.data);
         if(res.data.message === "moved to pay later"){
           let movedData = this.state.cart.find(item=>item.id === id);
           tempPayLater.push(movedData);
@@ -65,7 +62,6 @@ import EmptyCart from "./EmptyCart.js";
         }
       })
       .catch(error=>{
-        console.log(error)
       })
     }
 
@@ -75,7 +71,6 @@ import EmptyCart from "./EmptyCart.js";
       axios.post(`${domain}/api/move/${id}/to-cart`,null,
       {headers:{ 'Authorization':`Bearer ${user}`}})
       .then(res=>{
-        console.log(res.data);
         if(res.data.message === "moved to cart"){
           let movedData = this.state.payLater.find(item=>item.id === id);
           tempCart.push(movedData);
@@ -87,7 +82,6 @@ import EmptyCart from "./EmptyCart.js";
         }
       })
       .catch(error=>{
-        console.log(error)
       })
     }
 
@@ -98,7 +92,6 @@ import EmptyCart from "./EmptyCart.js";
       axios.delete(`${domain}/api/scheduledAd/${id}/delete`,
       {headers:{ 'Authorization':`Bearer ${user}`}})
       .then(res=>{
-        console.log(res.data);
         tempCart = tempCart.filter(item=>item.id !== id);
         tempPayLater = tempPayLater.filter(item=>item.id !== id);
         for(var i =0; i<tempCart.length; i++){
@@ -107,14 +100,12 @@ import EmptyCart from "./EmptyCart.js";
         this.setState({payLater:tempPayLater,cart:tempCart, cartTotal:cartTotal, deleteModal:false})
       })
       .catch(error=>{
-        console.log(error)
       })
     }
 
     handleInvoive=()=>{
       let tempCart = this.state.cart;
       let cart_id = null;
-      console.log(this.state.cart_id)
       if(this.state.cart_id === null){
         for(var i=0; i<tempCart.length;i++){
           if(tempCart[i].cart_id.id !== null){
@@ -130,15 +121,12 @@ import EmptyCart from "./EmptyCart.js";
         cart_id = this.state.cart_id;
       }
       
-      console.log("cart_id",cart_id)
       axios.get(`${domain}/api/payment/${cart_id}/invoice`,
       {headers:{ 'Authorization':`Bearer ${user}`}})
       .then(res=>{
-        console.log(res.data);
         this.props.history.push("/client/subscription-invoice",{invoice:res.data.invoice, cart_id:cart_id})
       })
       .catch(error=>{
-        console.log(error)
       })
     }
 

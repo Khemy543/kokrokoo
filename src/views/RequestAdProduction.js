@@ -24,7 +24,7 @@ import axios from "axios";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 function RequestAdProduction({history}){
   const [email, setEmail] = useState('')
   const [alert, setAlert] = useState(false);
@@ -36,7 +36,7 @@ function RequestAdProduction({history}){
   const [budget, setBudget] = useState('Middle');
   const [isActive, setIsActive] =useState(false);
 
-  var domain = "https://backend.demo.kokrokooad.com";
+  var domain = "https://backend.kokrokooad.com";
 
   const handleSubmit=(e)=>{
     e.preventDefault();
@@ -54,7 +54,6 @@ function RequestAdProduction({history}){
         setAlert(true);
     })
     .catch(error=>{
-        console.log(error)
     })
     .finally((_)=>{setIsActive(false)})
   }

@@ -16,7 +16,7 @@ export default function RateCompanyCard(props){
 
     return(
         <>
-             <Col lg="4" md="4" sm="12" xs="12" style={{marginBottom:"10px"}}>
+             <Col lg="4" md="4" sm="12" xs="12">
                 <Card id={"tooltip-" + id} className="card-stats mb-xl-0 shadow" style={{cursor:"pointer", borderRadius:"0px"}} onClick={()=>{props.history.push("/client/rate-cards",{media_house_id:id})}}>
                     <CardBody>
                       <Row>
@@ -34,11 +34,11 @@ export default function RateCompanyCard(props){
                   <Tooltip key={id} placement="right" isOpen={tooltipOpen} target={"tooltip-" + id} toggle={toggle}>
                   <p style={{fontSize:"12px",fontWeight:600, marginTop:"0px",marginBottom:"0px", color:"white"}}>PURPOSE: <br/><span>{purpose}</span></p>
                   <br/>
-                    <p style={{fontSize:"12px",fontWeight:600, marginTop:"0px",marginBottom:"0px", color:"white"}}>COVERAGE REGIONS:<br/> <span>{regions.toString().replace(/,/g, ", ")}</span></p>
+                    <p style={{fontSize:"12px",fontWeight:600, marginTop:"0px",marginBottom:"0px", color:"white"}}>COVERAGE REGIONS:<br/> <span>{regions?.toString().replace(/,/g, ", ")}</span></p>
                     <br/>
-                    <p style={{fontSize:"12px",fontWeight:600, marginTop:"0px",marginBottom:"0px", color:"white"}}>LANGUAGE OF COMMUNICATION: <br/><span>{langauage.toString().replace(/,/g, ", ")}</span></p>
+                    <p style={{fontSize:"12px",fontWeight:600, marginTop:"0px",marginBottom:"0px", color:"white"}}>LANGUAGE OF COMMUNICATION: <br/><span>{langauage?.toString().replace(/,/g, ", ")}</span></p>
                   </Tooltip>
             </Col>
         </>
     )
-}
+} 

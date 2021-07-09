@@ -18,7 +18,7 @@ import { Animated } from "react-animated-css";
 import LoadingOverlay from "react-loading-overlay";
 import FadeLoader from "react-spinners/FadeLoader";
 
-var domain = "https://backend.demo.kokrokooad.com";
+var domain = "https://backend.kokrokooad.com";
 
 class MediaAccount extends React.Component {
 
@@ -43,8 +43,7 @@ class MediaAccount extends React.Component {
         languages:[],
         isActive:false,
         country:"Ghana",
-        others:"",
-
+        others:null,
         name:"",
         email:"",
         title:"Mr",
@@ -56,13 +55,11 @@ class MediaAccount extends React.Component {
         id:null,
         purpose:"",
         regions:[]
-
     }
 
     componentDidMount(){
         axios.get(`${domain}/api/media-types`)
         .then(res=>{
-            console.log(res.data);
             this.setState({mediaTypes:res.data});
         })
     }
@@ -71,9 +68,23 @@ class MediaAccount extends React.Component {
         e.preventDefault();
         //adding other and Languages
         let tempLanguages = this.state.languages;
-        let tempOthers = this.state.others.split(",");
+        let tempOthers = this.state.others ?  this.state.others.split(",") : [];
         let newArray = tempLanguages.concat(tempOthers)
-        console.log(newArray)
+
+        if(this.state.regions.length <= 0){
+            return this.setState({
+                modal : false,
+               message : "Regions is required !"
+            })
+        }
+
+        if(newArray.length <= 0){
+            return({
+                modal : false,
+                message : "Language is required !"
+            })
+        }
+
 
         if(this.state.password === this.state.confirm_password){
         this.setState({isActive:true})
@@ -100,10 +111,6 @@ class MediaAccount extends React.Component {
         bodyFormData.append('terms',this.state.terms);
         bodyFormData.append('account',"media");
         
-            for(var pair of bodyFormData.entries()) {
-                console.log(pair[0]+ ': '+ pair[1]); 
-            }
-
             axios({
                 method:'post',
                 url:`${domain}/api/auth/register`,
@@ -112,7 +119,6 @@ class MediaAccount extends React.Component {
                 onUploadProgress: (progressEvent) => {
                     const {loaded , total} = progressEvent;
                     let percentage = Math.floor(loaded * 100 / total);
-                    console.log(percentage)
                     if(percentage<100){
                         this.setState({percentage:percentage});
                     }
@@ -121,7 +127,6 @@ class MediaAccount extends React.Component {
                     }
             }})
             .then(res=>{
-                console.log("data",res.data);
                 this.setState({isActive:false, message:"Registration Successful!", modal:true
                 })
                 setTimeout(
@@ -138,7 +143,6 @@ class MediaAccount extends React.Component {
             .catch(error=>{
                 this.setState({isActive:false});
                 if(error.response){
-                    console.log(error.response.data);
                     this.setState({
                         modal:true, isActive:false,
                         message:error.response.data.errors.business_cert 
@@ -216,7 +220,6 @@ class MediaAccount extends React.Component {
            }
         }
         
-        console.log(tempRegions)
     }
 
     
@@ -234,16 +237,7 @@ class MediaAccount extends React.Component {
            }
         }
         
-        console.log(tempLanguages)
     }
-
-   /*  checkOthers=()=>{
-        let tempLanguages = this.state.languages;
-        let tempOthers = this.state.others.split(",");
-        let newArray = tempLanguages.concat(tempOthers)
-        console.log(newArray)
-
-    } */
 
   render() {
     return (
@@ -456,7 +450,6 @@ class MediaAccount extends React.Component {
                             <label>Business Certificate*</label>
                             <Input type="file" onChange={e=>{
                                 const file = e.target.files[0];
-                                console.log(file)
                                 this.setState({business_cert:file})}
                                 } required
                                 style={{overflowX:"hidden"}}
@@ -466,7 +459,6 @@ class MediaAccount extends React.Component {
                             <label>Ratecard</label>
                             <Input type="file" onChange={e=>{
                                 const file = e.target.files[0];
-                                console.log(file)
                                 this.setState({operational_cert:file})}
                                 } required
                                 style={{overflowX:"hidden"}}/>
@@ -475,7 +467,6 @@ class MediaAccount extends React.Component {
                             <label>Upload Logo*</label>
                             <Input type="file" onChange={e=>{
                                 const file = e.target.files[0];
-                                console.log(file)
                                 this.setState({logo:file})}
                                 } required
                                 style={{overflowX:"hidden"}}/>
@@ -627,7 +618,7 @@ class MediaAccount extends React.Component {
                 <div style={{marginTop:"20px",marginBottom:"50px"}}>
                     <Row>
                     <Col md="8" className="ml-auto mr-auto">
-                    <Input type="checkbox" value={this.state.terms} onChange={e=>this.setState({terms:e.target.checked})} required/> <p style={{fontSize:"13px", fontWeight:700}} >Agree To <a href="/auth/terms&conditions-media">Terms And Conditions</a></p>
+                    <Input type="checkbox" value={this.state.terms} onChange={e=>this.setState({terms:e.target.checked})} required/> <p style={{fontSize:"13px", fontWeight:700}} >Agree To <a target="_blank" href="/auth/terms&conditions-media">Terms And Conditions</a></p>
                     <br/>
                     <Row>
                     <Col>
